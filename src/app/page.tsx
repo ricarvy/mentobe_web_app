@@ -14,6 +14,7 @@ import { TarotResult } from '@/components/TarotResult';
 import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
+import { DEMO_ACCOUNT } from '@/config/demo-account';
 
 export default function Home() {
   const { t } = useI18n();
@@ -25,8 +26,8 @@ export default function Home() {
   const [showResult, setShowResult] = useState(false);
   const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(DEMO_ACCOUNT.email);
+  const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [aiInterpretation, setAiInterpretation] = useState('');
   const [showAiInterpretation, setShowAiInterpretation] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);

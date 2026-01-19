@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, Mail, Lock, Eye, EyeOff, Chrome, Apple } from 'lucide-react';
 import Link from 'next/link';
+import { DEMO_ACCOUNT } from '@/config/demo-account';
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -15,8 +16,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: DEMO_ACCOUNT.email,
+    password: DEMO_ACCOUNT.password,
     confirmPassword: '',
     rememberMe: false,
   });
