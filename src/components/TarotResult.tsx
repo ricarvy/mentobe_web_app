@@ -7,6 +7,8 @@ import { type TarotCard, type SpreadPosition } from '@/lib/tarot';
 import { useI18n } from '@/lib/i18n';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface TarotResultProps {
   question: string;
@@ -118,8 +120,10 @@ export function TarotResult({
             <CardTitle className="text-white">{t.home.interpretation}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-black/30 rounded-lg p-4 min-h-[200px] text-purple-100 whitespace-pre-wrap">
-              {interpretation}
+            <div className="bg-black/30 rounded-lg p-4 min-h-[200px] text-purple-100 prose prose-invert prose-purple max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {interpretation}
+              </ReactMarkdown>
             </div>
           </CardContent>
         </Card>
@@ -151,8 +155,10 @@ export function TarotResult({
             <CardTitle className="text-white">{t.home.suggestion}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-black/30 rounded-lg p-4 min-h-[150px] text-purple-100 whitespace-pre-wrap">
-              {suggestion}
+            <div className="bg-black/30 rounded-lg p-4 min-h-[150px] text-purple-100 prose prose-invert prose-purple max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {suggestion}
+              </ReactMarkdown>
             </div>
           </CardContent>
         </Card>
