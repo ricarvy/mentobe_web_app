@@ -7,9 +7,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password }: { email: string; password: string } = body;
 
-    if (!email || !password) {
+    // 仅验证邮箱格式
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Please enter a valid email address' },
         { status: 400 }
       );
     }
@@ -18,28 +19,25 @@ export async function POST(request: NextRequest) {
     const username = email.split('@')[0];
 
     // 检查邮箱是否已存在
-    const existingEmail = await userManager.getUserByEmail(email);
-    if (existingEmail) {
-      return NextResponse.json(
-        { error: 'Email already exists' },
-        { status: 400 }
-      );
+    let existingEmail = await userManager.getUserByEmail(email);
+    
+    if (!existingEmail) {
+      // 如果用户不存在，创建新用户（密码可以为任意值）
+      const userData: InsertUser = {
+        username,
+        email,
+        password: password || 'demo', // 密码可以是任意值，默认为 'demo'
+      };
+
+      existingEmail = await userManager.createUser(userData);
     }
 
-    // 创建用户
-    const userData: InsertUser = {
-      username,
-      email,
-      password,
-    };
-
-    const user = await userManager.createUser(userData);
-
+    // 返回用户信息（无论新用户还是旧用户都直接登录）
     return NextResponse.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      isActive: user.isActive,
+      id: existingEmail.id,
+      username: existingEmail.username,
+      email: existingEmail.email,
+      isActive: existingEmail.isActive,
     });
   } catch (error) {
     console.error('Error in register route:', error);

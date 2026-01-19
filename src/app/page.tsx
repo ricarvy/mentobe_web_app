@@ -55,8 +55,8 @@ export default function Home() {
   };
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      alert(`${t.auth.pleaseEnterEmail} and ${t.auth.pleaseEnterPassword}`);
+    if (!email.trim()) {
+      alert(t.auth.pleaseEnterEmail);
       return;
     }
 
@@ -64,7 +64,7 @@ export default function Home() {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password: password || 'demo' }),
       });
 
       if (!response.ok) {
@@ -341,7 +341,7 @@ export default function Home() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-purple-200">{t.auth.email}</Label>
+              <Label htmlFor="email" className="text-purple-200">{t.auth.email} <span className="text-red-400">*</span></Label>
               <Input
                 id="email"
                 type="email"
@@ -352,7 +352,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <Label htmlFor="password" className="text-purple-200">{t.auth.password}</Label>
+              <Label htmlFor="password" className="text-purple-200">{t.auth.password} <span className="text-purple-300/60 text-xs">(Optional)</span></Label>
               <Input
                 id="password"
                 type="password"
