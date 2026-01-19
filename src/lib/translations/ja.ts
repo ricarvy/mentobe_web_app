@@ -60,6 +60,7 @@ export const ja = {
     past: '過去',
     present: '現在',
     future: '未来',
+    tarotCards: 'タロットカード',
     dailyQuota: '本日の残り回数',
     times: '回',
     loginRequired: '先にログインしてください',
@@ -121,6 +122,10 @@ export const ja = {
   },
   tarotCard: {
     back: 'タロットカードの裏',
+    reversed: '逆位置',
+    upright: '正位置',
+    meaning: '意味',
+    reversedMeaning: '逆位置の意味',
   },
   auth: {
     username: 'ユーザー名',

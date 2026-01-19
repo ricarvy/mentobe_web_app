@@ -60,6 +60,7 @@ export const en = {
     past: 'Past',
     present: 'Present',
     future: 'Future',
+    tarotCards: 'Tarot Cards',
     dailyQuota: 'Daily Quota Remaining',
     times: 'times',
     loginRequired: 'Please login first',
@@ -121,6 +122,10 @@ export const en = {
   },
   tarotCard: {
     back: 'Tarot Card Back',
+    reversed: 'Reversed',
+    upright: 'Upright',
+    meaning: 'Meaning',
+    reversedMeaning: 'Reversed Meaning',
   },
   auth: {
     username: 'Username',

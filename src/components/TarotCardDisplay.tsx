@@ -97,21 +97,46 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
 
               {/* 牌正面 */}
               <div
-                className="absolute inset-0 bg-gradient-to-br from-purple-800 to-pink-800 rounded-lg border-2 border-purple-400/50 p-2 flex flex-col items-center justify-center backface-hidden"
+                className="absolute inset-0 bg-gradient-to-br from-purple-800 to-pink-800 rounded-lg border-2 border-purple-400/50 overflow-hidden backface-hidden"
                 style={{
                   backfaceVisibility: 'hidden',
                   transform: 'rotateY(180deg)',
                 }}
               >
-                <div className={`text-3xl mb-2 ${card.isReversed ? 'rotate-180' : ''}`}>
-                  🌟
+                {/* 牌面图片 */}
+                {card.imageUrl ? (
+                  <img
+                    src={card.imageUrl}
+                    alt={card.nameEn}
+                    className={`w-full h-full object-cover ${card.isReversed ? 'rotate-180' : ''}`}
+                    onError={(e) => {
+                      // 图片加载失败时显示占位符
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : (
+                  <div className={`flex-1 flex items-center justify-center ${card.isReversed ? 'rotate-180' : ''}`}>
+                    <div className="text-3xl">🌟</div>
+                  </div>
+                )}
+
+                {/* 占位符 - 当图片加载失败时显示 */}
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-800 to-pink-800 hidden">
+                  <div className="text-center">
+                    <div className={`text-4xl mb-2 ${card.isReversed ? 'rotate-180' : ''}`}>🌟</div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-white mb-1">{card.name}</p>
-                  <p className="text-xs text-purple-200">{card.nameEn}</p>
-                  {card.isReversed && (
-                    <p className="text-xs text-pink-300 mt-1">(Reversed)</p>
-                  )}
+
+                {/* 牌信息覆盖层 */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm p-2">
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-white mb-0.5">{card.name}</p>
+                    <p className="text-xs text-purple-200">{card.nameEn}</p>
+                    {card.isReversed && (
+                      <p className="text-xs text-pink-300 mt-1">{t.tarotCard.reversed}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

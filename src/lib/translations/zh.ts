@@ -60,6 +60,7 @@ export const zh = {
     past: '过去',
     present: '现在',
     future: '未来',
+    tarotCards: '塔罗牌',
     dailyQuota: '今日剩余次数',
     times: '次',
     loginRequired: '请先登录',
@@ -121,6 +122,10 @@ export const zh = {
   },
   tarotCard: {
     back: '塔罗牌背面',
+    reversed: '逆位',
+    upright: '正位',
+    meaning: '含义',
+    reversedMeaning: '逆位含义',
   },
   auth: {
     username: '用户名',
