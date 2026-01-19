@@ -8,9 +8,20 @@
  * - DEMO_ACCOUNT_PASSWORD: 演示账号密码 (默认: Demo123!)
  */
 
+// 先读取环境变量，提供默认值
+const DEMO_EMAIL = process.env.DEMO_ACCOUNT_EMAIL || 'demo@mentobai.com';
+const DEMO_PASSWORD = process.env.DEMO_ACCOUNT_PASSWORD || 'Demo123!';
+const DEMO_ENABLED = process.env.DEMO_ACCOUNT_ENABLED !== 'false';
+
+console.log('[Demo Account Config]', {
+  enabled: DEMO_ENABLED,
+  email: DEMO_EMAIL,
+  passwordLength: DEMO_PASSWORD.length,
+});
+
 export const DEMO_ACCOUNT = {
-  email: process.env.DEMO_ACCOUNT_EMAIL || 'demo@mentobai.com',
-  password: process.env.DEMO_ACCOUNT_PASSWORD || 'Demo123!',
+  email: DEMO_EMAIL,
+  password: DEMO_PASSWORD,
   username: 'Demo User',
   id: 'demo-user-id',
   isActive: true,
@@ -18,7 +29,7 @@ export const DEMO_ACCOUNT = {
 } as const;
 
 // 演示账号功能开关
-export const DEMO_ACCOUNT_ENABLED = process.env.DEMO_ACCOUNT_ENABLED !== 'false';
+export const DEMO_ACCOUNT_ENABLED = DEMO_ENABLED;
 
 // 验证是否为演示账号
 export function isDemoAccount(email: string, password: string): boolean {
@@ -27,11 +38,21 @@ export function isDemoAccount(email: string, password: string): boolean {
     return false;
   }
 
-  const match = email === DEMO_ACCOUNT.email && password === DEMO_ACCOUNT.password;
+  // 添加安全检查
+  if (!email || !password) {
+    console.log('[Demo Account] Missing email or password');
+    return false;
+  }
+
+  // 确保 DEMO_ACCOUNT.email 和 password 存在
+  const demoEmail = DEMO_ACCOUNT.email || 'demo@mentobai.com';
+  const demoPassword = DEMO_ACCOUNT.password || 'Demo123!';
+
+  const match = email === demoEmail && password === demoPassword;
   console.log('[Demo Account Check]', {
     enabled: DEMO_ACCOUNT_ENABLED,
-    emailMatch: email === DEMO_ACCOUNT.email,
-    passwordMatch: password === DEMO_ACCOUNT.password,
+    emailMatch: email === demoEmail,
+    passwordMatch: password === demoPassword,
     isMatch: match,
   });
 
