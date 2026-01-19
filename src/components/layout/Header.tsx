@@ -70,15 +70,19 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button
-              variant="ghost"
-              className="text-purple-200 hover:text-white hover:bg-purple-500/10"
-            >
-              {t.common.signIn}
-            </Button>
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-              {t.common.getStarted}
-            </Button>
+            <Link href="/login">
+              <Button
+                variant="ghost"
+                className="text-purple-200 hover:text-white hover:bg-purple-500/10"
+              >
+                {t.common.signIn}
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                {t.common.getStarted}
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu */}
@@ -126,15 +130,19 @@ export function Header() {
                 </div>
 
                 <div className="flex flex-col gap-3 mt-6">
-                  <Button
-                    variant="ghost"
-                    className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
-                  >
-                    {t.common.signIn}
-                  </Button>
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
-                    {t.common.getStarted}
-                  </Button>
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    <Button
+                      variant="ghost"
+                      className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
+                    >
+                      {t.common.signIn}
+                    </Button>
+                  </Link>
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
+                      {t.common.getStarted}
+                    </Button>
+                  </Link>
                 </div>
               </nav>
             </SheetContent>
