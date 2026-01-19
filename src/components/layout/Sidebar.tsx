@@ -15,22 +15,6 @@ export function Sidebar() {
       <aside className="hidden lg:block fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r border-purple-500/20 bg-black/40 backdrop-blur-md">
         <ScrollArea className="h-full px-4 py-6">
           <div className="space-y-6">
-            {/* Quick Actions */}
-            <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Quick Actions</h3>
-              <div className="space-y-1">
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
-                  <Sparkles className="h-4 w-4" />
-                  New Reading
-                </Link>
-                <Link href="#history" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
-                  <History className="h-4 w-4" />
-                  Reading History
-                </Link>
-              </div>
-            </div>
-
-
           </div>
         </ScrollArea>
       </aside>
@@ -63,30 +47,6 @@ export function Sidebar() {
         </div>
         <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
           <div className="space-y-6">
-            {/* Quick Actions */}
-            <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Quick Actions</h3>
-              <div className="space-y-1">
-                <Link
-                  href="/"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  New Reading
-                </Link>
-                <Link
-                  href="#history"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
-                >
-                  <History className="h-4 w-4" />
-                  Reading History
-                </Link>
-              </div>
-            </div>
-
-
           </div>
         </ScrollArea>
       </aside>
