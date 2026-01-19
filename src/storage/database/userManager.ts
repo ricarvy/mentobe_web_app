@@ -54,15 +54,26 @@ export class UserManager {
   }
 
   async verifyPassword(email: string, password: string): Promise<User | null> {
-    const db = await getDb();
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    
-    if (!user) {
+    try {
+      console.log('[UserManager] Verifying password for email:', email);
+      const db = await getDb();
+      const [user] = await db.select().from(users).where(eq(users.email, email));
+
+      if (!user) {
+        console.log('[UserManager] User not found:', email);
+        return null;
+      }
+
+      console.log('[UserManager] User found, comparing password');
+      const isValid = await bcrypt.compare(password, user.password);
+      console.log('[UserManager] Password valid:', isValid);
+
+      return isValid ? user : null;
+    } catch (error) {
+      console.error('[UserManager] Error verifying password:', error);
+      console.error('[UserManager] Error stack:', error instanceof Error ? error.stack : 'No stack');
       return null;
     }
-
-    const isValid = await bcrypt.compare(password, user.password);
-    return isValid ? user : null;
   }
 }
 
