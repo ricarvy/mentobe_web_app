@@ -7,7 +7,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password }: { email: string; password: string } = body;
 
+    // 添加详细日志
+    console.log('[Login Attempt] Email:', email);
+    console.log('[Login Attempt] Password length:', password?.length);
+
     if (!email || !password) {
+      console.log('[Login Failed] Missing credentials');
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
@@ -15,7 +20,21 @@ export async function POST(request: NextRequest) {
     }
 
     // 优先检查演示账号
-    if (isDemoAccount(email, password)) {
+    const isDemo = isDemoAccount(email, password);
+    console.log('[Login Check] Is demo account:', isDemo);
+
+    // 检查是否匹配演示账号的邮箱，但密码或开关有问题
+    const emailMatchesDemo = email === DEMO_ACCOUNT.email;
+    if (emailMatchesDemo && !isDemo) {
+      console.log('[Login Failed] Demo account email but invalid password or disabled');
+      return NextResponse.json(
+        { error: 'Invalid email or password' },
+        { status: 401 }
+      );
+    }
+
+    if (isDemo) {
+      console.log('[Login Success] Demo account authenticated');
       return NextResponse.json({
         id: DEMO_ACCOUNT.id,
         username: DEMO_ACCOUNT.username,
