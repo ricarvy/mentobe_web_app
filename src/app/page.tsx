@@ -329,9 +329,16 @@ export default function Home() {
                   <Button
                     onClick={handleGetAiInterpretation}
                     disabled={isGenerating || remainingQuota <= 0}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative overflow-hidden"
                   >
-                    {isGenerating ? t.home.generating : remainingQuota <= 0 ? t.home.quotaExceeded : t.home.getAiInterpretation}
+                    {isGenerating && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                      </div>
+                    )}
+                    <span className={isGenerating ? 'pl-8' : ''}>
+                      {isGenerating ? `${t.home.generating}...` : remainingQuota <= 0 ? t.home.quotaExceeded : t.home.getAiInterpretation}
+                    </span>
                   </Button>
                 </CardContent>
               </Card>

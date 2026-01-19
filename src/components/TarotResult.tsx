@@ -129,6 +129,31 @@ export function TarotResult({
         </Card>
       )}
 
+      {/* AI解读加载状态 */}
+      {!interpretation && isGenerating && (
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
+          <CardHeader>
+            <CardTitle className="text-white">{t.home.interpretation}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-black/30 rounded-lg p-8 min-h-[200px] flex flex-col items-center justify-center">
+              {/* 加载动画 */}
+              <div className="relative w-20 h-20 mb-4">
+                <div className="absolute inset-0 border-4 border-purple-500/30 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-2 border-4 border-transparent border-t-pink-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+              </div>
+              <p className="text-purple-200 text-sm animate-pulse">
+                {t.home.generating}...
+              </p>
+              <p className="text-purple-300/70 text-xs mt-2">
+                AI正在为您解读塔罗牌的奥秘
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {interpretation && !suggestion && (
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
