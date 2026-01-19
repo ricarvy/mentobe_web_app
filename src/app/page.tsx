@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { StarBackground } from '@/components/StarBackground';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -53,7 +52,7 @@ export default function Home() {
 
   const handleLogin = async () => {
     if (!username.trim() || !email.trim()) {
-      alert('请输入用户名和邮箱');
+      alert('Please enter username and email');
       return;
     }
 
@@ -66,7 +65,7 @@ export default function Home() {
 
       if (!response.ok) {
         const error = await response.json();
-        alert(error.error || '登录失败');
+        alert(error.error || 'Login failed');
         return;
       }
 
@@ -77,7 +76,7 @@ export default function Home() {
       await fetchQuota(userData.id);
     } catch (error) {
       console.error('Error:', error);
-      alert('登录失败，请稍后重试');
+      alert('Login failed, please try again later');
     }
   };
 
@@ -111,7 +110,7 @@ export default function Home() {
     }
 
     if (remainingQuota <= 0) {
-      alert('今日解读次数已用完，请明天再来');
+      alert('Daily interpretation limit reached, please try again tomorrow');
       return;
     }
 
@@ -154,7 +153,7 @@ export default function Home() {
       await fetchQuota(user.id);
     } catch (error) {
       console.error('Error:', error);
-      alert(error instanceof Error ? error.message : '解读生成失败，请稍后重试');
+      alert(error instanceof Error ? error.message : 'Failed to generate interpretation, please try again later');
     } finally {
       setIsGenerating(false);
     }
@@ -180,7 +179,7 @@ export default function Home() {
       setAiSuggestion(data.suggestion);
     } catch (error) {
       console.error('Error:', error);
-      setAiSuggestion('建议生成失败，请稍后重试');
+      setAiSuggestion('Failed to generate suggestion, please try again later');
     } finally {
       setIsGenerating(false);
     }
@@ -198,189 +197,169 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-white">
-      <StarBackground />
-
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="flex justify-between items-center mb-8">
-            <div></div>
-            {user ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-purple-200">
-                  {user.username} | 今日剩余解读: {remainingQuota}/3
-                </span>
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  size="sm"
-                  className="border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
-                >
-                  退出登录
-                </Button>
-              </div>
-            ) : (
-              <Button
-                onClick={() => setShowLoginModal(true)}
-                variant="outline"
-                size="sm"
-                className="border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
-              >
-                登录
-              </Button>
-            )}
-          </div>
+    <div className="container mx-auto px-4 py-8 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-            塔罗牌指引
+            Discover Your Future
           </h1>
-          <p className="text-lg text-purple-200">探索命运的奥秘，获得内心的指引</p>
-        </header>
+          <p className="text-lg text-purple-200">
+            Unlock the mysteries of life with AI-powered tarot readings
+          </p>
+        </div>
 
-        <div className="max-w-4xl mx-auto">
-          {!selectedSpread && (
-            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
-              <CardHeader>
-                <CardTitle className="text-white">选择牌阵</CardTitle>
-                <CardDescription className="text-purple-200">选择一个牌阵开始你的塔罗之旅</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <TarotSpreadSelector
-                  spreads={spreads}
-                  onSpreadSelect={handleSpreadSelect}
+        {!selectedSpread && (
+          <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30" id="spreads">
+            <CardHeader>
+              <CardTitle className="text-white">Choose a Tarot Spread</CardTitle>
+              <CardDescription className="text-purple-200">
+                Select a spread to begin your tarot journey
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TarotSpreadSelector
+                spreads={spreads}
+                onSpreadSelect={handleSpreadSelect}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedSpread && !showResult && (
+          <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
+            <CardHeader>
+              <CardTitle className="text-white">{selectedSpread.name}</CardTitle>
+              <CardDescription className="text-purple-200">
+                {selectedSpread.description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label className="block text-sm font-medium mb-2 text-purple-200">
+                  Your Question
+                </Label>
+                <Textarea
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder="Enter your question..."
+                  className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 min-h-[100px]"
                 />
-              </CardContent>
-            </Card>
-          )}
+              </div>
 
-          {selectedSpread && !showResult && (
-            <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
-              <CardHeader>
-                <CardTitle className="text-white">{selectedSpread.name}</CardTitle>
-                <CardDescription className="text-purple-200">{selectedSpread.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label className="block text-sm font-medium mb-2 text-purple-200">
-                    你的问题
-                  </Label>
-                  <Textarea
-                    value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
-                    placeholder="输入你想问的问题..."
-                    className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 min-h-[100px]"
-                  />
-                </div>
+              <Button
+                onClick={handleDraw}
+                disabled={!question.trim() || isDrawing}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                {isDrawing ? 'Drawing cards...' : 'Start Reading'}
+              </Button>
 
-                <Button
-                  onClick={handleDraw}
-                  disabled={!question.trim() || isDrawing}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
-                  {isDrawing ? '抽牌中...' : '开始抽牌'}
-                </Button>
+              <Button
+                onClick={() => setSelectedSpread(null)}
+                variant="outline"
+                className="w-full border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+              >
+                Back to Spreads
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
-                <Button
-                  onClick={() => setSelectedSpread(null)}
-                  variant="outline"
-                  className="w-full border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
-                >
-                  返回牌阵选择
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+        {showResult && (
+          <>
+            <TarotCardDisplay
+              cards={drawnCards}
+              positions={selectedSpread!.positions}
+              isDrawing={isDrawing}
+            />
 
-          {showResult && (
-            <>
-              <TarotCardDisplay
+            {!user && (
+              <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
+                <CardHeader>
+                  <CardTitle className="text-white">Get AI Interpretation</CardTitle>
+                  <CardDescription className="text-purple-200">
+                    Sign in to unlock 3 free AI-powered tarot interpretations daily
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    onClick={() => setShowLoginModal(true)}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  >
+                    Sign In
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {user && !showAiInterpretation && (
+              <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
+                <CardHeader>
+                  <CardTitle className="text-white">Get AI Interpretation</CardTitle>
+                  <CardDescription className="text-purple-200">
+                    Let AI provide detailed interpretation of your cards
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="mb-4 text-sm text-purple-200">
+                    <span>Daily interpretations remaining: {remainingQuota}/3</span>
+                  </div>
+                  <Button
+                    onClick={handleGetAiInterpretation}
+                    disabled={isGenerating || remainingQuota <= 0}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  >
+                    {isGenerating ? 'Generating...' : remainingQuota <= 0 ? 'Daily limit reached' : 'Generate Interpretation'}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {showAiInterpretation && (
+              <TarotResult
+                question={question}
                 cards={drawnCards}
                 positions={selectedSpread!.positions}
-                isDrawing={isDrawing}
+                interpretation={aiInterpretation}
+                suggestion={aiSuggestion}
+                isGenerating={isGenerating}
+                onGetSuggestion={handleGetAiSuggestion}
+                onReset={handleReset}
               />
-
-              {!user && (
-                <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
-                  <CardHeader>
-                    <CardTitle className="text-white">获取AI解读</CardTitle>
-                    <CardDescription className="text-purple-200">
-                      登录即可解锁每日免费三次的塔罗牌AI解读
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button
-                      onClick={() => setShowLoginModal(true)}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    >
-                      登录账号
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-
-              {user && !showAiInterpretation && (
-                <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
-                  <CardHeader>
-                    <CardTitle className="text-white">获取AI解读</CardTitle>
-                    <CardDescription className="text-purple-200">
-                      让AI为你详细解读牌面含义
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button
-                      onClick={handleGetAiInterpretation}
-                      disabled={isGenerating || remainingQuota <= 0}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    >
-                      {isGenerating ? '生成中...' : remainingQuota <= 0 ? '今日次数已用完' : '生成解读'}
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-
-              {showAiInterpretation && (
-                <TarotResult
-                  question={question}
-                  cards={drawnCards}
-                  positions={selectedSpread!.positions}
-                  interpretation={aiInterpretation}
-                  suggestion={aiSuggestion}
-                  isGenerating={isGenerating}
-                  onGetSuggestion={handleGetAiSuggestion}
-                  onReset={handleReset}
-                />
-              )}
-            </>
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
 
+      {/* Login Modal */}
       <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
         <DialogContent className="bg-black/80 border-purple-500/30">
           <DialogHeader>
-            <DialogTitle className="text-white">登录账号</DialogTitle>
+            <DialogTitle className="text-white">Sign In</DialogTitle>
             <DialogDescription className="text-purple-200">
-              登录即可解锁每日免费三次的塔罗牌AI解读
+              Sign in to unlock 3 free AI-powered tarot interpretations daily
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="username" className="text-purple-200">用户名</Label>
+              <Label htmlFor="username" className="text-purple-200">Username</Label>
               <Input
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="输入用户名"
+                placeholder="Enter username"
                 className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
               />
             </div>
             <div>
-              <Label htmlFor="email" className="text-purple-200">邮箱</Label>
+              <Label htmlFor="email" className="text-purple-200">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="输入邮箱"
+                placeholder="Enter email"
                 className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
               />
             </div>
@@ -390,7 +369,7 @@ export default function Home() {
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
-              登录
+              Sign In
             </Button>
           </DialogFooter>
         </DialogContent>
