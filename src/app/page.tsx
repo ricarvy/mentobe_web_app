@@ -23,7 +23,7 @@ export default function Home() {
   const [drawnCards, setDrawnCards] = useState<TarotCard[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  const [user, setUser] = useState<{ id: string; username: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,6 +31,7 @@ export default function Home() {
   const [showAiInterpretation, setShowAiInterpretation] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [remainingQuota, setRemainingQuota] = useState(3);
+  const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
 
   // 从localStorage加载用户信息
   useEffect(() => {
@@ -48,6 +49,11 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setRemainingQuota(data.remaining);
+        setQuotaInfo({
+          remaining: data.remaining,
+          total: data.total,
+          isDemo: data.isDemo || false,
+        });
       }
     } catch (error) {
       console.error('Error fetching quota:', error);
@@ -61,7 +67,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -113,7 +119,7 @@ export default function Home() {
       return;
     }
 
-    if (remainingQuota <= 0) {
+    if (!quotaInfo.isDemo && remainingQuota <= 0) {
       alert(t.home.quotaExceeded);
       return;
     }
@@ -296,11 +302,15 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4 text-sm text-purple-200">
-                    <span>{t.home.dailyQuota}: {remainingQuota}/3</span>
+                    {quotaInfo.isDemo ? (
+                      <span>{t.home.dailyQuota}: Unlimited</span>
+                    ) : (
+                      <span>{t.home.dailyQuota}: {remainingQuota}/{quotaInfo.total}</span>
+                    )}
                   </div>
                   <Button
                     onClick={handleGetAiInterpretation}
-                    disabled={isGenerating || remainingQuota <= 0}
+                    disabled={isGenerating || (!quotaInfo.isDemo && remainingQuota <= 0)}
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative overflow-hidden"
                   >
                     {isGenerating && (
@@ -309,7 +319,7 @@ export default function Home() {
                       </div>
                     )}
                     <span className={isGenerating ? 'pl-8' : ''}>
-                      {isGenerating ? `${t.home.generating}...` : remainingQuota <= 0 ? t.home.quotaExceeded : t.home.getAiInterpretation}
+                      {isGenerating ? `${t.home.generating}...` : (!quotaInfo.isDemo && remainingQuota <= 0) ? t.home.quotaExceeded : t.home.getAiInterpretation}
                     </span>
                   </Button>
                 </CardContent>
