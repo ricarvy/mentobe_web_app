@@ -153,6 +153,11 @@ export const en = {
     emailPlaceholder: 'Enter your email',
     passwordPlaceholder: 'Enter your password',
     usernamePlaceholder: 'Choose a username',
+    demoAccount: 'Demo Account',
+    demoAccountHint: 'Quick experience with demo account',
+    demoCredentials: 'Demo Credentials',
+    demoEmail: 'Email: demo@mentobai.com',
+    demoPassword: 'Password: Demo123!',
   },
   privacyPolicy: {
     title: 'Privacy Policy',

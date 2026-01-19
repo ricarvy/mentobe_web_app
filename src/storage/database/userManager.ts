@@ -1,12 +1,20 @@
 import { eq, and, sql, desc } from 'drizzle-orm';
 import { getDb } from 'coze-coding-dev-sdk';
+import bcrypt from 'bcryptjs';
 import { users, insertUserSchema, type User, type InsertUser } from './shared/schema';
 
 export class UserManager {
   async createUser(data: InsertUser): Promise<User> {
     const db = await getDb();
     const validated = insertUserSchema.parse(data);
-    const [user] = await db.insert(users).values(validated).returning();
+    
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(validated.password, 10);
+    
+    const [user] = await db.insert(users).values({
+      ...validated,
+      password: hashedPassword,
+    }).returning();
     return user;
   }
 
@@ -30,12 +38,31 @@ export class UserManager {
 
   async updateUser(id: string, data: Partial<InsertUser>): Promise<User | null> {
     const db = await getDb();
+    const updateData: any = { ...data, updatedAt: new Date() };
+    
+    // Hash password if it's being updated
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+    
     const [user] = await db
       .update(users)
-      .set({ ...data, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(users.id, id))
       .returning();
     return user || null;
+  }
+
+  async verifyPassword(email: string, password: string): Promise<User | null> {
+    const db = await getDb();
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    
+    if (!user) {
+      return null;
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+    return isValid ? user : null;
   }
 }
 

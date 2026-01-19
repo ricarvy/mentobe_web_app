@@ -153,6 +153,11 @@ export const ja = {
     emailPlaceholder: 'メールアドレスを入力',
     passwordPlaceholder: 'パスワードを入力',
     usernamePlaceholder: 'ユーザー名を入力',
+    demoAccount: 'デモアカウント',
+    demoAccountHint: 'デモアカウントで体験',
+    demoCredentials: 'デモアカウント認証情報',
+    demoEmail: 'メール: demo@mentobai.com',
+    demoPassword: 'パスワード: Demo123!',
   },
   privacyPolicy: {
     title: 'プライバシーポリシー',

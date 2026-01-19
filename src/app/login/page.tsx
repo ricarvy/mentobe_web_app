@@ -369,6 +369,21 @@ export default function LoginPage() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
+            {/* Demo Account Info - only for login */}
+            {isLogin && (
+              <div className="w-full p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="h-4 w-4 text-purple-400" />
+                  <span className="text-sm font-semibold text-purple-200">{t.auth.demoAccount}</span>
+                </div>
+                <p className="text-xs text-purple-200/70">{t.auth.demoAccountHint}</p>
+                <div className="text-xs text-purple-200/90 space-y-1 mt-2">
+                  <p>{t.auth.demoCredentials}</p>
+                  <p className="font-mono bg-black/30 px-2 py-1 rounded">{t.auth.demoEmail}</p>
+                  <p className="font-mono bg-black/30 px-2 py-1 rounded">{t.auth.demoPassword}</p>
+                </div>
+              </div>
+            )}
             <div className="text-center text-sm text-purple-200/80">
               {isLogin ? t.auth.dontHaveAccount : t.auth.alreadyHaveAccount}
               <button

@@ -153,6 +153,11 @@ export const zh = {
     emailPlaceholder: '请输入邮箱',
     passwordPlaceholder: '请输入密码',
     usernamePlaceholder: '请选择用户名',
+    demoAccount: '演示账号',
+    demoAccountHint: '使用演示账号快速体验',
+    demoCredentials: '演示账号凭据',
+    demoEmail: '邮箱: demo@mentobai.com',
+    demoPassword: '密码: Demo123!',
   },
   privacyPolicy: {
     title: '隐私政策',

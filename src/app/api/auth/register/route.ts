@@ -5,11 +5,11 @@ import type { InsertUser } from '@/storage/database';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { username, email }: { username: string; email: string } = body;
+    const { username, email, password }: { username: string; email: string; password: string } = body;
 
-    if (!username || !email) {
+    if (!username || !email || !password) {
       return NextResponse.json(
-        { error: 'Username and email are required' },
+        { error: 'Username, email and password are required' },
         { status: 400 }
       );
     }
@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
     const userData: InsertUser = {
       username,
       email,
+      password,
     };
 
     const user = await userManager.createUser(userData);
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       username: user.username,
       email: user.email,
+      isActive: user.isActive,
     });
   } catch (error) {
     console.error('Error in register route:', error);

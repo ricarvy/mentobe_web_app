@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dailyQuotaManager } from '@/storage/database';
+import { appConfig } from '@/config';
+import { DEMO_ACCOUNT } from '@/config/demo-account';
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,10 +18,21 @@ export async function GET(request: NextRequest) {
     const remaining = await dailyQuotaManager.getRemainingQuota(userId);
     const quota = await dailyQuotaManager.getTodayQuota(userId);
 
+    // 演示账号显示无限配额
+    if (userId === DEMO_ACCOUNT.id) {
+      return NextResponse.json({
+        remaining: 999999,
+        used: 0,
+        total: 'Unlimited',
+        isDemo: true,
+      });
+    }
+
     return NextResponse.json({
       remaining,
       used: quota?.count || 0,
-      total: 3,
+      total: appConfig.features.dailyQuota.free,
+      isDemo: false,
     });
   } catch (error) {
     console.error('Error in quota route:', error);
