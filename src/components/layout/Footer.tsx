@@ -25,9 +25,9 @@ export function Footer() {
       { name: t.footer.documentation, href: '#docs' },
       { name: t.footer.helpCenter, href: '#help' },
       { name: t.footer.community, href: '#community' },
-      { name: t.footer.termsOfService, href: '#terms' },
     ],
     legal: [
+      { name: t.footer.termsOfService, href: '/terms' },
       { name: t.footer.privacyPolicy, href: '/privacy' },
       { name: t.footer.cookiePolicy, href: '#cookies' },
       { name: t.footer.gdpr, href: '#gdpr' },
@@ -137,7 +137,7 @@ export function Footer() {
               <Link href="/privacy" className="text-sm text-purple-200/60 hover:text-white transition-colors">
                 {t.footer.privacyPolicy}
               </Link>
-              <Link href="#terms" className="text-sm text-purple-200/60 hover:text-white transition-colors">
+              <Link href="/terms" className="text-sm text-purple-200/60 hover:text-white transition-colors">
                 {t.footer.termsOfService}
               </Link>
               <Link href="#cookies" className="text-sm text-purple-200/60 hover:text-white transition-colors">
