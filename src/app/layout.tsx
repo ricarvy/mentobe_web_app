@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Footer } from '@/components/layout/Footer';
 import { StarBackground } from '@/components/StarBackground';
 import { I18nProvider } from '@/lib/i18n';
+import { UserProvider } from '@/lib/userContext';
 
 export const metadata: Metadata = {
   title: {
@@ -188,17 +189,19 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <I18nProvider>
-          <StarBackground />
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <div className="flex flex-1">
-              <Sidebar />
-              <main className="flex-1 lg:ml-64">
-                {children}
-              </main>
+          <UserProvider>
+            <StarBackground />
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <div className="flex flex-1">
+                <Sidebar />
+                <main className="flex-1 lg:ml-64">
+                  {children}
+                </main>
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
+          </UserProvider>
         </I18nProvider>
       </body>
     </html>

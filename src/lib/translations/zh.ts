@@ -6,6 +6,9 @@ export const zh = {
     logout: '退出',
     getStarted: '开始使用',
     signIn: '登录',
+    profile: '个人资料',
+    username: '用户名',
+    email: '邮箱',
   },
   header: {
     home: '首页',
@@ -74,6 +77,11 @@ export const zh = {
     suggestedQuestion4: '在个人成长方面我应该关注什么？',
     suggestedQuestion5: '我是否需要注意某些障碍？',
     suggestedQuestion6: '针对我的当前情况，牌面有什么指引？',
+    history: '解读历史',
+    loading: '加载中...',
+    noHistory: '暂无解读历史',
+    startReading: '开始你的第一次塔罗解读',
+    newReading: '新解读',
   },
   spreadSelector: {
     singleCardTitle: '单牌解读',

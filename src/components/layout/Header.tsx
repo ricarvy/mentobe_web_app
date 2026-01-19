@@ -5,13 +5,15 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, Sparkles, Globe } from 'lucide-react';
+import { Menu, Sparkles, Globe, User, LogOut } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { languages } from '@/lib/translations';
+import { useUser } from '@/lib/userContext';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useI18n();
+  const { user, logout } = useUser();
 
   const navItems = [
     { name: t.header.home, href: '/' },
@@ -71,19 +73,50 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link href="/login">
-              <Button
-                variant="ghost"
-                className="text-purple-200 hover:text-white hover:bg-purple-500/10"
-              >
-                {t.common.signIn}
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-                {t.common.getStarted}
-              </Button>
-            </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-2"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>{user.username}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-black/90 border-purple-500/20">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center gap-2 cursor-pointer text-purple-200 hover:text-white hover:bg-purple-500/10">
+                      <User className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="flex items-center gap-2 text-purple-200 hover:text-white hover:bg-purple-500/10 cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>{t.common.logout}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button
+                    variant="ghost"
+                    className="text-purple-200 hover:text-white hover:bg-purple-500/10"
+                  >
+                    {t.common.signIn}
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                    {t.common.getStarted}
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -131,19 +164,46 @@ export function Header() {
                 </div>
 
                 <div className="flex flex-col gap-3 mt-6">
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant="ghost"
-                      className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
-                    >
-                      {t.common.signIn}
-                    </Button>
-                  </Link>
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
-                      {t.common.getStarted}
-                    </Button>
-                  </Link>
+                  {user ? (
+                    <>
+                      <Link href="/profile" onClick={() => setIsOpen(false)}>
+                        <Button
+                          variant="ghost"
+                          className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full justify-start gap-2"
+                        >
+                          <User className="h-4 w-4" />
+                          <span>{user.username}</span>
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          logout();
+                          setIsOpen(false);
+                        }}
+                        className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full justify-start gap-2"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>{t.common.logout}</span>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        <Button
+                          variant="ghost"
+                          className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
+                        >
+                          {t.common.signIn}
+                        </Button>
+                      </Link>
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
+                          {t.common.getStarted}
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </nav>
             </SheetContent>

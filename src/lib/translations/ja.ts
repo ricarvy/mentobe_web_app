@@ -6,6 +6,9 @@ export const ja = {
     logout: 'ログアウト',
     getStarted: '始める',
     signIn: 'サインイン',
+    profile: 'プロフィール',
+    username: 'ユーザー名',
+    email: 'メール',
   },
   header: {
     home: 'ホーム',
@@ -74,6 +77,11 @@ export const ja = {
     suggestedQuestion4: '個人の成長に焦点を当てるべき点は何ですか？',
     suggestedQuestion5: '注意すべき障害はありますか？',
     suggestedQuestion6: '現在の状況について、カードはどのようなガイダンスを提供していますか？',
+    history: 'リーディング履歴',
+    loading: '読み込み中...',
+    noHistory: 'リーディング履歴がありません',
+    startReading: '初めてのタロットリーディングを始めましょう',
+    newReading: '新規リーディング',
   },
   spreadSelector: {
     singleCardTitle: 'シングルカード',

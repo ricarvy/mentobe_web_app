@@ -6,6 +6,9 @@ export const en = {
     logout: 'Logout',
     getStarted: 'Get Started',
     signIn: 'Sign In',
+    profile: 'Profile',
+    username: 'Username',
+    email: 'Email',
   },
   header: {
     home: 'Home',
@@ -74,6 +77,11 @@ export const en = {
     suggestedQuestion4: 'What should I focus on in my personal growth?',
     suggestedQuestion5: 'Are there obstacles in my path that I should be aware of?',
     suggestedQuestion6: 'What guidance do the cards have for my current situation?',
+    history: 'Reading History',
+    loading: 'Loading...',
+    noHistory: 'No reading history yet',
+    startReading: 'Start your first tarot reading today',
+    newReading: 'New Reading',
   },
   spreadSelector: {
     singleCardTitle: 'Single Card',
