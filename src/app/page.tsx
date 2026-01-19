@@ -30,7 +30,6 @@ export default function Home() {
   const [aiInterpretation, setAiInterpretation] = useState('');
   const [showAiInterpretation, setShowAiInterpretation] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [aiSuggestion, setAiSuggestion] = useState('');
   const [remainingQuota, setRemainingQuota] = useState(3);
 
   // 从localStorage加载用户信息
@@ -164,32 +163,6 @@ export default function Home() {
     }
   };
 
-  const handleGetAiSuggestion = async () => {
-    setIsGenerating(true);
-
-    try {
-      const response = await fetch('/api/tarot/suggest', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question,
-          cards: drawnCards,
-          interpretation: aiInterpretation,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to get suggestion');
-
-      const data = await response.json();
-      setAiSuggestion(data.suggestion);
-    } catch (error) {
-      console.error('Error:', error);
-      setAiSuggestion('Failed to generate suggestion, please try again later');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const handleReset = () => {
     setSelectedSpread(null);
     setQuestion('');
@@ -198,7 +171,6 @@ export default function Home() {
     setShowResult(false);
     setAiInterpretation('');
     setShowAiInterpretation(false);
-    setAiSuggestion('');
   };
 
   const handleSelectQuestion = (selectedQuestion: string) => {
@@ -350,9 +322,7 @@ export default function Home() {
                 cards={drawnCards}
                 positions={selectedSpread!.positions}
                 interpretation={aiInterpretation}
-                suggestion={aiSuggestion}
                 isGenerating={isGenerating}
-                onGetSuggestion={handleGetAiSuggestion}
                 onReset={handleReset}
               />
             )}

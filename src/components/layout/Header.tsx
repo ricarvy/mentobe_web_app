@@ -17,11 +17,8 @@ export function Header() {
 
   const navItems = [
     { name: t.header.home, href: '/' },
-    { name: t.header.tarotSpreads, href: '#spreads' },
     { name: t.tarotCards?.title || 'All Tarot Cards', href: '/tarot-cards' },
     { name: t.header.pricing, href: '/pricing' },
-    { name: t.header.howItWorks, href: '#how-it-works' },
-    { name: t.header.about, href: '#about' },
   ];
 
   return (
