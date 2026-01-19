@@ -146,3 +146,17 @@ body {
   -webkit-backface-visibility: hidden;
 }
 
+/* 星星闪烁动画 */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+

@@ -12,6 +12,7 @@ export const en = {
     tarotSpreads: 'Tarot Spreads',
     howItWorks: 'How It Works',
     about: 'About',
+    pricing: 'Pricing',
   },
   sidebar: {
     quickActions: 'Quick Actions',
@@ -253,6 +254,108 @@ export const en = {
       email: 'Email: ',
       emailValue: 'contact@mentobai.com',
       response: 'We will respond to your inquiry within a reasonable time.',
+    },
+  },
+  pricing: {
+    title: 'Choose Your Plan',
+    subtitle: 'Unlock unlimited AI tarot readings and personalized insights',
+    billingCycle: {
+      monthly: 'Monthly',
+      yearly: 'Yearly',
+      save: 'Save {percent}%',
+    },
+    plans: {
+      free: {
+        name: 'Free',
+        description: 'Perfect for getting started',
+        price: '0',
+        features: [
+          '3 AI interpretations per day',
+          'Basic tarot spreads',
+          'Limited history access',
+          'Standard response time',
+        ],
+        button: 'Get Started',
+        popular: false,
+      },
+      monthly: {
+        name: 'Pro',
+        description: 'For serious seekers',
+        price: '19.9',
+        period: '/month',
+        features: [
+          'Unlimited AI interpretations',
+          'All tarot spreads available',
+          'Full history access',
+          'Priority response time',
+          'Personalized insights',
+        ],
+        button: 'Subscribe Now',
+        popular: true,
+      },
+      yearly: {
+        name: 'Premium',
+        description: 'Best value for enthusiasts',
+        price: '109.9',
+        period: '/year',
+        features: [
+          'Everything in Pro',
+          'Unlimited AI interpretations',
+          'All premium spreads',
+          'Full history access',
+          'Priority support',
+          'Early access to new features',
+        ],
+        button: 'Subscribe Now',
+        popular: false,
+      },
+    },
+    features: {
+      title: 'Why Choose Our Premium Plans?',
+      subtitle: 'Get the most out of your tarot journey',
+      items: [
+        {
+          title: 'Unlimited AI Readings',
+          description: 'No more daily limits on AI interpretations',
+        },
+        {
+          title: 'Advanced Spreads',
+          description: 'Access to premium tarot spreads',
+        },
+        {
+          title: 'Priority Support',
+          description: 'Get help when you need it most',
+        },
+        {
+          title: 'Full History Access',
+          description: 'Never lose your past readings',
+        },
+      ],
+    },
+    guarantee: {
+      title: '30-Day Money-Back Guarantee',
+      description: 'Not satisfied? Get a full refund within 30 days, no questions asked.',
+    },
+    faq: {
+      title: 'Frequently Asked Questions',
+      questions: [
+        {
+          question: 'How does the free plan work?',
+          answer: 'The free plan gives you 3 AI interpretations per day with access to basic tarot spreads. No credit card required.',
+        },
+        {
+          question: 'Can I cancel my subscription anytime?',
+          answer: 'Yes, you can cancel your subscription at any time. Your access will continue until the end of your billing period.',
+        },
+        {
+          question: 'What payment methods do you accept?',
+          answer: 'We accept all major credit cards and PayPal through Paddle, our secure payment processor.',
+        },
+        {
+          question: 'Is my payment information secure?',
+          answer: 'Absolutely. We use Paddle for payment processing, which is PCI DSS compliant and uses bank-grade encryption.',
+        },
+      ],
     },
   },
 };

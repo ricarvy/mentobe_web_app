@@ -10,6 +10,7 @@ export const zh = {
   header: {
     home: '首页',
     tarotSpreads: '牌阵',
+    pricing: '定价',
     howItWorks: '如何使用',
     about: '关于',
   },
@@ -253,6 +254,108 @@ export const zh = {
       email: '电子邮件：',
       emailValue: 'contact@mentobai.com',
       response: '我们将在合理时间内回复您的询问。',
+    },
+  },
+  pricing: {
+    title: '选择您的计划',
+    subtitle: '解锁无限AI塔罗解读和个性化洞察',
+    billingCycle: {
+      monthly: '按月付费',
+      yearly: '按年付费',
+      save: '节省 {percent}%',
+    },
+    plans: {
+      free: {
+        name: '免费版',
+        description: '适合新手使用',
+        price: '0',
+        features: [
+          '每天 3 次 AI 解读',
+          '基础塔罗牌阵',
+          '有限的历史记录',
+          '标准响应时间',
+        ],
+        button: '开始使用',
+        popular: false,
+      },
+      monthly: {
+        name: '专业版',
+        description: '适合深度探索者',
+        price: '19.9',
+        period: '/月',
+        features: [
+          '无限 AI 解读',
+          '所有塔罗牌阵',
+          '完整历史记录',
+          '优先响应时间',
+          '个性化洞察',
+        ],
+        button: '立即订阅',
+        popular: true,
+      },
+      yearly: {
+        name: '高级版',
+        description: '爱好者的最佳选择',
+        price: '109.9',
+        period: '/年',
+        features: [
+          '专业版的所有功能',
+          '无限 AI 解读',
+          '所有高级牌阵',
+          '完整历史记录',
+          '优先支持',
+          '新功能优先体验',
+        ],
+        button: '立即订阅',
+        popular: false,
+      },
+    },
+    features: {
+      title: '为什么选择我们的高级计划？',
+      subtitle: '充分体验塔罗之旅',
+      items: [
+        {
+          title: '无限 AI 解读',
+          description: '不再有每日解读限制',
+        },
+        {
+          title: '高级牌阵',
+          description: '访问所有高级塔罗牌阵',
+        },
+        {
+          title: '优先支持',
+          description: '在您需要时获得帮助',
+        },
+        {
+          title: '完整历史记录',
+          description: '永远不会丢失您的解读记录',
+        },
+      ],
+    },
+    guarantee: {
+      title: '30天退款保证',
+      description: '不满意吗？在30天内获得全额退款，无需任何理由。',
+    },
+    faq: {
+      title: '常见问题',
+      questions: [
+        {
+          question: '免费版如何使用？',
+          answer: '免费版每天提供 3 次 AI 解读，可使用基础塔罗牌阵。无需信用卡。',
+        },
+        {
+          question: '我可以随时取消订阅吗？',
+          answer: '是的，您可以随时取消订阅。您的使用权将持续到计费周期结束。',
+        },
+        {
+          question: '你们接受哪些支付方式？',
+          answer: '我们通过 Paddle 安全支付系统接受所有主要信用卡和 PayPal。',
+        },
+        {
+          question: '我的支付信息安全吗？',
+          answer: '绝对安全。我们使用 Paddle 进行支付处理，它符合 PCI DSS 标准，并使用银行级加密技术。',
+        },
+      ],
     },
   },
 };

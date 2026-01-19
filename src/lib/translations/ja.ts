@@ -10,6 +10,7 @@ export const ja = {
   header: {
     home: 'ホーム',
     tarotSpreads: 'タロットスプレッド',
+    pricing: '料金',
     howItWorks: '使い方',
     about: 'について',
   },
@@ -253,6 +254,108 @@ export const ja = {
       email: 'メール：',
       emailValue: 'contact@mentobai.com',
       response: '合理的な時間内にお問い合わせに回答いたします。',
+    },
+  },
+  pricing: {
+    title: 'プランを選択',
+    subtitle: '無制限のAIタロットリーディングとパーソナライズされた洞察を解放',
+    billingCycle: {
+      monthly: '月額',
+      yearly: '年額',
+      save: '{percent}%お得',
+    },
+    plans: {
+      free: {
+        name: '無料',
+        description: '初心者に最適',
+        price: '0',
+        features: [
+          '1日3回のAI解釈',
+          '基本的なタロットスプレッド',
+          '履歴へのアクセス制限',
+          '標準応答時間',
+        ],
+        button: '始める',
+        popular: false,
+      },
+      monthly: {
+        name: 'プロ',
+        description: '真剣な探求者に',
+        price: '19.9',
+        period: '/月',
+        features: [
+          '無制限のAI解釈',
+          'すべてのタロットスプレッド',
+          '履歴への完全アクセス',
+          '優先応答時間',
+          'パーソナライズされた洞察',
+        ],
+        button: '今すぐ購読',
+        popular: true,
+      },
+      yearly: {
+        name: 'プレミアム',
+        description: '愛好家に最適',
+        price: '109.9',
+        period: '/年',
+        features: [
+          'プロのすべての機能',
+          '無制限のAI解釈',
+          'すべてのプレミアムスプレッド',
+          '履歴への完全アクセス',
+          '優先サポート',
+          '新機能への早期アクセス',
+        ],
+        button: '今すぐ購読',
+        popular: false,
+      },
+    },
+    features: {
+      title: 'プレミアムプランを選ぶ理由',
+      subtitle: 'タロットの旅を最大限に活用',
+      items: [
+        {
+          title: '無制限のAIリーディング',
+          description: 'AI解釈の毎日制限なし',
+        },
+        {
+          title: '高度なスプレッド',
+          description: 'プレミアムタロットスプレッドにアクセス',
+        },
+        {
+          title: '優先サポート',
+          description: '最も必要なときにヘルプを受ける',
+        },
+        {
+          title: '完全な履歴アクセス',
+          description: '過去のリーディングを失わない',
+        },
+      ],
+    },
+    guarantee: {
+      title: '30日間返金保証',
+      description: 'ご満足いただけない場合、30日以内に理由を問わず全額返金いたします。',
+    },
+    faq: {
+      title: 'よくある質問',
+      questions: [
+        {
+          question: '無料プランはどのように機能しますか？',
+          answer: '無料プランでは、1日3回のAI解釈と基本的なタロットスプレッドにアクセスできます。クレジットカードは不要です。',
+        },
+        {
+          question: 'いつでもサブスクリプションをキャンセルできますか？',
+          answer: 'はい、いつでもサブスクリプションをキャンセルできます。アクセスは請求期間の終了まで継続されます。',
+        },
+        {
+          question: 'どのような支払い方法を受け付けていますか？',
+          answer: '安全な決済処理業者であるPaddleを通じて、すべての主要なクレジットカードとPayPalを受け付けています。',
+        },
+        {
+          question: '支払い情報は安全ですか？',
+          answer: 'はい、絶対に安全です。支払い処理にはPaddleを使用しており、PCI DSS準拠で銀行レベルの暗号化を使用しています。',
+        },
+      ],
     },
   },
 };
