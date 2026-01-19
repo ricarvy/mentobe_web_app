@@ -8,17 +8,27 @@
  * - DEMO_ACCOUNT_PASSWORD: 演示账号密码 (默认: Demo123!)
  */
 
-// 先读取环境变量，提供默认值
-const DEMO_EMAIL = process.env.DEMO_ACCOUNT_EMAIL || 'demo@mentobai.com';
-const DEMO_PASSWORD = process.env.DEMO_ACCOUNT_PASSWORD || 'Demo123!';
+// 默认配置
+const DEFAULT_CONFIG = {
+  email: 'demo@mentobai.com',
+  password: 'Demo123!',
+  enabled: true,
+};
+
+// 读取环境变量
+const DEMO_EMAIL = process.env.DEMO_ACCOUNT_EMAIL || DEFAULT_CONFIG.email;
+const DEMO_PASSWORD = process.env.DEMO_ACCOUNT_PASSWORD || DEFAULT_CONFIG.password;
 const DEMO_ENABLED = process.env.DEMO_ACCOUNT_ENABLED !== 'false';
 
 console.log('[Demo Account Config]', {
   enabled: DEMO_ENABLED,
   email: DEMO_EMAIL,
+  password: '***',
   passwordLength: DEMO_PASSWORD.length,
+  environment: process.env.NODE_ENV || 'unknown',
 });
 
+// 演示账号配置对象
 export const DEMO_ACCOUNT = {
   email: DEMO_EMAIL,
   password: DEMO_PASSWORD,
@@ -26,13 +36,21 @@ export const DEMO_ACCOUNT = {
   id: 'demo-user-id',
   isActive: true,
   unlimitedQuota: true, // 无限限额
-} as const;
+};
 
 // 演示账号功能开关
 export const DEMO_ACCOUNT_ENABLED = DEMO_ENABLED;
 
 // 验证是否为演示账号
 export function isDemoAccount(email: string, password: string): boolean {
+  console.log('[Demo Account Verification Start]', {
+    demoEnabled: DEMO_ACCOUNT_ENABLED,
+    demoEmail: DEMO_ACCOUNT.email,
+    demoPasswordLength: DEMO_ACCOUNT.password.length,
+    inputEmail: email,
+    inputPasswordLength: password?.length,
+  });
+
   if (!DEMO_ACCOUNT_ENABLED) {
     console.log('[Demo Account] Demo account is disabled');
     return false;
@@ -44,16 +62,22 @@ export function isDemoAccount(email: string, password: string): boolean {
     return false;
   }
 
-  // 确保 DEMO_ACCOUNT.email 和 password 存在
-  const demoEmail = DEMO_ACCOUNT.email || 'demo@mentobai.com';
-  const demoPassword = DEMO_ACCOUNT.password || 'Demo123!';
+  // 使用配置的值
+  const demoEmail = DEMO_ACCOUNT.email;
+  const demoPassword = DEMO_ACCOUNT.password;
 
-  const match = email === demoEmail && password === demoPassword;
-  console.log('[Demo Account Check]', {
-    enabled: DEMO_ACCOUNT_ENABLED,
-    emailMatch: email === demoEmail,
-    passwordMatch: password === demoPassword,
+  const emailMatch = email === demoEmail;
+  const passwordMatch = password === demoPassword;
+  const match = emailMatch && passwordMatch;
+
+  console.log('[Demo Account Verification Result]', {
+    emailMatch,
+    passwordMatch,
     isMatch: match,
+    inputEmail: email,
+    inputPassword: password,
+    expectedEmail: demoEmail,
+    expectedPassword: demoPassword,
   });
 
   return match;
