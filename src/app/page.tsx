@@ -11,8 +11,10 @@ import { spreads, drawCards, type TarotCard, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
+import { useI18n } from '@/lib/i18n';
 
 export default function Home() {
+  const { t } = useI18n();
   const [selectedSpread, setSelectedSpread] = useState<Spread | null>(null);
   const [question, setQuestion] = useState('');
   const [drawnCards, setDrawnCards] = useState<TarotCard[]>([]);
@@ -52,7 +54,7 @@ export default function Home() {
 
   const handleLogin = async () => {
     if (!username.trim() || !email.trim()) {
-      alert('Please enter username and email');
+      alert(`${t.auth.pleaseEnterUsername} and ${t.auth.pleaseEnterEmail}`);
       return;
     }
 
@@ -65,7 +67,7 @@ export default function Home() {
 
       if (!response.ok) {
         const error = await response.json();
-        alert(error.error || 'Login failed');
+        alert(error.error || t.auth.loginFailed);
         return;
       }
 
@@ -76,7 +78,7 @@ export default function Home() {
       await fetchQuota(userData.id);
     } catch (error) {
       console.error('Error:', error);
-      alert('Login failed, please try again later');
+      alert(t.auth.loginFailed);
     }
   };
 
@@ -110,7 +112,7 @@ export default function Home() {
     }
 
     if (remainingQuota <= 0) {
-      alert('Daily interpretation limit reached, please try again tomorrow');
+      alert(t.home.quotaExceeded);
       return;
     }
 
@@ -202,19 +204,19 @@ export default function Home() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-            Discover Your Future
+            {t.home.title}
           </h1>
           <p className="text-lg text-purple-200">
-            Unlock the mysteries of life with AI-powered tarot readings
+            {t.home.subtitle}
           </p>
         </div>
 
         {!selectedSpread && (
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30" id="spreads">
             <CardHeader>
-              <CardTitle className="text-white">Choose a Tarot Spread</CardTitle>
+              <CardTitle className="text-white">{t.home.selectSpread}</CardTitle>
               <CardDescription className="text-purple-200">
-                Select a spread to begin your tarot journey
+                {t.home.welcome}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -237,12 +239,12 @@ export default function Home() {
             <CardContent className="space-y-6">
               <div>
                 <Label className="block text-sm font-medium mb-2 text-purple-200">
-                  Your Question
+                  {t.home.chooseQuestion}
                 </Label>
                 <Textarea
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
-                  placeholder="Enter your question..."
+                  placeholder={t.home.questionPlaceholder}
                   className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 min-h-[100px]"
                 />
               </div>
@@ -252,7 +254,7 @@ export default function Home() {
                 disabled={!question.trim() || isDrawing}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
-                {isDrawing ? 'Drawing cards...' : 'Start Reading'}
+                {isDrawing ? t.home.drawCards : t.home.drawCards}
               </Button>
 
               <Button
@@ -260,7 +262,7 @@ export default function Home() {
                 variant="outline"
                 className="w-full border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
               >
-                Back to Spreads
+                {t.header.tarotSpreads}
               </Button>
             </CardContent>
           </Card>
@@ -277,9 +279,9 @@ export default function Home() {
             {!user && (
               <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
                 <CardHeader>
-                  <CardTitle className="text-white">Get AI Interpretation</CardTitle>
+                  <CardTitle className="text-white">{t.home.getAiInterpretation}</CardTitle>
                   <CardDescription className="text-purple-200">
-                    Sign in to unlock 3 free AI-powered tarot interpretations daily
+                    {t.home.loginRequired}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -287,7 +289,7 @@ export default function Home() {
                     onClick={() => setShowLoginModal(true)}
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   >
-                    Sign In
+                    {t.common.signIn}
                   </Button>
                 </CardContent>
               </Card>
@@ -296,21 +298,21 @@ export default function Home() {
             {user && !showAiInterpretation && (
               <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
                 <CardHeader>
-                  <CardTitle className="text-white">Get AI Interpretation</CardTitle>
+                  <CardTitle className="text-white">{t.home.getAiInterpretation}</CardTitle>
                   <CardDescription className="text-purple-200">
-                    Let AI provide detailed interpretation of your cards
+                    {t.home.interpretation}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4 text-sm text-purple-200">
-                    <span>Daily interpretations remaining: {remainingQuota}/3</span>
+                    <span>{t.home.dailyQuota}: {remainingQuota}/3</span>
                   </div>
                   <Button
                     onClick={handleGetAiInterpretation}
                     disabled={isGenerating || remainingQuota <= 0}
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   >
-                    {isGenerating ? 'Generating...' : remainingQuota <= 0 ? 'Daily limit reached' : 'Generate Interpretation'}
+                    {isGenerating ? t.home.generating : remainingQuota <= 0 ? t.home.quotaExceeded : t.home.getAiInterpretation}
                   </Button>
                 </CardContent>
               </Card>
@@ -336,30 +338,30 @@ export default function Home() {
       <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
         <DialogContent className="bg-black/80 border-purple-500/30">
           <DialogHeader>
-            <DialogTitle className="text-white">Sign In</DialogTitle>
+            <DialogTitle className="text-white">{t.common.signIn}</DialogTitle>
             <DialogDescription className="text-purple-200">
-              Sign in to unlock 3 free AI-powered tarot interpretations daily
+              {t.home.loginRequired}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="username" className="text-purple-200">Username</Label>
+              <Label htmlFor="username" className="text-purple-200">{t.auth.username}</Label>
               <Input
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
+                placeholder={t.auth.pleaseEnterUsername}
                 className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
               />
             </div>
             <div>
-              <Label htmlFor="email" className="text-purple-200">Email</Label>
+              <Label htmlFor="email" className="text-purple-200">{t.auth.email}</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter email"
+                placeholder={t.auth.pleaseEnterEmail}
                 className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
               />
             </div>
@@ -369,7 +371,7 @@ export default function Home() {
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
-              Sign In
+              {t.common.signIn}
             </Button>
           </DialogFooter>
         </DialogContent>

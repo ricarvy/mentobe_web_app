@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronRight, ChevronDown, Book, Sparkles, History, Settings, HelpCircle, Menu } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [spreadsOpen, setSpreadsOpen] = useState(false);
+  const { t } = useI18n();
 
   const spreads = [
     { name: 'Single Card', id: 'single', description: 'Quick insights for a single question' },
@@ -25,15 +27,15 @@ export function Sidebar() {
           <div className="space-y-6">
             {/* Quick Actions */}
             <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Quick Actions</h3>
+              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">{t.sidebar.quickActions}</h3>
               <div className="space-y-1">
                 <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
                   <Sparkles className="h-4 w-4" />
-                  New Reading
+                  {t.sidebar.newReading}
                 </Link>
                 <Link href="#history" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
                   <History className="h-4 w-4" />
-                  Reading History
+                  {t.sidebar.readingHistory}
                 </Link>
               </div>
             </div>
@@ -45,7 +47,7 @@ export function Sidebar() {
                   <Button variant="ghost" className="w-full justify-between px-2 text-purple-300 hover:text-white hover:bg-purple-500/10">
                     <div className="flex items-center gap-2">
                       <Book className="h-4 w-4" />
-                      <span className="text-sm font-semibold">Tarot Spreads</span>
+                      <span className="text-sm font-semibold">{t.sidebar.tarotSpreads}</span>
                     </div>
                     {spreadsOpen ? (
                       <ChevronDown className="h-4 w-4" />
@@ -71,15 +73,15 @@ export function Sidebar() {
 
             {/* Resources */}
             <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Resources</h3>
+              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">{t.sidebar.resources}</h3>
               <div className="space-y-1">
                 <Link href="#how-it-works" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
                   <HelpCircle className="h-4 w-4" />
-                  How It Works
+                  {t.header.howItWorks}
                 </Link>
                 <Link href="#about" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors">
                   <Settings className="h-4 w-4" />
-                  About
+                  {t.header.about}
                 </Link>
               </div>
             </div>
@@ -117,7 +119,7 @@ export function Sidebar() {
           <div className="space-y-6">
             {/* Quick Actions */}
             <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Quick Actions</h3>
+              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">{t.sidebar.quickActions}</h3>
               <div className="space-y-1">
                 <Link
                   href="/"
@@ -125,7 +127,7 @@ export function Sidebar() {
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
                 >
                   <Sparkles className="h-4 w-4" />
-                  New Reading
+                  {t.sidebar.newReading}
                 </Link>
                 <Link
                   href="#history"
@@ -133,7 +135,7 @@ export function Sidebar() {
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
                 >
                   <History className="h-4 w-4" />
-                  Reading History
+                  {t.sidebar.readingHistory}
                 </Link>
               </div>
             </div>
@@ -145,7 +147,7 @@ export function Sidebar() {
                   <Button variant="ghost" className="w-full justify-between px-2 text-purple-300 hover:text-white hover:bg-purple-500/10">
                     <div className="flex items-center gap-2">
                       <Book className="h-4 w-4" />
-                      <span className="text-sm font-semibold">Tarot Spreads</span>
+                      <span className="text-sm font-semibold">{t.sidebar.tarotSpreads}</span>
                     </div>
                     {spreadsOpen ? (
                       <ChevronDown className="h-4 w-4" />
@@ -172,7 +174,7 @@ export function Sidebar() {
 
             {/* Resources */}
             <div>
-              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">Resources</h3>
+              <h3 className="mb-3 px-2 text-sm font-semibold text-purple-300">{t.sidebar.resources}</h3>
               <div className="space-y-1">
                 <Link
                   href="#how-it-works"
@@ -180,7 +182,7 @@ export function Sidebar() {
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
                 >
                   <HelpCircle className="h-4 w-4" />
-                  How It Works
+                  {t.header.howItWorks}
                 </Link>
                 <Link
                   href="#about"
@@ -188,7 +190,7 @@ export function Sidebar() {
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-purple-200 hover:bg-purple-500/10 hover:text-white transition-colors"
                 >
                   <Settings className="h-4 w-4" />
-                  About
+                  {t.header.about}
                 </Link>
               </div>
             </div>

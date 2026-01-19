@@ -2,34 +2,36 @@
 
 import Link from 'next/link';
 import { Sparkles, Twitter, Instagram, Facebook, Mail } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export function Footer() {
+  const { t } = useI18n();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     product: [
-      { name: 'Features', href: '#features' },
-      { name: 'Pricing', href: '#pricing' },
-      { name: 'Tarot Spreads', href: '#spreads' },
-      { name: 'API', href: '#api' },
+      { name: t.footer.features, href: '#features' },
+      { name: t.footer.pricing, href: '#pricing' },
+      { name: t.header.tarotSpreads, href: '#spreads' },
+      { name: t.footer.api, href: '#api' },
     ],
     company: [
-      { name: 'About Us', href: '#about' },
-      { name: 'Blog', href: '#blog' },
-      { name: 'Careers', href: '#careers' },
-      { name: 'Contact', href: '#contact' },
+      { name: t.footer.aboutUs, href: '#about' },
+      { name: t.footer.blog, href: '#blog' },
+      { name: t.footer.careers, href: '#careers' },
+      { name: t.footer.contact, href: '#contact' },
     ],
     resources: [
-      { name: 'Documentation', href: '#docs' },
-      { name: 'Help Center', href: '#help' },
-      { name: 'Community', href: '#community' },
-      { name: 'Terms of Service', href: '#terms' },
+      { name: t.footer.documentation, href: '#docs' },
+      { name: t.footer.helpCenter, href: '#help' },
+      { name: t.footer.community, href: '#community' },
+      { name: t.footer.termsOfService, href: '#terms' },
     ],
     legal: [
-      { name: 'Privacy Policy', href: '#privacy' },
-      { name: 'Cookie Policy', href: '#cookies' },
-      { name: 'GDPR', href: '#gdpr' },
-      { name: 'Disclaimer', href: '#disclaimer' },
+      { name: t.footer.privacyPolicy, href: '#privacy' },
+      { name: t.footer.cookiePolicy, href: '#cookies' },
+      { name: t.footer.gdpr, href: '#gdpr' },
+      { name: t.footer.disclaimer, href: '#disclaimer' },
     ],
   };
 
@@ -54,7 +56,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-sm text-purple-200/80 max-w-sm">
-              Discover the mysteries of the future with AI-powered tarot readings. Get personalized insights and guidance for your life journey.
+              {t.footer.description}
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-4 mt-6">
@@ -75,7 +77,7 @@ export function Footer() {
 
           {/* Product Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Product</h4>
+            <h4 className="text-sm font-semibold text-white mb-4">{t.footer.product}</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link) => (
                 <li key={link.name}>
@@ -92,7 +94,7 @@ export function Footer() {
 
           {/* Company Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Company</h4>
+            <h4 className="text-sm font-semibold text-white mb-4">{t.footer.company}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -109,7 +111,7 @@ export function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Legal</h4>
+            <h4 className="text-sm font-semibold text-white mb-4">{t.footer.legal}</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
@@ -129,17 +131,17 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-purple-500/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-purple-200/60">
-              © {currentYear} Tarot AI. All rights reserved.
+              © {currentYear} Tarot AI. {t.footer.allRightsReserved}.
             </p>
             <div className="flex items-center gap-6">
               <Link href="#privacy" className="text-sm text-purple-200/60 hover:text-white transition-colors">
-                Privacy
+                {t.footer.privacyPolicy}
               </Link>
               <Link href="#terms" className="text-sm text-purple-200/60 hover:text-white transition-colors">
-                Terms
+                {t.footer.termsOfService}
               </Link>
               <Link href="#cookies" className="text-sm text-purple-200/60 hover:text-white transition-colors">
-                Cookies
+                {t.footer.cookiePolicy}
               </Link>
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { type Spread } from '@/lib/tarot';
+import { useI18n } from '@/lib/i18n';
 
 interface TarotSpreadSelectorProps {
   spreads: Spread[];
@@ -9,6 +10,8 @@ interface TarotSpreadSelectorProps {
 }
 
 export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSelectorProps) {
+  const { t } = useI18n();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {spreads.map((spread) => (
@@ -22,7 +25,7 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
             <CardDescription className="text-purple-200">{spread.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-purple-300">{spread.positions.length} 张牌</p>
+            <p className="text-sm text-purple-300">{spread.positions.length} {t.home.times}</p>
           </CardContent>
         </Card>
       ))}

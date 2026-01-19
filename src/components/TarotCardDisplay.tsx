@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { type TarotCard, type SpreadPosition } from '@/lib/tarot';
+import { useI18n } from '@/lib/i18n';
 
 interface TarotCardDisplayProps {
   cards: TarotCard[];
@@ -10,6 +11,7 @@ interface TarotCardDisplayProps {
 }
 
 export function TarotCardDisplay({ cards, positions, isDrawing }: TarotCardDisplayProps) {
+  const { t } = useI18n();
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [showAll, setShowAll] = useState(false);
 
@@ -52,7 +54,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing }: TarotCardDispl
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-center mb-8 text-white">你的牌面</h2>
+      <h2 className="text-2xl font-bold text-center mb-8 text-white">{t.home.interpretation}</h2>
       <div
         className={`flex justify-center items-center gap-4 flex-wrap ${
           showAll ? 'scale-90 transition-transform duration-500' : ''
@@ -104,7 +106,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing }: TarotCardDispl
                   <p className="text-sm font-bold text-white mb-1">{card.name}</p>
                   <p className="text-xs text-purple-200">{card.nameEn}</p>
                   {card.isReversed && (
-                    <p className="text-xs text-pink-300 mt-1">（逆位）</p>
+                    <p className="text-xs text-pink-300 mt-1">(Reversed)</p>
                   )}
                 </div>
               </div>

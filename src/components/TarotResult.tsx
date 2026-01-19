@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { type TarotCard, type SpreadPosition } from '@/lib/tarot';
+import { useI18n } from '@/lib/i18n';
 
 interface TarotResultProps {
   question: string;
@@ -26,12 +27,14 @@ export function TarotResult({
   onGetSuggestion,
   onReset,
 }: TarotResultProps) {
+  const { t } = useI18n();
+
   return (
     <div className="mt-8 space-y-6">
       {interpretation && (
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-white">AI解读</CardTitle>
+            <CardTitle className="text-white">{t.home.interpretation}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="bg-black/30 rounded-lg p-4 min-h-[200px] text-purple-100 whitespace-pre-wrap">
@@ -44,18 +47,18 @@ export function TarotResult({
       {interpretation && !suggestion && (
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-white">获取更多指引</CardTitle>
+            <CardTitle className="text-white">{t.home.suggestion}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-purple-200">
-              想了解更多关于其他相关问题吗？让AI为你提供个性化建议。
+              {t.home.questionPlaceholder}
             </p>
             <Button
               onClick={onGetSuggestion}
               disabled={isGenerating}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
-              {isGenerating ? '生成中...' : '获取AI建议'}
+              {isGenerating ? t.home.generating : t.home.suggestion}
             </Button>
           </CardContent>
         </Card>
@@ -64,7 +67,7 @@ export function TarotResult({
       {suggestion && (
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-white">AI建议</CardTitle>
+            <CardTitle className="text-white">{t.home.suggestion}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="bg-black/30 rounded-lg p-4 min-h-[150px] text-purple-100 whitespace-pre-wrap">
@@ -77,22 +80,22 @@ export function TarotResult({
       {suggestion && (
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-white">测试其他问题</CardTitle>
+            <CardTitle className="text-white">{t.home.chooseQuestion}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-purple-200 mb-4">
-              如果你想探索其他相关问题，可以在这里输入新问题，AI将为你提供针对性的解读。
+              {t.home.questionPlaceholder}
             </p>
             <div className="flex gap-4">
               <Textarea
-                placeholder="输入你想了解的其他问题..."
+                placeholder={t.home.questionPlaceholder}
                 className="flex-1 bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 min-h-[80px]"
                 readOnly
               />
               <Button
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
-                提交
+                {t.home.drawCards}
               </Button>
             </div>
           </CardContent>
@@ -105,7 +108,7 @@ export function TarotResult({
           variant="outline"
           className="flex-1 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
         >
-          重新开始
+          {t.header.home}
         </Button>
       </div>
     </div>
