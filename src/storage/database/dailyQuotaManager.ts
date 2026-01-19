@@ -1,9 +1,12 @@
 import { eq, and, sql } from 'drizzle-orm';
 import { getDb } from 'coze-coding-dev-sdk';
 import { dailyQuotas, insertDailyQuotaSchema, type DailyQuota, type InsertDailyQuota } from './shared/schema';
+import { appConfig } from '@/config';
 
 export class DailyQuotaManager {
-  private readonly MAX_DAILY_INTERPRETATIONS = 3;
+  private get MAX_DAILY_INTERPRETATIONS(): number {
+    return appConfig.features.dailyQuota.free;
+  }
 
   async getOrCreateQuota(userId: string, date: string): Promise<DailyQuota> {
     const db = await getDb();

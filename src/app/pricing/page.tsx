@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { paddleConfig } from '@/config';
 
 declare global {
   interface Window {
@@ -36,19 +37,13 @@ export default function PricingPage() {
   const [paddleInitialized, setPaddleInitialized] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
-  // Paddle Price IDs (需要替换为实际的 Paddle Price IDs)
-  const priceIds = {
-    monthly: 'pri_01hxxxxxxxxxxxxx', // 月付价格ID
-    yearly: 'pri_01hxxxxxxxxxxxxx',  // 年付价格ID
-  };
-
   useEffect(() => {
     // 加载 Paddle.js
     const loadPaddle = () => {
       if (window.Paddle) {
         window.Paddle.Initialize({
-          token: process.env.NEXT_PUBLIC_PADDLE_TOKEN || 'test_live_token',
-          environment: process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT || 'sandbox',
+          token: paddleConfig.token,
+          environment: paddleConfig.environment,
         });
         setPaddleInitialized(true);
       }
@@ -56,7 +51,7 @@ export default function PricingPage() {
 
     // 动态加载 Paddle.js
     const script = document.createElement('script');
-    script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+    script.src = paddleConfig.scriptUrl;
     script.onload = loadPaddle;
     document.body.appendChild(script);
 
@@ -73,15 +68,13 @@ export default function PricingPage() {
       return;
     }
 
-    const priceId = plan === 'monthly' ? priceIds.monthly : priceIds.yearly;
+    const priceId = plan === 'monthly' ? paddleConfig.priceIds.monthly : paddleConfig.priceIds.yearly;
 
     window.Paddle?.Checkout.open({
       settings: {
-        displayMode: 'overlay',
-        theme: 'dark',
-        locale: t.common.language === '中文' || t.common.language === '语言' ? 'zh-Hans' : 
+        ...paddleConfig.settings,
+        locale: t.common.language === '中文' || t.common.language === '语言' ? 'zh-Hans' :
                  t.common.language === '日本語' || t.common.language === '言語' ? 'ja' : 'en',
-        successUrl: `${window.location.origin}/?payment=success`,
       },
       items: [
         {

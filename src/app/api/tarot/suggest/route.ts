@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LLMClient, Config } from 'coze-coding-dev-sdk';
+import { llmConfig } from '@/config';
 import type { TarotCard } from '@/lib/tarot';
 
 export async function POST(request: NextRequest) {
@@ -48,8 +49,8 @@ ${interpretation}
         { role: 'user', content: userPrompt },
       ],
       {
-        temperature: 0.8,
-        model: 'doubao-seed-1-6-251015',
+        temperature: llmConfig.temperature,
+        model: llmConfig.model,
       }
     );
 
