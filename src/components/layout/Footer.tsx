@@ -28,7 +28,7 @@ export function Footer() {
       { name: t.footer.termsOfService, href: '#terms' },
     ],
     legal: [
-      { name: t.footer.privacyPolicy, href: '#privacy' },
+      { name: t.footer.privacyPolicy, href: '/privacy' },
       { name: t.footer.cookiePolicy, href: '#cookies' },
       { name: t.footer.gdpr, href: '#gdpr' },
       { name: t.footer.disclaimer, href: '#disclaimer' },
@@ -134,7 +134,7 @@ export function Footer() {
               © {currentYear} Mentob AI. {t.footer.allRightsReserved}.
             </p>
             <div className="flex items-center gap-6">
-              <Link href="#privacy" className="text-sm text-purple-200/60 hover:text-white transition-colors">
+              <Link href="/privacy" className="text-sm text-purple-200/60 hover:text-white transition-colors">
                 {t.footer.privacyPolicy}
               </Link>
               <Link href="#terms" className="text-sm text-purple-200/60 hover:text-white transition-colors">
