@@ -138,20 +138,8 @@ export const spreads: Spread[] = [
   },
 ];
 
-// 抽牌函数
+// 抽牌函数（使用完整78张牌，包含大阿卡纳和小阿卡纳）
 export function drawCards(count: number): TarotCard[] {
-  const deck = [...majorArcanaCards];
-  const shuffled = deck.sort(() => Math.random() - 0.5);
-  const drawn = shuffled.slice(0, count);
-
-  return drawn.map((card) => ({
-    ...card,
-    isReversed: Math.random() > 0.5,
-  }));
-}
-
-// 使用完整78张牌抽牌
-export function drawCardsFromFullDeck(count: number): TarotCard[] {
   const deck = allTarotCards.map(card => ({
     id: card.id,
     name: card.name,
@@ -174,3 +162,5 @@ export function drawCardsFromFullDeck(count: number): TarotCard[] {
     isReversed: Math.random() > 0.5,
   }));
 }
+
+
