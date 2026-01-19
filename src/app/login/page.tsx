@@ -18,7 +18,6 @@ export default function LoginPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    username: '',
     rememberMe: false,
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -56,10 +55,6 @@ export default function LoginPage() {
     }
 
     if (!isLogin) {
-      if (!formData.username) {
-        newErrors.username = t.auth.pleaseEnterUsername;
-      }
-
       if (!formData.confirmPassword) {
         newErrors.confirmPassword = t.auth.pleaseConfirmPassword;
       } else if (formData.password !== formData.confirmPassword) {
@@ -112,7 +107,6 @@ export default function LoginPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            username: formData.username,
             email: formData.email,
             password: formData.password,
           }),
@@ -174,31 +168,6 @@ export default function LoginPage() {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Username - only for registration */}
-              {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="username" className="text-purple-200">
-                    {t.auth.username}
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="username"
-                      name="username"
-                      type="text"
-                      placeholder={t.auth.usernamePlaceholder}
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      className={`bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 ${
-                        errors.username ? 'border-red-500' : ''
-                      }`}
-                    />
-                  </div>
-                  {errors.username && (
-                    <p className="text-sm text-red-400">{errors.username}</p>
-                  )}
-                </div>
-              )}
-
               {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-purple-200">

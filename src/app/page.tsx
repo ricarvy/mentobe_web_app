@@ -25,8 +25,8 @@ export default function Home() {
   const [showResult, setShowResult] = useState(false);
   const [user, setUser] = useState<{ id: string; username: string; email: string } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [aiInterpretation, setAiInterpretation] = useState('');
   const [showAiInterpretation, setShowAiInterpretation] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -55,8 +55,8 @@ export default function Home() {
   };
 
   const handleLogin = async () => {
-    if (!username.trim() || !email.trim()) {
-      alert(`${t.auth.pleaseEnterUsername} and ${t.auth.pleaseEnterEmail}`);
+    if (!email.trim() || !password.trim()) {
+      alert(`${t.auth.pleaseEnterEmail} and ${t.auth.pleaseEnterPassword}`);
       return;
     }
 
@@ -64,7 +64,7 @@ export default function Home() {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
@@ -341,16 +341,6 @@ export default function Home() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="username" className="text-purple-200">{t.auth.username}</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder={t.auth.pleaseEnterUsername}
-                className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
-              />
-            </div>
-            <div>
               <Label htmlFor="email" className="text-purple-200">{t.auth.email}</Label>
               <Input
                 id="email"
@@ -358,6 +348,17 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.auth.pleaseEnterEmail}
+                className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
+              />
+            </div>
+            <div>
+              <Label htmlFor="password" className="text-purple-200">{t.auth.password}</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t.auth.pleaseEnterPassword}
                 className="bg-black/30 border-purple-500/30 text-white placeholder:text-purple-300/50 mt-2"
               />
             </div>

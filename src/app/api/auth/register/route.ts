@@ -5,23 +5,17 @@ import type { InsertUser } from '@/storage/database';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { username, email, password }: { username: string; email: string; password: string } = body;
+    const { email, password }: { email: string; password: string } = body;
 
-    if (!username || !email || !password) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: 'Username, email and password are required' },
+        { error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    // 检查用户名是否已存在
-    const existingUser = await userManager.getUserByUsername(username);
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'Username already exists' },
-        { status: 400 }
-      );
-    }
+    // 从邮箱中提取用户名（邮箱@前的部分）
+    const username = email.split('@')[0];
 
     // 检查邮箱是否已存在
     const existingEmail = await userManager.getUserByEmail(email);
