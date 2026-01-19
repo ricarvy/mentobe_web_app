@@ -11,6 +11,7 @@ import { spreads, drawCards, type TarotCard, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
+import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 
@@ -200,6 +201,18 @@ export default function Home() {
     setAiSuggestion('');
   };
 
+  const handleSelectQuestion = (selectedQuestion: string) => {
+    setQuestion(selectedQuestion);
+    // Scroll to the question input
+    setTimeout(() => {
+      const questionInput = document.querySelector('textarea');
+      if (questionInput) {
+        questionInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        questionInput.focus();
+      }
+    }, 100);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="max-w-4xl mx-auto">
@@ -239,6 +252,9 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Suggested Questions */}
+              <SuggestedQuestions onSelectQuestion={handleSelectQuestion} />
+
               <div>
                 <Label className="block text-sm font-medium mb-2 text-purple-200">
                   {t.home.chooseQuestion}

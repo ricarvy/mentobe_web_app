@@ -67,6 +67,13 @@ export const ja = {
     quotaExceeded: '本日の解釈回数が上限に達しました。明日お試しください',
     generating: '生成中...',
     suggestion: 'AI提案',
+    suggestedQuestions: 'おすすめの質問',
+    suggestedQuestion1: '私のキャリアの未来はどうなりますか？',
+    suggestedQuestion2: 'まもなく真実の愛を見つけることができますか？',
+    suggestedQuestion3: '財政状況を改善するにはどうすればいいですか？',
+    suggestedQuestion4: '個人の成長に焦点を当てるべき点は何ですか？',
+    suggestedQuestion5: '注意すべき障害はありますか？',
+    suggestedQuestion6: '現在の状況について、カードはどのようなガイダンスを提供していますか？',
   },
   spreadSelector: {
     singleCardTitle: 'シングルカード',

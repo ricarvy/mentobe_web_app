@@ -67,6 +67,13 @@ export const zh = {
     quotaExceeded: '今日解读次数已用尽，请明天再试',
     generating: '生成中...',
     suggestion: 'AI建议',
+    suggestedQuestions: '推荐问题',
+    suggestedQuestion1: '我的未来事业如何发展？',
+    suggestedQuestion2: '我很快会找到真爱吗？',
+    suggestedQuestion3: '如何改善我的财务状况？',
+    suggestedQuestion4: '在个人成长方面我应该关注什么？',
+    suggestedQuestion5: '我是否需要注意某些障碍？',
+    suggestedQuestion6: '针对我的当前情况，牌面有什么指引？',
   },
   spreadSelector: {
     singleCardTitle: '单牌解读',

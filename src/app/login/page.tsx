@@ -98,7 +98,7 @@ export default function LoginPage() {
 
         if (response.ok) {
           // Store user info in localStorage (in production, use secure cookies)
-          localStorage.setItem('user', JSON.stringify(data));
+          localStorage.setItem('tarot_user', JSON.stringify(data));
           // Redirect to home page
           window.location.href = '/';
         } else {
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
         if (response.ok) {
           // Auto login after registration
-          localStorage.setItem('user', JSON.stringify(data));
+          localStorage.setItem('tarot_user', JSON.stringify(data));
           window.location.href = '/';
         } else {
           setErrors({ submit: data.error || t.auth.registrationFailed });

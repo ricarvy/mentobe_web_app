@@ -67,6 +67,13 @@ export const en = {
     quotaExceeded: 'Daily interpretation limit reached, please try again tomorrow',
     generating: 'Generating...',
     suggestion: 'AI Suggestion',
+    suggestedQuestions: 'Suggested Questions',
+    suggestedQuestion1: 'What does the future hold for my career?',
+    suggestedQuestion2: 'Will I find true love soon?',
+    suggestedQuestion3: 'How can I improve my financial situation?',
+    suggestedQuestion4: 'What should I focus on in my personal growth?',
+    suggestedQuestion5: 'Are there obstacles in my path that I should be aware of?',
+    suggestedQuestion6: 'What guidance do the cards have for my current situation?',
   },
   spreadSelector: {
     singleCardTitle: 'Single Card',
