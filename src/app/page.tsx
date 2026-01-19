@@ -12,9 +12,11 @@ import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
 import { useI18n } from '@/lib/i18n';
+import { useSpreadTranslations } from '@/lib/spreadTranslations';
 
 export default function Home() {
   const { t } = useI18n();
+  const { getTranslatedSpread } = useSpreadTranslations();
   const [selectedSpread, setSelectedSpread] = useState<Spread | null>(null);
   const [question, setQuestion] = useState('');
   const [drawnCards, setDrawnCards] = useState<TarotCard[]>([]);
@@ -231,9 +233,9 @@ export default function Home() {
         {selectedSpread && !showResult && (
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
             <CardHeader>
-              <CardTitle className="text-white">{selectedSpread.name}</CardTitle>
+              <CardTitle className="text-white">{getTranslatedSpread(selectedSpread).name}</CardTitle>
               <CardDescription className="text-purple-200">
-                {selectedSpread.description}
+                {getTranslatedSpread(selectedSpread).description}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -274,6 +276,7 @@ export default function Home() {
               cards={drawnCards}
               positions={selectedSpread!.positions}
               isDrawing={isDrawing}
+              spread={selectedSpread!}
             />
 
             {!user && (

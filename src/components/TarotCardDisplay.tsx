@@ -1,19 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { type TarotCard, type SpreadPosition } from '@/lib/tarot';
+import { type TarotCard, type SpreadPosition, type Spread } from '@/lib/tarot';
 import { useI18n } from '@/lib/i18n';
+import { useSpreadTranslations } from '@/lib/spreadTranslations';
 
 interface TarotCardDisplayProps {
   cards: TarotCard[];
   positions: SpreadPosition[];
   isDrawing: boolean;
+  spread: Spread;
 }
 
-export function TarotCardDisplay({ cards, positions, isDrawing }: TarotCardDisplayProps) {
+export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotCardDisplayProps) {
   const { t } = useI18n();
+  const { getTranslatedSpread } = useSpreadTranslations();
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [showAll, setShowAll] = useState(false);
+  const translatedSpread = getTranslatedSpread(spread);
 
   useEffect(() => {
     if (isDrawing) {
@@ -112,10 +116,14 @@ export function TarotCardDisplay({ cards, positions, isDrawing }: TarotCardDispl
               </div>
             </div>
 
-            {showAll && (
+            {showAll && positions[index] && (
               <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center w-48">
-                <p className="text-xs font-semibold text-purple-200">{positions[index]?.name}</p>
-                <p className="text-xs text-purple-300/70 mt-1">{positions[index]?.description}</p>
+                <p className="text-xs font-semibold text-purple-200">
+                  {translatedSpread.positions[index]?.name || positions[index].name}
+                </p>
+                <p className="text-xs text-purple-300/70 mt-1">
+                  {translatedSpread.positions[index]?.description || positions[index].description}
+                </p>
               </div>
             )}
           </div>
