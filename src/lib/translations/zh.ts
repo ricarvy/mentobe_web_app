@@ -46,7 +46,7 @@ export const zh = {
   home: {
     title: '探索你的未来',
     subtitle: 'AI驱动的塔罗解读',
-    welcome: '欢迎来到Tarot AI',
+    welcome: '欢迎来到Mentob AI',
     selectSpread: '选择牌阵',
     chooseQuestion: '输入你的问题',
     drawCards: '抽牌',

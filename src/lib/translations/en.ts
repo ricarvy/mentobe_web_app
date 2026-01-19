@@ -46,7 +46,7 @@ export const en = {
   home: {
     title: 'Explore Your Future',
     subtitle: 'AI-Powered Tarot Readings',
-    welcome: 'Welcome to Tarot AI',
+    welcome: 'Welcome to Mentob AI',
     selectSpread: 'Select Spread',
     chooseQuestion: 'Enter Your Question',
     drawCards: 'Draw Cards',

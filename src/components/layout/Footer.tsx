@@ -39,7 +39,7 @@ export function Footer() {
     { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
     { name: 'Instagram', href: 'https://instagram.com', icon: Instagram },
     { name: 'Facebook', href: 'https://facebook.com', icon: Facebook },
-    { name: 'Email', href: 'mailto:contact@tarotai.com', icon: Mail },
+    { name: 'Email', href: 'mailto:contact@mentobai.com', icon: Mail },
   ];
 
   return (
@@ -52,7 +52,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <Sparkles className="h-6 w-6 text-purple-400" />
               <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Tarot AI
+                Mentob AI
               </span>
             </Link>
             <p className="mt-4 text-sm text-purple-200/80 max-w-sm">
@@ -131,7 +131,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-purple-500/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-purple-200/60">
-              © {currentYear} Tarot AI. {t.footer.allRightsReserved}.
+              © {currentYear} Mentob AI. {t.footer.allRightsReserved}.
             </p>
             <div className="flex items-center gap-6">
               <Link href="#privacy" className="text-sm text-purple-200/60 hover:text-white transition-colors">

@@ -8,8 +8,8 @@ import { I18nProvider } from '@/lib/i18n';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Tarot AI - AI-Powered Tarot Reading | Discover Your Future',
-    template: '%s | Tarot AI',
+    default: 'Mentob AI - AI-Powered Tarot Reading | Discover Your Future',
+    template: '%s | Mentob AI',
   },
   description:
     'Experience the power of AI-driven tarot readings. Get personalized insights, explore different tarot spreads, and unlock the mysteries of your future with our advanced AI technology.',
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
     'tarot wisdom',
     'mystic reading',
   ],
-  authors: [{ name: 'Tarot AI Team', url: 'https://tarotai.com' }],
-  creator: 'Tarot AI',
-  publisher: 'Tarot AI',
-  metadataBase: new URL('https://tarotai.com'),
+  authors: [{ name: 'Mentob AI Team', url: 'https://mentobai.com' }],
+  creator: 'Mentob AI',
+  publisher: 'Mentob AI',
+  metadataBase: new URL('https://mentobai.com'),
   alternates: {
     canonical: '/',
     languages: {
@@ -44,11 +44,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Tarot AI - AI-Powered Tarot Reading',
+    title: 'Mentob AI - AI-Powered Tarot Reading',
     description:
       'Discover the mysteries of your future with AI-powered tarot readings. Get personalized insights and guidance for your life journey.',
-    url: 'https://tarotai.com',
-    siteName: 'Tarot AI',
+    url: 'https://mentobai.com',
+    siteName: 'Mentob AI',
     locale: 'en_US',
     type: 'website',
     images: [
@@ -56,17 +56,17 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Tarot AI - AI-Powered Tarot Reading',
+        alt: 'Mentob AI - AI-Powered Tarot Reading',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tarot AI - AI-Powered Tarot Reading',
+    title: 'Mentob AI - AI-Powered Tarot Reading',
     description:
       'Discover the mysteries of your future with AI-powered tarot readings. Get personalized insights and guidance for your life journey.',
     images: ['/og-image.jpg'],
-    creator: '@tarotai',
+    creator: '@mentobai',
   },
   robots: {
     index: true,
@@ -100,9 +100,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
-              name: 'Tarot AI',
+              name: 'Mentob AI',
               description: 'AI-powered tarot reading platform offering personalized insights and guidance',
-              url: 'https://tarotai.com',
+              url: 'https://mentobai.com',
               applicationCategory: 'LifestyleApplication',
               operatingSystem: 'Web',
               offers: {
@@ -132,20 +132,20 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
-              name: 'Tarot AI',
-              url: 'https://tarotai.com',
-              logo: 'https://tarotai.com/logo.png',
+              name: 'Mentob AI',
+              url: 'https://mentobai.com',
+              logo: 'https://mentobai.com/logo.png',
               description: 'AI-powered tarot reading platform',
               contactPoint: {
                 '@type': 'ContactPoint',
                 contactType: 'customer service',
-                email: 'contact@tarotai.com',
+                email: 'contact@mentobai.com',
                 availableLanguage: ['English', 'Spanish', 'French', 'German'],
               },
               sameAs: [
-                'https://twitter.com/tarotai',
-                'https://facebook.com/tarotai',
-                'https://instagram.com/tarotai',
+                'https://twitter.com/mentobai',
+                'https://facebook.com/mentobai',
+                'https://instagram.com/mentobai',
               ],
             }),
           }}

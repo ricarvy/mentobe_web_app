@@ -46,7 +46,7 @@ export const ja = {
   home: {
     title: '未来を探る',
     subtitle: 'AI搭載タロットリーディング',
-    welcome: 'Tarot AIへようこそ',
+    welcome: 'Mentob AIへようこそ',
     selectSpread: 'スプレッドを選択',
     chooseQuestion: '質問を入力',
     drawCards: 'カードを引く',
