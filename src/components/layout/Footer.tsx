@@ -11,7 +11,7 @@ export function Footer() {
   const footerLinks = {
     product: [
       { name: t.footer.features, href: '#features' },
-      { name: t.footer.pricing, href: '#pricing' },
+      { name: t.footer.pricing, href: '/pricing' },
       { name: t.header.tarotSpreads, href: '#spreads' },
       { name: t.footer.api, href: '#api' },
     ],
