@@ -23,7 +23,7 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
 
   return (
     <div className="w-full max-w-3xl mx-auto mb-6">
-      <Card className="border-purple-500/20 bg-black/40 backdrop-blur-sm p-6">
+      <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-pink-900/30 backdrop-blur-sm p-6">
         <div className="flex items-center gap-2 mb-4">
           <Lightbulb className="h-5 w-5 text-purple-400" />
           <h3 className="text-lg font-semibold text-purple-200">
@@ -35,10 +35,10 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
             <Button
               key={index}
               variant="outline"
-              className="h-auto py-3 px-4 text-left justify-start text-sm text-purple-200/80 border-purple-500/20 hover:bg-purple-500/10 hover:border-purple-500/40 transition-all"
+              className="h-auto py-3 px-4 text-left justify-start text-sm text-purple-200/90 border-purple-500/20 hover:bg-purple-500/15 hover:border-purple-500/40 transition-all break-words word-wrap-normal whitespace-normal"
               onClick={() => onSelectQuestion(question)}
             >
-              {question}
+              <span className="leading-relaxed">{question}</span>
             </Button>
           ))}
         </div>

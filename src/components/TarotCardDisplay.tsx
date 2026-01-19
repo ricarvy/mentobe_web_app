@@ -42,8 +42,8 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
 
   if (isDrawing) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="flex gap-4 flex-wrap justify-center">
+      <div className="fixed inset-0 z-50 flex justify-center items-center" style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
+        <div className="flex gap-4 flex-wrap justify-center max-w-full px-4">
           {Array.from({ length: positions.length }).map((_, i) => (
             <div
               key={i}
