@@ -1,9 +1,6 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { Footer } from '@/components/layout/Footer';
 import { Shield, Lock, Eye, Cookie, CheckCircle, Mail } from 'lucide-react';
 
 export default function PrivacyPolicyPage() {
@@ -15,10 +12,7 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 lg:ml-64">
+      <main>
           <div className="container mx-auto px-4 py-12 max-w-4xl">
             {/* Header */}
             <div className="mb-12">
@@ -409,8 +403,6 @@ export default function PrivacyPolicyPage() {
             </div>
           </div>
         </main>
-      </div>
-      <Footer />
     </div>
   );
 }
