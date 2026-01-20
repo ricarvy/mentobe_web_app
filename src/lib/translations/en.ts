@@ -322,7 +322,7 @@ export const en = {
         button: 'Get Started',
         popular: false,
       },
-      monthly: {
+      pro: {
         name: 'Pro',
         description: 'For serious seekers',
         price: '19.9',
@@ -337,7 +337,7 @@ export const en = {
         button: 'Subscribe Now',
         popular: true,
       },
-      yearly: {
+      premium: {
         name: 'Premium',
         description: 'Best value for enthusiasts',
         price: '109.9',

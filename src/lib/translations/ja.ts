@@ -322,7 +322,7 @@ export const ja = {
         button: '始める',
         popular: false,
       },
-      monthly: {
+      pro: {
         name: 'プロ',
         description: '真剣な探求者に',
         price: '19.9',
@@ -337,7 +337,7 @@ export const ja = {
         button: '今すぐ購読',
         popular: true,
       },
-      yearly: {
+      premium: {
         name: 'プレミアム',
         description: '愛好家に最適',
         price: '109.9',

@@ -322,7 +322,7 @@ export const zh = {
         button: '开始使用',
         popular: false,
       },
-      monthly: {
+      pro: {
         name: '专业版',
         description: '适合深度探索者',
         price: '19.9',
@@ -337,7 +337,7 @@ export const zh = {
         button: '立即订阅',
         popular: true,
       },
-      yearly: {
+      premium: {
         name: '高级版',
         description: '爱好者的最佳选择',
         price: '109.9',

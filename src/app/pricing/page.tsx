@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { stripeConfig } from '@/config';
+import { stripeConfig, getPriceId } from '@/config/stripe';
 import { useUser } from '@/lib/userContext';
 import { apiRequest } from '@/lib/api-client';
 
@@ -50,7 +50,7 @@ export default function PricingPage() {
     };
   }, []);
 
-  const handleSubscribe = async (plan: 'monthly' | 'yearly') => {
+  const handleSubscribe = async (plan: 'pro' | 'premium') => {
     if (!stripeLoaded) {
       console.error('Stripe.js not loaded');
       return;
@@ -65,6 +65,14 @@ export default function PricingPage() {
     setLoading(true);
 
     try {
+      // 获取对应的价格ID
+      const priceId = getPriceId(plan, billingCycle);
+
+      if (!priceId) {
+        console.error('Invalid price ID');
+        return;
+      }
+
       // 调用后端 API 创建 Checkout Session
       const response = await apiRequest<{
         sessionId: string;
@@ -73,7 +81,7 @@ export default function PricingPage() {
         method: 'POST',
         requireAuth: true,
         body: JSON.stringify({
-          priceId: plan === 'monthly' ? stripeConfig.priceIds.monthly : stripeConfig.priceIds.yearly,
+          priceId,
           userId: user.id,
           userEmail: user.email,
         }),
@@ -100,7 +108,7 @@ export default function PricingPage() {
     features: string[];
     button: string;
     popular: boolean;
-    billingCycle?: 'monthly' | 'yearly';
+    planType?: 'pro' | 'premium';
   };
 
   const plans: Plan[] = [
@@ -108,12 +116,12 @@ export default function PricingPage() {
       ...t.pricing.plans.free,
     },
     {
-      ...t.pricing.plans.monthly,
-      billingCycle: 'monthly',
+      ...t.pricing.plans.pro,
+      planType: 'pro',
     },
     {
-      ...t.pricing.plans.yearly,
-      billingCycle: 'yearly',
+      ...t.pricing.plans.premium,
+      planType: 'premium',
     },
   ];
 
@@ -231,7 +239,7 @@ export default function PricingPage() {
                     </Button>
                   ) : (
                     <Button
-                      onClick={() => plan.billingCycle && handleSubscribe(plan.billingCycle)}
+                      onClick={() => plan.planType && handleSubscribe(plan.planType)}
                       disabled={!stripeLoaded || loading}
                       className={`w-full ${
                         plan.popular
@@ -316,7 +324,7 @@ export default function PricingPage() {
             <Button
               size="lg"
               disabled={!stripeLoaded || loading}
-              onClick={() => handleSubscribe('monthly')}
+              onClick={() => handleSubscribe('pro')}
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8"
             >
               {loading ? 'Processing...' : 'Get Started Now'}
