@@ -83,6 +83,7 @@ export default function LoginPage() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa(`${formData.email}:${formData.password}`)}`,
           },
           body: JSON.stringify({
             email: formData.email,

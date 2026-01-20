@@ -70,7 +70,10 @@ export default function Home() {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(`${email}:${password}`)}`,
+        },
         body: JSON.stringify({ email, password }),
       });
 
