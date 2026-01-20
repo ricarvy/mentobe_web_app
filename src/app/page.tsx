@@ -17,6 +17,7 @@ import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials, addAuthHeader, clearAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
+import { getQuota } from '@/lib/quota';
 
 export default function Home() {
   const { t } = useI18n();
@@ -48,15 +49,7 @@ export default function Home() {
 
   const fetchQuota = async (userId: string) => {
     try {
-      const data = await apiRequest<{
-        remaining: number;
-        used: number;
-        total: number | string;
-        isDemo: boolean;
-      }>(`/api/auth/quota?userId=${userId}`, {
-        method: 'GET',
-        requireAuth: false,
-      });
+      const data = await getQuota(userId);
 
       setRemainingQuota(data.remaining);
       setQuotaInfo({

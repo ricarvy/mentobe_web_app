@@ -9,6 +9,7 @@ import { useUser } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
 import { addAuthHeader } from '@/lib/auth';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
+import { getQuota } from '@/lib/quota';
 import { User, Mail, Calendar, History, Settings, Shield, LogOut, Sparkles, Check, X, Infinity } from 'lucide-react';
 
 export default function ProfilePage() {
@@ -26,15 +27,7 @@ export default function ProfilePage() {
     if (!user) return;
 
     try {
-      const data = await apiRequest<{
-        remaining: number;
-        used: number;
-        total: number | string;
-        isDemo: boolean;
-      }>(`/api/auth/quota?userId=${user.id}`, {
-        method: 'GET',
-        requireAuth: false,
-      });
+      const data = await getQuota(user.id);
 
       setQuotaInfo({
         remaining: data.remaining,
