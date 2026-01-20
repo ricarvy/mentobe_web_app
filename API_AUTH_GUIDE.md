@@ -309,7 +309,7 @@ curl -X POST \
   http://localhost:5000/api/auth/login
 
 # 查询限额
-curl "http://localhost:5000/api/auth/quota?userId=demo-user-id" \
+curl "https://5t2jjdkkmt.coze.site/api/auth/quota?userId=demo-user-id" \
   -H "Authorization: Basic ZGVtb0BtZW50b2JhaS5jb206RGVtbzEyMyE="
 
 # 获取解读
