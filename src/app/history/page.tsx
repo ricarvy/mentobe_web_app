@@ -13,6 +13,7 @@ import { apiRequest, ApiRequestError } from '@/lib/api-client';
 import { Calendar, Clock, ChevronRight, ChevronDown, Sparkles, History, ArrowLeft, RefreshCw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { allTarotCards } from '@/lib/tarot-cards';
 
 interface TarotCard {
   id: string;
@@ -79,7 +80,21 @@ export default function HistoryPage() {
 
   const parseCards = (cardsJson: string): TarotCard[] => {
     try {
-      return JSON.parse(cardsJson);
+      const parsedCards = JSON.parse(cardsJson);
+      return parsedCards.map((card: any) => {
+        // 从本地卡牌数据中查找完整信息
+        const localCard = allTarotCards.find(c => c.id === card.id);
+        return {
+          ...card,
+          nameEn: localCard?.nameEn || card.nameEn || '',
+          meaning: localCard?.meaning || card.meaning || '',
+          reversedMeaning: localCard?.reversedMeaning || card.reversedMeaning || '',
+          imageUrl: localCard?.imageUrl || card.imageUrl || '',
+          keywords: localCard?.keywords || [],
+          suit: localCard?.suit,
+          number: localCard?.number,
+        };
+      });
     } catch (error) {
       console.error('Error parsing cards JSON:', error);
       return [];
@@ -300,13 +315,13 @@ export default function HistoryPage() {
                           AI Interpretation
                         </h3>
                         {item.interpretation ? (
-                          <div className="bg-black/40 rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20">
+                          <div className="bg-black rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20 text-white">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                               {item.interpretation}
                             </ReactMarkdown>
                           </div>
                         ) : (
-                          <div className="bg-black/40 rounded-lg p-4 border border-purple-500/20 text-center">
+                          <div className="bg-black rounded-lg p-4 border border-purple-500/20 text-center">
                             <p className="text-purple-300 text-sm">
                               No interpretation available
                             </p>
