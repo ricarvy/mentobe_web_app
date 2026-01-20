@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -226,39 +227,69 @@ export default function HistoryPage() {
                           <Sparkles className="h-5 w-5 text-purple-400" />
                           Cards Drawn
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {cards.map((card, index) => (
                             <Card
                               key={`${card.id}-${index}`}
-                              className="bg-black/30 border-purple-500/20 p-3"
+                              className="bg-black/30 border-purple-500/20 overflow-hidden"
                             >
-                              <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0">
+                              <div className="relative">
+                                {/* Card Image */}
+                                <div className={`relative aspect-[3/5] bg-gradient-to-br from-purple-900/50 to-pink-900/50 ${card.isReversed ? 'rotate-180' : ''}`}>
+                                  {card.imageUrl ? (
+                                    <Image
+                                      src={card.imageUrl}
+                                      alt={card.nameEn}
+                                      fill
+                                      className="object-cover"
+                                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    />
+                                  ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <Sparkles className="h-12 w-12 text-purple-400/50" />
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Position Badge */}
+                                <div className="absolute top-2 left-2">
                                   <Badge
-                                    variant={card.isReversed ? "destructive" : "default"}
-                                    className="text-xs"
+                                    variant="secondary"
+                                    className="bg-black/60 backdrop-blur-sm text-xs font-semibold"
                                   >
-                                    {index + 1}
+                                    #{index + 1}
                                   </Badge>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-white mb-1 truncate">
-                                    {card.name}
-                                  </p>
-                                  <p className="text-xs text-purple-300 truncate">
-                                    {card.nameEn}
-                                  </p>
+
+                                {/* Reversed Indicator */}
+                                {card.isReversed && (
+                                  <div className="absolute top-2 right-2">
+                                    <Badge
+                                      variant="destructive"
+                                      className="bg-red-600/90 backdrop-blur-sm text-xs"
+                                    >
+                                      Reversed
+                                    </Badge>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Card Info */}
+                              <div className="p-3 border-t border-purple-500/20">
+                                <p className="text-sm font-semibold text-white mb-1">
+                                  {card.name}
+                                </p>
+                                <p className="text-xs text-purple-300 mb-2">
+                                  {card.nameEn}
+                                </p>
+                                {!card.isReversed && (
                                   <Badge
                                     variant="outline"
-                                    className={`text-xs mt-2 ${
-                                      card.isReversed
-                                        ? 'border-red-500/30 text-red-300'
-                                        : 'border-purple-500/30 text-purple-300'
-                                    }`}
+                                    className="border-purple-500/30 text-purple-300 text-xs"
                                   >
-                                    {card.isReversed ? 'Reversed' : 'Upright'}
+                                    Upright
                                   </Badge>
-                                </div>
+                                )}
                               </div>
                             </Card>
                           ))}
