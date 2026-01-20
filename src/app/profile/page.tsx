@@ -1,60 +1,51 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
 import { addAuthHeader } from '@/lib/auth';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
-import { Calendar, User, Mail, Clock, ChevronRight, ChevronDown, Sparkles } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-
-interface HistoryItem {
-  id: string;
-  question: string;
-  interpretation: string;
-  spreadType: string;
-  createdAt: string;
-  cards: string;
-}
+import { User, Mail, Calendar, History, Settings, Shield, LogOut, Sparkles, Check, X, Infinity } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, logout } = useUser();
   const { t } = useI18n();
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
 
   useEffect(() => {
     if (user) {
-      fetchHistory();
+      fetchQuota();
     }
   }, [user]);
 
-  const fetchHistory = async () => {
+  const fetchQuota = async () => {
     if (!user) return;
 
     try {
-      setLoading(true);
+      const data = await apiRequest<{
+        remaining: number;
+        used: number;
+        total: number | string;
+        isDemo: boolean;
+      }>(`/api/auth/quota?userId=${user.id}`, {
+        method: 'GET',
+        requireAuth: false,
+      });
 
-      const data = await apiRequest<{ interpretations: HistoryItem[] }>(
-        `/api/tarot/history?userId=${user.id}`,
-        {
-          method: 'GET',
-        }
-      );
-
-      setHistory(data.interpretations || []);
+      setQuotaInfo({
+        remaining: data.remaining,
+        total: data.total,
+        isDemo: data.isDemo || false,
+      });
     } catch (error) {
-      console.error('Error fetching history:', error);
+      console.error('Error fetching quota:', error);
       if (error instanceof ApiRequestError) {
-        console.error('[History Error]', error.message, error.code, error.details);
+        console.error('[Quota Error]', error.message, error.code, error.details);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -82,131 +73,174 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* User Info Card */}
-      <Card className="mb-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <User className="h-6 w-6 text-purple-400" />
-            {t.common.profile || 'Profile'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3 text-purple-200">
-            <User className="h-5 w-5 text-purple-400" />
-            <div>
-              <p className="text-sm text-purple-300">{t.common.username || 'Username'}</p>
-              <p className="font-semibold text-white">{user.username}</p>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-3xl font-bold text-white mb-8 flex items-center gap-2">
+        <User className="h-8 w-8 text-purple-400" />
+        {t.common.profile || 'Profile'}
+      </h1>
+
+      <div className="space-y-6">
+        {/* User Info Card */}
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
+          <CardHeader>
+            <CardTitle className="text-white">Account Information</CardTitle>
+            <CardDescription className="text-purple-200">
+              Your account details and settings
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-3 text-purple-200">
+              <User className="h-5 w-5 text-purple-400 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-purple-300">{t.common.username || 'Username'}</p>
+                <p className="font-semibold text-white">{user.username}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3 text-purple-200">
-            <Mail className="h-5 w-5 text-purple-400" />
-            <div>
-              <p className="text-sm text-purple-300">{t.common.email || 'Email'}</p>
-              <p className="font-semibold text-white">{user.email}</p>
+            <div className="flex items-center gap-3 text-purple-200">
+              <Mail className="h-5 w-5 text-purple-400 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-purple-300">{t.common.email || 'Email'}</p>
+                <p className="font-semibold text-white">{user.email}</p>
+              </div>
             </div>
-          </div>
-          <div className="pt-4 border-t border-purple-500/20">
+            <div className="flex items-center gap-3 text-purple-200">
+              <Shield className="h-5 w-5 text-purple-400 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-purple-300">Account Type</p>
+                <p className="font-semibold text-white">
+                  {user.isDemo ? (
+                    <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                      Demo Account
+                    </Badge>
+                  ) : (
+                    <Badge variant="default" className="bg-purple-600">
+                      Standard Account
+                    </Badge>
+                  )}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quota Information */}
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Calendar className="h-6 w-6 text-purple-400" />
+              Daily Quota
+            </CardTitle>
+            <CardDescription className="text-purple-200">
+              Your AI interpretation usage for today
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {quotaInfo ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-purple-300 mb-1">
+                      {t.home.dailyQuota || 'Daily Quota Remaining'}
+                    </p>
+                    <p className="text-3xl font-bold text-white">
+                      {quotaInfo.isDemo ? '∞' : quotaInfo.remaining}
+                      <span className="text-lg text-purple-300 ml-1">
+                        / {quotaInfo.isDemo ? '∞' : quotaInfo.total} {t.home.times || 'times'}
+                      </span>
+                    </p>
+                  </div>
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                    quotaInfo.isDemo ? 'bg-purple-600' : 
+                    quotaInfo.remaining > 0 ? 'bg-green-600' : 'bg-red-600'
+                  }`}>
+                    {quotaInfo.isDemo ? (
+                      <Infinity className="h-8 w-8 text-white" />
+                    ) : quotaInfo.remaining > 0 ? (
+                      <Check className="h-8 w-8 text-white" />
+                    ) : (
+                      <X className="h-8 w-8 text-white" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                {!quotaInfo.isDemo && typeof quotaInfo.total === 'number' && (
+                  <div className="space-y-2">
+                    <div className="h-2 bg-purple-900/30 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 ${
+                          quotaInfo.remaining > 0 ? 'bg-purple-600' : 'bg-red-600'
+                        }`}
+                        style={{
+                          width: `${(quotaInfo.remaining / quotaInfo.total) * 100}%`
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-purple-300">
+                      {quotaInfo.total - quotaInfo.remaining} of {quotaInfo.total} interpretations used today
+                    </p>
+                  </div>
+                )}
+
+                {quotaInfo.isDemo && (
+                  <p className="text-sm text-purple-300">
+                    Demo accounts have unlimited AI interpretations.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-4 text-purple-200">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mr-2" />
+                Loading quota information...
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Settings className="h-6 w-6 text-purple-400" />
+              Quick Actions
+            </CardTitle>
+            <CardDescription className="text-purple-200">
+              Common tasks and navigation
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Link href="/history">
+              <Button
+                variant="outline"
+                className="w-full justify-start border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+              >
+                <History className="mr-3 h-5 w-5" />
+                {t.home.history || 'View Reading History'}
+              </Button>
+            </Link>
+            <Link href="/">
+              <Button
+                variant="outline"
+                className="w-full justify-start border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+              >
+                <Sparkles className="mr-3 h-5 w-5" />
+                {t.home.newReading || 'New Reading'}
+              </Button>
+            </Link>
             <Button
               onClick={() => {
                 logout();
                 window.location.href = '/';
               }}
               variant="outline"
-              className="border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+              className="w-full justify-start border-red-500/30 text-red-200 hover:bg-red-500/10"
             >
+              <LogOut className="mr-3 h-5 w-5" />
               {t.common.logout}
             </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Reading History Card */}
-      <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <Clock className="h-6 w-6 text-purple-400" />
-            {t.home.history || 'Reading History'}
-          </CardTitle>
-          <CardDescription className="text-purple-200">
-            Your past tarot readings and interpretations
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center py-12 text-purple-200">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400" />
-              <span className="ml-3">{t.home.loading || 'Loading...'}</span>
-            </div>
-          ) : history.length === 0 ? (
-            <div className="text-center py-12 text-purple-200">
-              <Sparkles className="h-16 w-16 mx-auto mb-4 text-purple-400 opacity-50" />
-              <p className="text-lg mb-2">{t.home.noHistory || 'No reading history yet'}</p>
-              <p className="text-sm text-purple-300 mb-6">
-                {t.home.startReading || 'Start your first tarot reading today'}
-              </p>
-              <Button
-                onClick={() => (window.location.href = '/')}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-              >
-                {t.home.newReading || 'New Reading'}
-              </Button>
-            </div>
-          ) : (
-            <ScrollArea className="h-[600px] pr-4">
-              <div className="space-y-4">
-                {history.map((item) => (
-                  <Card
-                    key={item.id}
-                    className="bg-black/30 border-purple-500/20 overflow-hidden"
-                  >
-                    <button
-                      onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                      className="w-full p-4 text-left hover:bg-purple-500/5 transition-colors"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Calendar className="h-4 w-4 text-purple-400" />
-                            <span className="text-sm text-purple-300">
-                              {new Date(item.createdAt).toLocaleDateString()}
-                            </span>
-                            <span className="text-sm text-purple-300">
-                              {new Date(item.createdAt).toLocaleTimeString()}
-                            </span>
-                          </div>
-                          <p className="text-sm font-medium text-white line-clamp-2">
-                            {item.question}
-                          </p>
-                          <p className="text-xs text-purple-300 mt-1">
-                            Spread: {item.spreadType}
-                          </p>
-                        </div>
-                        {expandedItem === item.id ? (
-                          <ChevronDown className="text-purple-400 w-5 h-5 flex-shrink-0 mt-1" />
-                        ) : (
-                          <ChevronRight className="text-purple-400 w-5 h-5 flex-shrink-0 mt-1" />
-                        )}
-                      </div>
-                    </button>
-
-                    {expandedItem === item.id && (
-                      <div className="border-t border-purple-500/20 p-4">
-                        <div className="bg-black/40 rounded-lg p-4 prose prose-invert prose-purple max-w-none">
-                          <h4 className="text-white font-semibold mb-2">Interpretation:</h4>
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {item.interpretation}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                ))}
-              </div>
-            </ScrollArea>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

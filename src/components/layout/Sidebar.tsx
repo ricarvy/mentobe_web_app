@@ -42,7 +42,7 @@ export function Sidebar() {
         <ScrollArea className="h-full px-2 py-6">
           <div className="space-y-2">
             {/* History Button */}
-            <Link href="/profile">
+            <Link href="/history">
               <Button
                 variant="ghost"
                 className={`
@@ -100,7 +100,7 @@ export function Sidebar() {
         <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
           <div className="space-y-2">
             {/* History Button */}
-            <Link href="/profile">
+            <Link href="/history">
               <Button
                 variant="ghost"
                 className="w-full justify-start text-purple-200 hover:text-white hover:bg-purple-500/10 px-4 py-3"
