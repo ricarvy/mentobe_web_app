@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sparkles, History, ChevronRight, Menu } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
 
   return (
     <>
@@ -15,6 +17,16 @@ export function Sidebar() {
       <aside className="hidden lg:block fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r border-purple-500/20 bg-black/40 backdrop-blur-md">
         <ScrollArea className="h-full px-4 py-6">
           <div className="space-y-6">
+            {/* History Button */}
+            <Link href="/profile">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-purple-200 hover:text-white hover:bg-purple-500/10"
+              >
+                <History className="mr-3 h-5 w-5" />
+                {t.home.history || 'Reading History'}
+              </Button>
+            </Link>
           </div>
         </ScrollArea>
       </aside>
@@ -47,6 +59,17 @@ export function Sidebar() {
         </div>
         <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
           <div className="space-y-6">
+            {/* History Button */}
+            <Link href="/profile">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-purple-200 hover:text-white hover:bg-purple-500/10"
+                onClick={() => setIsOpen(false)}
+              >
+                <History className="mr-3 h-5 w-5" />
+                {t.home.history || 'Reading History'}
+              </Button>
+            </Link>
           </div>
         </ScrollArea>
       </aside>
