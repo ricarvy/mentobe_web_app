@@ -18,13 +18,25 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: DEMO_ACCOUNT.email,
-    password: DEMO_ACCOUNT.password,
+    email: isLogin ? DEMO_ACCOUNT.email : '',
+    password: isLogin ? DEMO_ACCOUNT.password : '',
     confirmPassword: '',
     rememberMe: false,
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // 切换登录/注册模式时重置表单
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setErrors({});
+    setFormData({
+      email: !isLogin ? DEMO_ACCOUNT.email : '',
+      password: !isLogin ? DEMO_ACCOUNT.password : '',
+      confirmPassword: '',
+      rememberMe: false,
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -361,10 +373,7 @@ export default function LoginPage() {
               {isLogin ? t.auth.dontHaveAccount : t.auth.alreadyHaveAccount}
               <button
                 type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setErrors({});
-                }}
+                onClick={toggleMode}
                 className="ml-1 text-purple-400 hover:text-purple-300 transition-colors font-medium"
               >
                 {isLogin ? t.auth.createAccount : t.common.signIn}
