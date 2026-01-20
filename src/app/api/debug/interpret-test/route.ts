@@ -1,18 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { dailyQuotaManager, tarotInterpretationManager } from '@/storage/database';
 import { llmConfig } from '@/config/llm';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { LLMClient, Config } from 'coze-coding-dev-sdk';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+} from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
-  const results: any = {
-    timestamp: new Date().toISOString(),
-    tests: [],
-    totalDuration: 0,
-  };
+  return withErrorHandler(async () => {
+    const startTime = Date.now();
+    const results: any = {
+      timestamp: new Date().toISOString(),
+      tests: [],
+      totalDuration: 0,
+    };
 
-  try {
     const body = await request.json();
     const { userId = 'demo-user-id', skipLLM = false } = body;
 
@@ -176,17 +180,6 @@ export async function POST(request: NextRequest) {
 
     console.log('=== Interpret Debug Test Completed ===', results.summary);
 
-    return NextResponse.json(results);
-  } catch (error) {
-    console.error('[Interpret Debug Test Error]', error);
-    return NextResponse.json(
-      {
-        error: 'Debug test failed',
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        results,
-      },
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+    return Response.json(createSuccessResponse(results));
+  });
 }

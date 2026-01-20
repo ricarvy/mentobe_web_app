@@ -1,11 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { llmConfig, validateLLMConfig } from '@/config/llm';
 import { databaseConfig, validateDatabaseConfig } from '@/config/database';
 import { appConfig, validateAppConfig } from '@/config/app';
 import { DEMO_ACCOUNT, DEMO_ACCOUNT_ENABLED } from '@/config/demo-account';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+} from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const debugInfo = {
       timestamp: new Date().toISOString(),
       environment: {
@@ -62,16 +66,6 @@ export async function GET(request: NextRequest) {
       },
     };
 
-    return NextResponse.json(debugInfo);
-  } catch (error) {
-    console.error('[Debug Config Error]', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to get debug info',
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      },
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+    return Response.json(createSuccessResponse(debugInfo));
+  });
 }

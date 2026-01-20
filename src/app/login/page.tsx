@@ -10,6 +10,7 @@ import { Sparkles, Mail, Lock, Eye, EyeOff, Chrome, Apple } from 'lucide-react';
 import Link from 'next/link';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
+import { apiRequest, ApiRequestError } from '@/lib/api-client';
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -70,7 +71,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -80,53 +81,53 @@ export default function LoginPage() {
     try {
       if (isLogin) {
         // Handle login
-        const response = await fetch('/api/auth/login', {
+        const data = await apiRequest<{
+          id: string;
+          username: string;
+          email: string;
+          isDemo: boolean;
+        }>('/api/auth/login', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa(`${formData.email}:${formData.password}`)}`,
-          },
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
           }),
+          requireAuth: false,
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          // Store user info in localStorage (in production, use secure cookies)
-          localStorage.setItem('tarot_user', JSON.stringify(data));
-          // Redirect to home page
-          window.location.href = '/';
-        } else {
-          setErrors({ submit: data.error || t.auth.loginFailed });
-        }
+        // Store user info in localStorage (in production, use secure cookies)
+        localStorage.setItem('tarot_user', JSON.stringify(data));
+        // Redirect to home page
+        window.location.href = '/';
       } else {
         // Handle registration
-        const response = await fetch('/api/auth/register', {
+        const data = await apiRequest<{
+          id: string;
+          username: string;
+          email: string;
+        }>('/api/auth/register', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
           }),
+          requireAuth: false,
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          // Auto login after registration
-          saveAuthCredentials(data, formData.email, formData.password);
-          window.location.href = '/';
-        } else {
-          setErrors({ submit: data.error || t.auth.registrationFailed });
-        }
+        // Auto login after registration
+        saveAuthCredentials(data, formData.email, formData.password);
+        window.location.href = '/';
       }
     } catch (error) {
-      setErrors({ submit: isLogin ? t.auth.loginFailed : t.auth.registrationFailed });
+      console.error('Auth error:', error);
+      if (error instanceof ApiRequestError) {
+        // 友好的错误提示
+        setErrors({
+          submit: error.isServerError ? '服务器繁忙，请稍后再试' : error.message
+        });
+      } else {
+        setErrors({ submit: isLogin ? t.auth.loginFailed : t.auth.registrationFailed });
+      }
     } finally {
       setIsLoading(false);
     }

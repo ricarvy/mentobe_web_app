@@ -16,6 +16,7 @@ import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials, addAuthHeader, clearAuthCredentials } from '@/lib/auth';
+import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 
 export default function Home() {
   const { t } = useI18n();
@@ -47,32 +48,27 @@ export default function Home() {
 
   const fetchQuota = async (userId: string) => {
     try {
-      const headers = addAuthHeader({ 'Content-Type': 'application/json' });
-      const response = await fetch(`/api/auth/quota?userId=${userId}`, {
+      const data = await apiRequest<{
+        remaining: number;
+        used: number;
+        total: number | string;
+        isDemo: boolean;
+      }>(`/api/auth/quota?userId=${userId}`, {
         method: 'GET',
-        headers,
+        requireAuth: false,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setRemainingQuota(data.remaining);
-        setQuotaInfo({
-          remaining: data.remaining,
-          total: data.total,
-          isDemo: data.isDemo || false,
-        });
-      } else {
-        console.error('Failed to fetch quota:', response.status, response.statusText);
-        // 尝试读取错误信息
-        try {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-        } catch (e) {
-          console.error('Could not read error response');
-        }
-      }
+      setRemainingQuota(data.remaining);
+      setQuotaInfo({
+        remaining: data.remaining,
+        total: data.total,
+        isDemo: data.isDemo || false,
+      });
     } catch (error) {
       console.error('Error fetching quota:', error);
+      if (error instanceof ApiRequestError) {
+        console.error('[Quota Error]', error.message, error.code, error.details);
+      }
     }
   };
 
@@ -83,30 +79,30 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const userData = await apiRequest<{
+        id: string;
+        username: string;
+        email: string;
+        isDemo: boolean;
+      }>('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa(`${email}:${password}`)}`,
-        },
         body: JSON.stringify({ email, password }),
+        requireAuth: false, // 登录接口不需要Authorization header，但会在请求体中包含凭证
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        alert(error.error || t.auth.loginFailed);
-        return;
-      }
-
-      const userData = await response.json();
       setUser(userData);
       // 存储用户信息和认证凭证
       saveAuthCredentials(userData, email, password);
       setShowLoginModal(false);
       await fetchQuota(userData.id);
     } catch (error) {
-      console.error('Error:', error);
-      alert(t.auth.loginFailed);
+      console.error('Login error:', error);
+      if (error instanceof ApiRequestError) {
+        // 友好的错误提示
+        alert(error.isServerError ? '服务器繁忙，请稍后再试' : error.message);
+      } else {
+        alert(t.auth.loginFailed);
+      }
     }
   };
 
@@ -150,56 +146,42 @@ export default function Home() {
     setShowAiInterpretation(true);
 
     try {
-      const headers = addAuthHeader({ 'Content-Type': 'application/json' });
-      const response = await fetch('/api/tarot/interpret', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          userId: user.id,
-          question,
-          spread: selectedSpread,
-          cards: drawnCards,
-        }),
-      });
-
-      if (!response.ok) {
-        let errorMessage = 'Failed to get interpretation';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (e) {
-          // 如果无法解析为 JSON，尝试读取文本
-          try {
-            const errorText = await response.text();
-            console.error('Interpret API error response:', errorText);
-            errorMessage = `Server error (${response.status}): ${errorText}`;
-          } catch (textError) {
-            errorMessage = `Server error (${response.status})`;
+      await streamApiRequest(
+        '/api/tarot/interpret',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            userId: user.id,
+            question,
+            spread: selectedSpread,
+            cards: drawnCards,
+          }),
+        },
+        (text) => {
+          setAiInterpretation((prev) => prev + text);
+        },
+        async (fullText) => {
+          // 流式响应完成
+          console.log('Interpretation completed, length:', fullText.length);
+          // 更新剩余限额
+          await fetchQuota(user.id);
+        },
+        (error) => {
+          console.error('Stream error:', error);
+          if (error.isServerError) {
+            alert('服务器繁忙，请稍后再试');
+          } else {
+            alert(error.message);
           }
         }
-        throw new Error(errorMessage);
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('No reader');
-
-      const decoder = new TextDecoder();
-      let result = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const text = decoder.decode(value);
-        result += text;
-        setAiInterpretation(result);
-      }
-
-      // 更新剩余限额
-      await fetchQuota(user.id);
+      );
     } catch (error) {
       console.error('Error:', error);
-      alert(error instanceof Error ? error.message : 'Failed to generate interpretation, please try again later');
+      if (error instanceof ApiRequestError) {
+        alert(error.isServerError ? '服务器繁忙，请稍后再试' : error.message);
+      } else {
+        alert('生成解读失败，请稍后再试');
+      }
     } finally {
       setIsGenerating(false);
     }

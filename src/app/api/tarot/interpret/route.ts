@@ -1,8 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { LLMClient, Config } from 'coze-coding-dev-sdk';
 import { dailyQuotaManager, tarotInterpretationManager } from '@/storage/database';
 import { llmConfig } from '@/config';
 import type { TarotCard, Spread, SpreadPosition } from '@/lib/tarot';
+import {
+  ApiError,
+  ERROR_CODES,
+} from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
   console.log('=== /api/tarot/interpret 开始处理请求 ===');
@@ -22,9 +26,9 @@ export async function POST(request: NextRequest) {
     console.log('[2] 验证必填字段...');
     if (!userId || !question || !spread || !cards || cards.length === 0) {
       console.log('[2.1] 验证失败 - 缺少必填字段');
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_REQUEST,
+        'Missing required fields'
       );
     }
 
@@ -35,9 +39,9 @@ export async function POST(request: NextRequest) {
 
     if (!canInterpret) {
       console.log('[3.2] 配额已用完');
-      return NextResponse.json(
-        { error: '今日解读次数已用完，请明天再来' },
-        { status: 429 }
+      throw new ApiError(
+        ERROR_CODES.QUOTA_EXCEEDED,
+        '今日解读次数已用完，请明天再来'
       );
     }
 
@@ -131,7 +135,7 @@ ${cardsInfo}
     });
 
     console.log('[10] 返回流式响应...');
-    return new NextResponse(readableStream, {
+    return new Response(readableStream, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Transfer-Encoding': 'chunked',
@@ -146,10 +150,21 @@ ${cardsInfo}
     console.error('[错误堆栈]:', error instanceof Error ? error.stack : 'No stack');
     console.error('[错误详情]:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
 
-    // 确保总是返回 JSON
-    return NextResponse.json(
-      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    // 返回200状态码，错误信息在响应体中
+    const errorResponse = {
+      success: false,
+      error: {
+        code: error instanceof ApiError ? error.code : ERROR_CODES.INTERNAL_ERROR,
+        message: error instanceof ApiError ? error.message : '服务器繁忙，请稍后再试',
+        details: error instanceof Error ? error.message : String(error),
+      },
+    };
+
+    return new Response(JSON.stringify(errorResponse), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 }

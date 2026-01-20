@@ -1,17 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { dailyQuotaManager } from '@/storage/database';
 import { appConfig } from '@/config';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  ApiError,
+  ERROR_CODES,
+} from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const searchParams = request.nextUrl.searchParams;
     const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_REQUEST,
+        'User ID is required'
       );
     }
 
@@ -20,28 +26,21 @@ export async function GET(request: NextRequest) {
 
     // 演示账号显示无限配额
     if (userId === DEMO_ACCOUNT.id) {
-      return NextResponse.json({
+      const quotaData = {
         remaining: 999999,
         used: 0,
         total: 'Unlimited',
         isDemo: true,
-      });
+      };
+      return Response.json(createSuccessResponse(quotaData));
     }
 
-    return NextResponse.json({
+    const quotaData = {
       remaining,
       used: quota?.count || 0,
       total: appConfig.features.dailyQuota.free,
       isDemo: false,
-    });
-  } catch (error) {
-    console.error('Error in quota route:', error);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
-
-    // 确保总是返回 JSON
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+    };
+    return Response.json(createSuccessResponse(quotaData));
+  });
 }

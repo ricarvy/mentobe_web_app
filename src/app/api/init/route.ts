@@ -1,5 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { userManager } from '@/storage/database';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+} from '@/lib/api-response';
 
 // 默认管理员账号配置
 const DEFAULT_ADMIN = {
@@ -9,19 +13,20 @@ const DEFAULT_ADMIN = {
 };
 
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     // 检查是否已经存在管理员账号
     const existingAdmin = await userManager.getUserByEmail(DEFAULT_ADMIN.email);
-    
+
     if (existingAdmin) {
-      return NextResponse.json({
+      const response = {
         message: 'Admin user already exists',
         user: {
           id: existingAdmin.id,
           username: existingAdmin.username,
           email: existingAdmin.email,
         }
-      });
+      };
+      return Response.json(createSuccessResponse(response));
     }
 
     // 创建默认管理员账号
@@ -37,7 +42,7 @@ export async function POST(request: NextRequest) {
       email: admin.email,
     });
 
-    return NextResponse.json({
+    const response = {
       message: 'Admin user created successfully',
       user: {
         id: admin.id,
@@ -48,12 +53,7 @@ export async function POST(request: NextRequest) {
         email: DEFAULT_ADMIN.email,
         password: DEFAULT_ADMIN.password,
       }
-    });
-  } catch (error) {
-    console.error('Error in init route:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+    };
+    return Response.json(createSuccessResponse(response));
+  });
 }

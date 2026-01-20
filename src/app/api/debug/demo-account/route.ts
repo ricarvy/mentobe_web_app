@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { DEMO_ACCOUNT, DEMO_ACCOUNT_ENABLED } from '@/config/demo-account';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+} from '@/lib/api-response';
 
 export async function GET(request: NextRequest) {
-  try {
-    return NextResponse.json({
+  return withErrorHandler(async () => {
+    const demoAccountInfo = {
       enabled: DEMO_ACCOUNT_ENABLED,
       email: DEMO_ACCOUNT.email,
       passwordLength: DEMO_ACCOUNT.password.length,
@@ -16,12 +20,7 @@ export async function GET(request: NextRequest) {
       envDemoEmail: process.env.DEMO_ACCOUNT_EMAIL,
       envDemoPassword: process.env.DEMO_ACCOUNT_PASSWORD ? 'SET' : 'NOT_SET',
       envDemoEnabled: process.env.DEMO_ACCOUNT_ENABLED,
-    });
-  } catch (error) {
-    console.error('[Debug Demo Account] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+    };
+    return Response.json(createSuccessResponse(demoAccountInfo));
+  });
 }

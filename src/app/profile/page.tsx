@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useUser } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
 import { addAuthHeader } from '@/lib/auth';
+import { apiRequest, ApiRequestError } from '@/lib/api-client';
 import { Calendar, User, Mail, Clock, ChevronRight, ChevronDown, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -39,26 +40,19 @@ export default function ProfilePage() {
     try {
       setLoading(true);
 
-      const headers = addAuthHeader({ 'Content-Type': 'application/json' });
-      const response = await fetch(`/api/tarot/history?userId=${user.id}`, {
-        method: 'GET',
-        headers,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setHistory(data.interpretations || []);
-      } else {
-        console.error('Failed to fetch history:', response.status, response.statusText);
-        try {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-        } catch (e) {
-          console.error('Could not read error response');
+      const data = await apiRequest<{ interpretations: HistoryItem[] }>(
+        `/api/tarot/history?userId=${user.id}`,
+        {
+          method: 'GET',
         }
-      }
+      );
+
+      setHistory(data.interpretations || []);
     } catch (error) {
       console.error('Error fetching history:', error);
+      if (error instanceof ApiRequestError) {
+        console.error('[History Error]', error.message, error.code, error.details);
+      }
     } finally {
       setLoading(false);
     }

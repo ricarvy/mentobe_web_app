@@ -1,16 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { userManager } from '@/storage/database';
 import type { InsertUser } from '@/storage/database';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  ApiError,
+  ERROR_CODES,
+} from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const body = await request.json();
     const { email, password }: { email: string; password: string } = body;
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_REQUEST,
+        'Email and password are required'
       );
     }
 
@@ -20,9 +26,9 @@ export async function POST(request: NextRequest) {
     // 检查邮箱是否已存在
     const existingEmail = await userManager.getUserByEmail(email);
     if (existingEmail) {
-      return NextResponse.json(
-        { error: 'Email already exists' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.USER_EXISTS,
+        'Email already exists'
       );
     }
 
@@ -35,17 +41,12 @@ export async function POST(request: NextRequest) {
 
     const user = await userManager.createUser(userData);
 
-    return NextResponse.json({
+    const responseData = {
       id: user.id,
       username: user.username,
       email: user.email,
       isActive: user.isActive,
-    });
-  } catch (error) {
-    console.error('Error in register route:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+    };
+    return Response.json(createSuccessResponse(responseData, 'Registration successful'));
+  });
 }

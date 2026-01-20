@@ -1,8 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { isDemoAccount, DEMO_ACCOUNT } from '@/config/demo-account';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  createErrorResponse,
+  ApiError,
+  ERROR_CODES,
+} from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     // 获取 Authorization header
     const authHeader = request.headers.get('authorization');
     console.log('[Login Attempt] Authorization header present:', !!authHeader);
@@ -29,13 +36,14 @@ export async function POST(request: NextRequest) {
           // 验证 header 中的凭证与请求体中的凭证是否一致
           if (headerEmail !== email || headerPassword !== password) {
             console.log('[Login Failed] Credentials mismatch between body and header');
-            return NextResponse.json(
-              { error: 'Credentials mismatch' },
-              { status: 401 }
+            throw new ApiError(
+              ERROR_CODES.UNAUTHORIZED,
+              'Credentials mismatch'
             );
           }
         }
       } catch (error) {
+        if (error instanceof ApiError) throw error;
         console.error('[Authorization Parse Error]', error);
         // 解析失败时不阻断登录流程，继续使用请求体中的凭证
       }
@@ -43,9 +51,9 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       console.log('[Login Failed] Missing credentials');
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_REQUEST,
+        'Email and password are required'
       );
     }
 
@@ -63,36 +71,30 @@ export async function POST(request: NextRequest) {
     const emailMatchesDemo = email === DEMO_ACCOUNT.email;
     if (emailMatchesDemo && !isDemo) {
       console.log('[Login Failed] Demo account email but invalid password or disabled');
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_CREDENTIALS,
+        'Invalid email or password'
       );
     }
 
     if (isDemo) {
       console.log('[Login Success] Demo account authenticated');
-      return NextResponse.json({
+      const userData = {
         id: DEMO_ACCOUNT.id,
         username: DEMO_ACCOUNT.username,
         email: DEMO_ACCOUNT.email,
         isActive: DEMO_ACCOUNT.isActive,
         isDemo: true,
         unlimitedQuota: DEMO_ACCOUNT.unlimitedQuota,
-      });
+      };
+      return Response.json(createSuccessResponse(userData, 'Login successful'));
     }
 
     // 非演示账号返回错误（当前只支持演示账号）
     console.log('[Login Failed] Only demo account is supported');
-    return NextResponse.json(
-      { error: 'Invalid email or password' },
-      { status: 401 }
+    throw new ApiError(
+      ERROR_CODES.INVALID_CREDENTIALS,
+      'Invalid email or password'
     );
-  } catch (error) {
-    console.error('[Login Route Error]', error);
-    console.error('[Login Route Error Stack]', error instanceof Error ? error.stack : 'No stack trace');
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+  });
 }

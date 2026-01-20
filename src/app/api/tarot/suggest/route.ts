@@ -1,17 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { LLMClient, Config } from 'coze-coding-dev-sdk';
 import { llmConfig } from '@/config';
 import type { TarotCard } from '@/lib/tarot';
+import {
+  withErrorHandler,
+  createSuccessResponse,
+  ApiError,
+  ERROR_CODES,
+} from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const body = await request.json();
     const { question, cards, interpretation }: { question: string; cards: TarotCard[]; interpretation: string } = body;
 
     if (!question || !cards || !interpretation) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+      throw new ApiError(
+        ERROR_CODES.INVALID_REQUEST,
+        'Missing required fields'
       );
     }
 
@@ -54,12 +60,6 @@ ${interpretation}
       }
     );
 
-    return NextResponse.json({ suggestion: response.content });
-  } catch (error) {
-    console.error('Error in suggest route:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+    return Response.json(createSuccessResponse({ suggestion: response.content }));
+  });
 }
