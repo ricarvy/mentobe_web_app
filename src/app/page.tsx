@@ -15,6 +15,7 @@ import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
+import { saveAuthCredentials, addAuthHeader, clearAuthCredentials } from '@/lib/auth';
 
 export default function Home() {
   const { t } = useI18n();
@@ -46,7 +47,12 @@ export default function Home() {
 
   const fetchQuota = async (userId: string) => {
     try {
-      const response = await fetch(`/api/auth/quota?userId=${userId}`);
+      const headers = addAuthHeader({ 'Content-Type': 'application/json' });
+      const response = await fetch(`/api/auth/quota?userId=${userId}`, {
+        method: 'GET',
+        headers,
+      });
+
       if (response.ok) {
         const data = await response.json();
         setRemainingQuota(data.remaining);
@@ -94,7 +100,8 @@ export default function Home() {
 
       const userData = await response.json();
       setUser(userData);
-      localStorage.setItem('tarot_user', JSON.stringify(userData));
+      // 存储用户信息和认证凭证
+      saveAuthCredentials(userData, email, password);
       setShowLoginModal(false);
       await fetchQuota(userData.id);
     } catch (error) {
@@ -105,8 +112,10 @@ export default function Home() {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('tarot_user');
+    clearAuthCredentials();
     setRemainingQuota(3);
+    setEmail(DEMO_ACCOUNT.email);
+    setPassword(DEMO_ACCOUNT.password);
   };
 
   const handleSpreadSelect = (spread: Spread) => {
@@ -141,9 +150,10 @@ export default function Home() {
     setShowAiInterpretation(true);
 
     try {
+      const headers = addAuthHeader({ 'Content-Type': 'application/json' });
       const response = await fetch('/api/tarot/interpret', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           userId: user.id,
           question,

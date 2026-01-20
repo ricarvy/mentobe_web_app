@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Sparkles, Mail, Lock, Eye, EyeOff, Chrome, Apple } from 'lucide-react';
 import Link from 'next/link';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
+import { saveAuthCredentials } from '@/lib/auth';
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -118,7 +119,7 @@ export default function LoginPage() {
 
         if (response.ok) {
           // Auto login after registration
-          localStorage.setItem('tarot_user', JSON.stringify(data));
+          saveAuthCredentials(data, formData.email, formData.password);
           window.location.href = '/';
         } else {
           setErrors({ submit: data.error || t.auth.registrationFailed });
