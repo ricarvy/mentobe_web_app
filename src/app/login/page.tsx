@@ -95,8 +95,8 @@ export default function LoginPage() {
           requireAuth: false,
         });
 
-        // Store user info in localStorage (in production, use secure cookies)
-        localStorage.setItem('tarot_user', JSON.stringify(data));
+        // Store user info and auth credentials in localStorage
+        saveAuthCredentials(data, formData.email, formData.password);
         // Redirect to home page
         window.location.href = '/';
       } else {
