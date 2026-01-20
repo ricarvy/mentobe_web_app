@@ -18,9 +18,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ interpretations });
   } catch (error) {
     console.error('Error fetching history:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+
     return NextResponse.json(
       { error: 'Failed to fetch history' },
-      { status: 500 }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

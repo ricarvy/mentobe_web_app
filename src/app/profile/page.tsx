@@ -34,13 +34,21 @@ export default function ProfilePage() {
 
   const fetchHistory = async () => {
     if (!user) return;
-    
+
     try {
       setLoading(true);
       const response = await fetch(`/api/tarot/history?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
         setHistory(data.interpretations || []);
+      } else {
+        console.error('Failed to fetch history:', response.status, response.statusText);
+        try {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+        } catch (e) {
+          console.error('Could not read error response');
+        }
       }
     } catch (error) {
       console.error('Error fetching history:', error);

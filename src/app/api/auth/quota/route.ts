@@ -36,9 +36,12 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in quota route:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+
+    // 确保总是返回 JSON
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

@@ -55,6 +55,15 @@ export default function Home() {
           total: data.total,
           isDemo: data.isDemo || false,
         });
+      } else {
+        console.error('Failed to fetch quota:', response.status, response.statusText);
+        // 尝试读取错误信息
+        try {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+        } catch (e) {
+          console.error('Could not read error response');
+        }
       }
     } catch (error) {
       console.error('Error fetching quota:', error);
@@ -144,8 +153,21 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to get interpretation');
+        let errorMessage = 'Failed to get interpretation';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          // 如果无法解析为 JSON，尝试读取文本
+          try {
+            const errorText = await response.text();
+            console.error('Interpret API error response:', errorText);
+            errorMessage = `Server error (${response.status}): ${errorText}`;
+          } catch (textError) {
+            errorMessage = `Server error (${response.status})`;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       const reader = response.body?.getReader();
