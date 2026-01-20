@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { MainContent } from '@/components/layout/MainContent';
 import { Footer } from '@/components/layout/Footer';
 import { StarBackground } from '@/components/StarBackground';
 import { I18nProvider } from '@/lib/i18n';
 import { UserProvider } from '@/lib/userContext';
+import { SidebarProvider } from '@/components/layout/SidebarContext';
 
 export const metadata: Metadata = {
   title: {
@@ -190,17 +192,19 @@ export default function RootLayout({
       <body className="antialiased">
         <I18nProvider>
           <UserProvider>
-            <StarBackground />
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <div className="flex flex-1">
-                <Sidebar />
-                <main className="flex-1 lg:ml-64">
-                  {children}
-                </main>
+            <SidebarProvider>
+              <StarBackground />
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <div className="flex flex-1">
+                  <Sidebar />
+                  <MainContent>
+                    {children}
+                  </MainContent>
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
+            </SidebarProvider>
           </UserProvider>
         </I18nProvider>
       </body>
