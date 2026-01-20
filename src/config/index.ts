@@ -7,3 +7,4 @@ export { paddleConfig } from './paddle';
 export { llmConfig } from './llm';
 export { databaseConfig } from './database';
 export { appConfig } from './app';
+export { backendConfig, getApiUrl, validateBackendConfig } from './backend';

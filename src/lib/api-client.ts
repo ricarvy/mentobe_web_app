@@ -8,6 +8,7 @@ import type {
   ApiResponse,
 } from './api-response';
 import { addAuthHeader } from './auth';
+import { getApiUrl } from '@/config';
 
 /**
  * API 请求配置
@@ -51,6 +52,9 @@ export async function apiRequest<T = any>(
 ): Promise<T> {
   const { requireAuth = true, ...requestConfig } = config;
 
+  // 构建完整的API URL
+  const fullUrl = getApiUrl(url);
+
   // 添加 Authorization header（如果需要）
   let headers: HeadersInit = requestConfig.headers || {};
 
@@ -69,7 +73,7 @@ export async function apiRequest<T = any>(
   }
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(fullUrl, {
       ...requestConfig,
       headers,
     });
@@ -141,6 +145,9 @@ export async function streamApiRequest(
 ): Promise<void> {
   const { requireAuth = true, ...requestConfig } = config;
 
+  // 构建完整的API URL
+  const fullUrl = getApiUrl(url);
+
   // 添加 Authorization header（如果需要）
   let headers: HeadersInit = requestConfig.headers || {};
 
@@ -159,7 +166,7 @@ export async function streamApiRequest(
   }
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(fullUrl, {
       ...requestConfig,
       headers,
     });
