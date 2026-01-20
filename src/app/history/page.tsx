@@ -42,11 +42,50 @@ export default function HistoryPage() {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
+  // 流式显示状态
+  const [streamingText, setStreamingText] = useState<Record<string, string>>({});
+  const [isStreaming, setIsStreaming] = useState<Record<string, boolean>>({});
+
   useEffect(() => {
     if (user) {
       fetchHistory();
     }
   }, [user]);
+
+  // 流式显示效果
+  useEffect(() => {
+    if (expandedItem) {
+      const item = history.find(h => h.id === expandedItem);
+      if (item?.interpretation && !streamingText[expandedItem]) {
+        // 开始流式显示
+        startStreamingText(expandedItem, item.interpretation);
+      }
+    }
+  }, [expandedItem, history]);
+
+  const startStreamingText = (itemId: string, text: string) => {
+    setIsStreaming(prev => ({ ...prev, [itemId]: true }));
+    setStreamingText(prev => ({ ...prev, [itemId]: '' }));
+
+    let index = 0;
+    const speed = 10; // 每次显示的字符数
+
+    const interval = setInterval(() => {
+      if (index >= text.length) {
+        clearInterval(interval);
+        setIsStreaming(prev => ({ ...prev, [itemId]: false }));
+        return;
+      }
+
+      const nextIndex = Math.min(index + speed, text.length);
+      setStreamingText(prev => ({
+        ...prev,
+        [itemId]: text.substring(0, nextIndex)
+      }));
+
+      index = nextIndex;
+    }, 30); // 每30ms更新一次
+  };
 
   const fetchHistory = async () => {
     if (!user) return;
@@ -313,11 +352,18 @@ export default function HistoryPage() {
                         <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                           <Sparkles className="h-5 w-5 text-purple-400" />
                           AI Interpretation
+                          {isStreaming[item.id] && (
+                            <span className="flex items-center gap-1 text-xs text-purple-400">
+                              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
+                              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse delay-100" />
+                              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse delay-200" />
+                            </span>
+                          )}
                         </h3>
                         {item.interpretation ? (
                           <div className="bg-black rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20 text-white">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                              {item.interpretation}
+                              {streamingText[item.id] || item.interpretation}
                             </ReactMarkdown>
                           </div>
                         ) : (

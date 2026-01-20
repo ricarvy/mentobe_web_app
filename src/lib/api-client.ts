@@ -11,6 +11,45 @@ import { addAuthHeader } from './auth';
 import { getApiUrl } from '@/config';
 
 /**
+ * 语言代码映射
+ * 前端语言代码 -> 后端语言代码
+ */
+const LANG_MAP: Record<string, string> = {
+  zh: 'cn',
+  en: 'en',
+  ja: 'jp',
+};
+
+/**
+ * 获取当前语言代码
+ */
+function getCurrentLang(): string {
+  // 优先从 localStorage 读取
+  const savedLang = localStorage.getItem('tarot_language');
+  if (savedLang && LANG_MAP[savedLang]) {
+    return LANG_MAP[savedLang];
+  }
+
+  // 检测浏览器语言
+  const browserLang = navigator.language.split('-')[0];
+  if (LANG_MAP[browserLang]) {
+    return LANG_MAP[browserLang];
+  }
+
+  // 默认返回英文
+  return 'en';
+}
+
+/**
+ * 为 URL 添加语言参数
+ */
+function addLangParam(url: string): string {
+  const lang = getCurrentLang();
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}lang=${lang}`;
+}
+
+/**
  * API 请求配置
  */
 export interface ApiRequestConfig extends RequestInit {
@@ -52,8 +91,11 @@ export async function apiRequest<T = any>(
 ): Promise<T> {
   const { requireAuth = true, ...requestConfig } = config;
 
+  // 为 URL 添加语言参数
+  const urlWithLang = addLangParam(url);
+
   // 构建完整的API URL
-  const fullUrl = getApiUrl(url);
+  const fullUrl = getApiUrl(urlWithLang);
 
   // 添加 Authorization header（如果需要）
   let headers: HeadersInit = requestConfig.headers || {};
@@ -168,8 +210,11 @@ export async function streamApiRequest(
 ): Promise<void> {
   const { requireAuth = true, ...requestConfig } = config;
 
+  // 为 URL 添加语言参数
+  const urlWithLang = addLangParam(url);
+
   // 构建完整的API URL
-  const fullUrl = getApiUrl(url);
+  const fullUrl = getApiUrl(urlWithLang);
 
   // 添加 Authorization header（如果需要）
   let headers: HeadersInit = requestConfig.headers || {};
