@@ -8,6 +8,7 @@ import { StarBackground } from '@/components/StarBackground';
 import { I18nProvider } from '@/lib/i18n';
 import { UserProvider } from '@/lib/userContext';
 import { SidebarProvider } from '@/components/layout/SidebarContext';
+import { StructuredData } from '@/components/layout/StructuredData';
 
 export const metadata: Metadata = {
   title: {
@@ -96,98 +97,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebApplication',
-              name: 'Mentob AI',
-              description: 'AI-powered tarot reading platform offering personalized insights and guidance',
-              url: 'https://mentobai.com',
-              applicationCategory: 'LifestyleApplication',
-              operatingSystem: 'Web',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'USD',
-                availability: 'https://schema.org/InStock',
-              },
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '4.8',
-                ratingCount: '1250',
-              },
-              featureList: [
-                'AI-powered tarot readings',
-                'Multiple tarot spreads',
-                'Real-time interpretation',
-                'Personalized insights',
-                'Free daily readings',
-              ],
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'Mentob AI',
-              url: 'https://mentobai.com',
-              logo: 'https://mentobai.com/logo.png',
-              description: 'AI-powered tarot reading platform',
-              contactPoint: {
-                '@type': 'ContactPoint',
-                contactType: 'customer service',
-                email: 'contact@mentobai.com',
-                availableLanguage: ['English', 'Spanish', 'French', 'German'],
-              },
-              sameAs: [
-                'https://twitter.com/mentobai',
-                'https://facebook.com/mentobai',
-                'https://instagram.com/mentobai',
-              ],
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'FAQPage',
-              mainEntity: [
-                {
-                  '@type': 'Question',
-                  name: 'How does AI tarot reading work?',
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Our AI analyzes traditional tarot card meanings and combines them with advanced natural language processing to provide personalized interpretations based on your questions and the cards drawn.',
-                  },
-                },
-                {
-                  '@type': 'Question',
-                  name: 'Is the tarot reading free?',
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Yes! We offer free tarot readings. After creating an account, you get 3 free AI-powered interpretations per day.',
-                  },
-                },
-                {
-                  '@type': 'Question',
-                  name: 'What tarot spreads are available?',
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'We offer various spreads including Single Card for quick insights, Three Card spread for past-present-future readings, and the comprehensive Celtic Cross spread for detailed analysis.',
-                  },
-                },
-              ],
-            }),
-          }}
-        />
+        {/* Structured Data for SEO */}
+        <StructuredData />
       </head>
       <body className="antialiased">
         <I18nProvider>
