@@ -227,71 +227,68 @@ export default function HistoryPage() {
                           <Sparkles className="h-5 w-5 text-purple-400" />
                           Cards Drawn
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                           {cards.map((card, index) => (
-                            <Card
+                            <div
                               key={`${card.id}-${index}`}
-                              className="bg-black/30 border-purple-500/20 overflow-hidden"
+                              className="relative bg-black/30 border border-purple-500/20 rounded-lg overflow-hidden"
                             >
-                              <div className="relative">
-                                {/* Card Image */}
-                                <div className={`relative aspect-[3/5] bg-gradient-to-br from-purple-900/50 to-pink-900/50 ${card.isReversed ? 'rotate-180' : ''}`}>
-                                  {card.imageUrl ? (
-                                    <Image
-                                      src={card.imageUrl}
-                                      alt={card.nameEn}
-                                      fill
-                                      className="object-cover"
-                                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    />
-                                  ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                      <Sparkles className="h-12 w-12 text-purple-400/50" />
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Position Badge */}
-                                <div className="absolute top-2 left-2">
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-black/60 backdrop-blur-sm text-xs font-semibold"
-                                  >
-                                    #{index + 1}
-                                  </Badge>
-                                </div>
-
-                                {/* Reversed Indicator */}
-                                {card.isReversed && (
-                                  <div className="absolute top-2 right-2">
-                                    <Badge
-                                      variant="destructive"
-                                      className="bg-red-600/90 backdrop-blur-sm text-xs"
-                                    >
-                                      Reversed
-                                    </Badge>
+                              {/* Card Image */}
+                              <div className={`relative w-full h-40 bg-gradient-to-br from-purple-900/50 to-pink-900/50 ${card.isReversed ? 'rotate-180' : ''}`}>
+                                {card.imageUrl ? (
+                                  <Image
+                                    src={card.imageUrl}
+                                    alt={card.nameEn}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                                  />
+                                ) : (
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                    <Sparkles className="h-8 w-8 text-purple-400/50" />
                                   </div>
                                 )}
                               </div>
 
+                              {/* Position Badge */}
+                              <div className="absolute top-1 left-1">
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-black/60 backdrop-blur-sm text-[10px] font-semibold px-1.5 py-0.5"
+                                >
+                                  #{index + 1}
+                                </Badge>
+                              </div>
+
+                              {/* Reversed Indicator */}
+                              {card.isReversed && (
+                                <div className="absolute top-1 right-1">
+                                  <Badge
+                                    variant="destructive"
+                                    className="bg-red-600/90 backdrop-blur-sm text-[10px] px-1.5 py-0.5"
+                                  >
+                                    Reversed
+                                  </Badge>
+                                </div>
+                              )}
                               {/* Card Info */}
-                              <div className="p-3 border-t border-purple-500/20">
-                                <p className="text-sm font-semibold text-white mb-1">
+                              <div className="p-2 border-t border-purple-500/20 mt-auto">
+                                <p className="text-xs font-semibold text-white mb-0.5 truncate">
                                   {card.name}
                                 </p>
-                                <p className="text-xs text-purple-300 mb-2">
+                                <p className="text-[10px] text-purple-300 truncate">
                                   {card.nameEn}
                                 </p>
                                 {!card.isReversed && (
                                   <Badge
                                     variant="outline"
-                                    className="border-purple-500/30 text-purple-300 text-xs"
+                                    className="border-purple-500/30 text-purple-300 text-[10px] mt-1"
                                   >
                                     Upright
                                   </Badge>
                                 )}
                               </div>
-                            </Card>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -302,11 +299,19 @@ export default function HistoryPage() {
                           <Sparkles className="h-5 w-5 text-purple-400" />
                           AI Interpretation
                         </h3>
-                        <div className="bg-black/40 rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {item.interpretation}
-                          </ReactMarkdown>
-                        </div>
+                        {item.interpretation ? (
+                          <div className="bg-black/40 rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {item.interpretation}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          <div className="bg-black/40 rounded-lg p-4 border border-purple-500/20 text-center">
+                            <p className="text-purple-300 text-sm">
+                              No interpretation available
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
