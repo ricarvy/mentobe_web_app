@@ -4,6 +4,7 @@
  */
 
 export { paddleConfig } from './paddle';
+export { stripeConfig } from './stripe';
 export { llmConfig } from './llm';
 export { databaseConfig } from './database';
 export { appConfig } from './app';

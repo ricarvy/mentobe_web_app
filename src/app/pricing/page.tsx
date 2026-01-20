@@ -7,26 +7,20 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { paddleConfig } from '@/config';
+import { stripeConfig } from '@/config';
+import { useUser } from '@/lib/userContext';
+import { apiRequest } from '@/lib/api-client';
 
+// Stripe.js 类型定义
 declare global {
   interface Window {
-    Paddle?: {
-      Initialize: (options: { token: string; environment: string }) => void;
-      Checkout: {
-        open: (options: {
-          settings: {
-            displayMode: string;
-            theme: string;
-            locale: string;
-            successUrl: string;
-          };
-          items: Array<{
-            priceId: string;
-            quantity: number;
-          }>;
-        }) => void;
-        close: () => void;
+    Stripe?: (publishableKey: string) => {
+      redirectToCheckout: (options: { sessionId: string }) => Promise<void>;
+      initEmbeddedCheckout: (options: {
+        fetchClientSecret: () => Promise<string>;
+      }) => {
+        mount: (element: HTMLElement) => void;
+        destroy: () => void;
       };
     };
   }
@@ -34,25 +28,19 @@ declare global {
 
 export default function PricingPage() {
   const { t } = useI18n();
-  const [paddleInitialized, setPaddleInitialized] = useState(false);
+  const { user } = useUser();
+  const [stripeLoaded, setStripeLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   useEffect(() => {
-    // 加载 Paddle.js
-    const loadPaddle = () => {
-      if (window.Paddle) {
-        window.Paddle.Initialize({
-          token: paddleConfig.token,
-          environment: paddleConfig.environment,
-        });
-        setPaddleInitialized(true);
-      }
-    };
-
-    // 动态加载 Paddle.js
+    // 动态加载 Stripe.js
     const script = document.createElement('script');
-    script.src = paddleConfig.scriptUrl;
-    script.onload = loadPaddle;
+    script.src = 'https://js.stripe.com/v3/';
+    script.async = true;
+    script.onload = () => {
+      setStripeLoaded(true);
+    };
     document.body.appendChild(script);
 
     return () => {
@@ -62,27 +50,46 @@ export default function PricingPage() {
     };
   }, []);
 
-  const handleSubscribe = (plan: 'monthly' | 'yearly') => {
-    if (!paddleInitialized) {
-      console.error('Paddle not initialized');
+  const handleSubscribe = async (plan: 'monthly' | 'yearly') => {
+    if (!stripeLoaded) {
+      console.error('Stripe.js not loaded');
       return;
     }
 
-    const priceId = plan === 'monthly' ? paddleConfig.priceIds.monthly : paddleConfig.priceIds.yearly;
+    if (!user) {
+      // 如果用户未登录，跳转到登录页面
+      window.location.href = '/login';
+      return;
+    }
 
-    window.Paddle?.Checkout.open({
-      settings: {
-        ...paddleConfig.settings,
-        locale: t.common.language === '中文' || t.common.language === '语言' ? 'zh-Hans' :
-                 t.common.language === '日本語' || t.common.language === '言語' ? 'ja' : 'en',
-      },
-      items: [
-        {
-          priceId: priceId,
-          quantity: 1,
-        },
-      ],
-    });
+    setLoading(true);
+
+    try {
+      // 调用后端 API 创建 Checkout Session
+      const response = await apiRequest<{
+        sessionId: string;
+        publishableKey: string;
+      }>('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        requireAuth: true,
+        body: JSON.stringify({
+          priceId: plan === 'monthly' ? stripeConfig.priceIds.monthly : stripeConfig.priceIds.yearly,
+          userId: user.id,
+          userEmail: user.email,
+        }),
+      });
+
+      // 使用 Stripe.js 重定向到 Checkout 页面
+      const stripe = window.Stripe!(response.publishableKey);
+      await stripe.redirectToCheckout({
+        sessionId: response.sessionId,
+      });
+    } catch (error) {
+      console.error('Failed to create checkout session:', error);
+      alert('Failed to create checkout session. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   type Plan = {
@@ -225,14 +232,14 @@ export default function PricingPage() {
                   ) : (
                     <Button
                       onClick={() => plan.billingCycle && handleSubscribe(plan.billingCycle)}
-                      disabled={!paddleInitialized}
+                      disabled={!stripeLoaded || loading}
                       className={`w-full ${
                         plan.popular
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                           : 'bg-purple-600 hover:bg-purple-700'
                       }`}
                     >
-                      {plan.button}
+                      {loading ? 'Processing...' : plan.button}
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   )}
@@ -308,10 +315,11 @@ export default function PricingPage() {
             </p>
             <Button
               size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8"
+              disabled={!stripeLoaded || loading}
               onClick={() => handleSubscribe('monthly')}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8"
             >
-              Get Started Now
+              {loading ? 'Processing...' : 'Get Started Now'}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </div>
