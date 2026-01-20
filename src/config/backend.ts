@@ -23,10 +23,14 @@ export interface BackendConfig {
  * - POST /api/tarot/interpret - AI塔罗解读（流式）
  * - GET /api/tarot/history - 解读历史记录
  * - GET /api/tarot/suggest - 相关问题建议
+ *
+ * 注意：由于 CORS 限制，前端通过本地代理访问后端服务
  */
 export const backendConfig: BackendConfig = {
-  // 从环境变量读取，如果没有则使用默认值
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901',
+  // 使用本地代理绕过 CORS 限制
+  // 开发环境：使用本地代理 /api/proxy
+  // 生产环境：使用本地代理 /api/proxy
+  baseURL: '/api/proxy',
 
   // 请求超时时间（毫秒）
   timeout: Number(process.env.NEXT_PUBLIC_BACKEND_TIMEOUT) || 30000,

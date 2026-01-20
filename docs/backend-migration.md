@@ -22,10 +22,12 @@
 **关键配置**:
 ```typescript
 export const backendConfig: BackendConfig = {
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901',
+  baseURL: '/api/proxy',  // 使用本地代理绕过 CORS 限制
   timeout: Number(process.env.NEXT_PUBLIC_BACKEND_TIMEOUT) || 30000,
 };
 ```
+
+**说明**: 前端请求先发送到本地 Next.js API Route (`/api/proxy/*`)，再由代理转发到后端服务 (`http://120.76.142.91:8901`)。这样可以绕过浏览器的 CORS 限制。
 
 ### 2. 更新文件
 
@@ -175,7 +177,16 @@ curl -X GET "http://localhost:5000/api/tarot/history?userId=xxx"
 1. 确认后端API路径是否与前端调用路径一致
 2. 参考 `http://120.76.142.91:8901/docs#/` 确认正确的API路径
 
-### 问题3: 认证失败
+### 问题3: CORS 跨域错误
+
+**症状**: 浏览器控制台显示 "Access-Control-Allow-Origin" 相关错误
+
+**解决方案**:
+- ✅ 已修复：通过 Next.js API Route 代理绕过 CORS 限制
+- 新增文件：`src/app/api/proxy/[...path]/route.ts`
+- 详见：`docs/cors-fix.md`
+
+### 问题4: 认证失败
 
 **症状**: API返回 "Unauthorized" 错误
 
@@ -184,7 +195,7 @@ curl -X GET "http://localhost:5000/api/tarot/history?userId=xxx"
 2. 确认后端的认证机制（Basic Auth）是否正确配置
 3. 查看后端日志确认认证错误的具体原因
 
-### 问题4: 流式响应中断
+### 问题5: 流式响应中断
 
 **症状**: AI解读过程中突然中断
 

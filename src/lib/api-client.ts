@@ -73,9 +73,32 @@ export async function apiRequest<T = any>(
   }
 
   try {
+    // 添加详细日志
+    const requestContentType = headers instanceof Headers ? headers.get('Content-Type') : (headers as Record<string, string>)['Content-Type'];
+    const hasAuth = headers instanceof Headers ? headers.has('Authorization') : !!(headers as Record<string, string>)['Authorization'];
+
+    console.log('[API Request]', {
+      url: fullUrl,
+      method: requestConfig.method || 'GET',
+      requireAuth,
+      headers: {
+        'Content-Type': requestContentType,
+        'Authorization': hasAuth ? '***' : 'N/A',
+      },
+      hasBody: !!requestConfig.body,
+    });
+
     const response = await fetch(fullUrl, {
       ...requestConfig,
       headers,
+    });
+
+    console.log('[API Response]', {
+      url: fullUrl,
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      contentType: response.headers.get('content-type'),
     });
 
     // 尝试解析响应
@@ -166,9 +189,32 @@ export async function streamApiRequest(
   }
 
   try {
+    // 添加详细日志
+    const requestContentType = headers instanceof Headers ? headers.get('Content-Type') : (headers as Record<string, string>)['Content-Type'];
+    const hasAuth = headers instanceof Headers ? headers.has('Authorization') : !!(headers as Record<string, string>)['Authorization'];
+
+    console.log('[API Request]', {
+      url: fullUrl,
+      method: requestConfig.method || 'GET',
+      requireAuth,
+      headers: {
+        'Content-Type': requestContentType,
+        'Authorization': hasAuth ? '***' : 'N/A',
+      },
+      hasBody: !!requestConfig.body,
+    });
+
     const response = await fetch(fullUrl, {
       ...requestConfig,
       headers,
+    });
+
+    console.log('[API Response]', {
+      url: fullUrl,
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      contentType: response.headers.get('content-type'),
     });
 
     // 检查响应是否为流式响应
