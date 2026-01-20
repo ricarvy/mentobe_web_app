@@ -43,11 +43,13 @@ async function proxyRequest(
   try {
     // 构建后端 URL
     const path = params.path.join('/');
-    const backendUrl = `${BACKEND_URL}/${path}`;
+    const queryString = request.nextUrl.search;
+    const backendUrl = `${BACKEND_URL}/${path}${queryString}`;
 
     console.log('[Backend Proxy]', {
       method,
       path,
+      queryString,
       backendUrl,
       hasAuth: request.headers.has('authorization'),
     });
