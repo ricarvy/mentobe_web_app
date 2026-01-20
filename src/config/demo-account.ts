@@ -20,11 +20,19 @@ const DEMO_EMAIL = process.env.DEMO_ACCOUNT_EMAIL || DEFAULT_CONFIG.email;
 const DEMO_PASSWORD = process.env.DEMO_ACCOUNT_PASSWORD || DEFAULT_CONFIG.password;
 const DEMO_ENABLED = process.env.DEMO_ACCOUNT_ENABLED !== 'false';
 
+// 验证默认配置
+console.log('[Demo Account Default Config]', {
+  email: DEFAULT_CONFIG.email,
+  password: DEFAULT_CONFIG.password,
+  passwordLength: DEFAULT_CONFIG.password.length,
+});
+
 console.log('[Demo Account Config]', {
   enabled: DEMO_ENABLED,
   email: DEMO_EMAIL,
   password: '***',
   passwordLength: DEMO_PASSWORD.length,
+  passwordChars: Array.from(DEMO_PASSWORD),
   environment: process.env.NODE_ENV || 'unknown',
 });
 
@@ -47,8 +55,10 @@ export function isDemoAccount(email: string, password: string): boolean {
     demoEnabled: DEMO_ACCOUNT_ENABLED,
     demoEmail: DEMO_ACCOUNT.email,
     demoPasswordLength: DEMO_ACCOUNT.password.length,
+    demoPasswordChars: Array.from(DEMO_ACCOUNT.password).map(c => c.charCodeAt(0)),
     inputEmail: email,
     inputPasswordLength: password?.length,
+    inputPasswordChars: password ? Array.from(password).map(c => c.charCodeAt(0)) : [],
   });
 
   if (!DEMO_ACCOUNT_ENABLED) {
@@ -78,6 +88,8 @@ export function isDemoAccount(email: string, password: string): boolean {
     inputPassword: password,
     expectedEmail: demoEmail,
     expectedPassword: demoPassword,
+    inputPasswordType: typeof password,
+    expectedPasswordType: typeof demoPassword,
   });
 
   return match;

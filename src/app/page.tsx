@@ -62,7 +62,7 @@ export default function Home() {
   };
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!email || !password) {
       alert(`${t.auth.pleaseEnterEmail} and ${t.auth.pleaseEnterPassword}`);
       return;
     }
