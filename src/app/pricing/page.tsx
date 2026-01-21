@@ -27,7 +27,7 @@ declare global {
 }
 
 export default function PricingPage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { user } = useUser();
   const [stripeLoaded, setStripeLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -111,15 +111,42 @@ export default function PricingPage() {
     planType?: 'pro' | 'premium';
   };
 
-  // 价格配置
-  const prices = {
+  type PriceInfo = {
+    price: string;
+    period: string;
+  };
+
+  type LanguagePrices = {
+    en: PriceInfo;
+    zh: PriceInfo;
+    ja: PriceInfo;
+  };
+
+  // 价格配置 - 根据语言显示不同货币
+  const prices: Record<'pro' | 'premium', Record<'monthly' | 'yearly', LanguagePrices>> = {
     pro: {
-      monthly: { price: '19.9', period: '/month' },
-      yearly: { price: '199.9', period: '/year' },
+      monthly: {
+        en: { price: '$9.9', period: '/month' },
+        zh: { price: '¥69', period: '/月' },
+        ja: { price: '¥1,480', period: '/月' },
+      },
+      yearly: {
+        en: { price: '$79', period: '/year' },
+        zh: { price: '¥559', period: '/年' },
+        ja: { price: '¥11,800', period: '/年' },
+      },
     },
     premium: {
-      monthly: { price: '39.9', period: '/month' },
-      yearly: { price: '399.9', period: '/year' },
+      monthly: {
+        en: { price: '$19.9', period: '/month' },
+        zh: { price: '¥139', period: '/月' },
+        ja: { price: '¥2,980', period: '/月' },
+      },
+      yearly: {
+        en: { price: '$169', period: '/year' },
+        zh: { price: '¥1,199', period: '/年' },
+        ja: { price: '¥25,300', period: '/年' },
+      },
     },
   };
 
@@ -130,14 +157,14 @@ export default function PricingPage() {
     {
       ...t.pricing.plans.pro,
       planType: 'pro',
-      price: prices.pro[billingCycle].price,
-      period: prices.pro[billingCycle].period,
+      price: prices.pro[billingCycle][language].price,
+      period: prices.pro[billingCycle][language].period,
     },
     {
       ...t.pricing.plans.premium,
       planType: 'premium',
-      price: prices.premium[billingCycle].price,
-      period: prices.premium[billingCycle].period,
+      price: prices.premium[billingCycle][language].price,
+      period: prices.premium[billingCycle][language].period,
     },
   ];
 
