@@ -207,19 +207,85 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-title-glow" style={{
+            animation: 'titleFloat 3s ease-in-out infinite, titleGlow 4s ease-in-out infinite alternate',
+            textShadow: '0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(236, 72, 153, 0.3)'
+          }}>
             {t.home.title}
           </h1>
-          <p className="text-lg text-purple-200">
+          <p className="text-lg text-purple-200" style={{
+            animation: 'subtitleFloat 4s ease-in-out infinite 0.5s',
+            textShadow: '0 0 10px rgba(168, 85, 247, 0.3)'
+          }}>
             {t.home.subtitle}
           </p>
         </div>
 
+        <style jsx>{`
+          @keyframes titleFloat {
+            0%, 100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+
+          @keyframes titleGlow {
+            0% {
+              filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
+            }
+            100% {
+              filter: drop-shadow(0 0 40px rgba(236, 72, 153, 0.8));
+            }
+          }
+
+          @keyframes subtitleFloat {
+            0%, 100% {
+              transform: translateY(0px);
+              opacity: 0.8;
+            }
+            50% {
+              transform: translateY(-5px);
+              opacity: 1;
+            }
+          }
+
+          @keyframes selectSpreadPulse {
+            0%, 100% {
+              transform: scale(1);
+              filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+            }
+            50% {
+              transform: scale(1.05);
+              filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.8));
+            }
+          }
+
+          @keyframes welcomeFade {
+            0% {
+              opacity: 0.7;
+              filter: brightness(0.9);
+            }
+            100% {
+              opacity: 1;
+              filter: brightness(1.2);
+            }
+          }
+        `}</style>
+
         {!selectedSpread && (
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30" id="spreads">
-            <CardHeader>
-              <CardTitle className="text-white">{t.home.selectSpread}</CardTitle>
-              <CardDescription className="text-purple-200">
+            <CardHeader className="text-center">
+              <CardTitle className="text-white text-2xl" style={{
+                animation: 'selectSpreadPulse 2.5s ease-in-out infinite',
+                textShadow: '0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(236, 72, 153, 0.4)'
+              }}>
+                {t.home.selectSpread}
+              </CardTitle>
+              <CardDescription className="text-purple-200" style={{
+                animation: 'welcomeFade 3s ease-in-out infinite alternate'
+              }}>
                 {t.home.welcome}
               </CardDescription>
             </CardHeader>
