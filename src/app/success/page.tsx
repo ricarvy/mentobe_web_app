@@ -6,14 +6,28 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, Home } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { useUser } from '@/lib/userContext';
 
 export default function SuccessPage() {
   const { t } = useI18n();
+  const { refreshUser } = useUser();
 
   useEffect(() => {
+    // 刷新用户信息，获取最新的VIP等级和到期时间
+    const refreshUserInfo = async () => {
+      try {
+        await refreshUser();
+        console.log('[Success Page] User info refreshed successfully');
+      } catch (error) {
+        console.error('[Success Page] Failed to refresh user info:', error);
+      }
+    };
+
+    refreshUserInfo();
+
     // 这里可以添加页面访问统计或日志
     console.log('Payment success page accessed');
-  }, []);
+  }, [refreshUser]);
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center">
