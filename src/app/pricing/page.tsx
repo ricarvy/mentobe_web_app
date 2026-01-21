@@ -343,11 +343,7 @@ export default function PricingPage() {
                   </ul>
                 </CardContent>
                 <CardFooter className="pt-6">
-                  {plan.name === 'Free' ? (
-                    <Button className="w-full" variant="outline">
-                      {plan.button}
-                    </Button>
-                  ) : (
+                  {plan.planType && (
                     <>
                       {/* 为Premium用户禁用Pro计划 */}
                       {user && user.vipLevel === 'premium' && plan.planType === 'pro' ? (
@@ -364,7 +360,7 @@ export default function PricingPage() {
                         </div>
                       ) : (
                         <Button
-                          onClick={() => plan.planType && handleSubscribe(plan.planType)}
+                          onClick={() => handleSubscribe(plan.planType)}
                           disabled={loading}
                           className={`w-full ${
                             plan.popular
