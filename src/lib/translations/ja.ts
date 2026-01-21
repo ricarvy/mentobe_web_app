@@ -96,6 +96,15 @@ export const ja = {
     noHistory: 'リーディング履歴がありません',
     startReading: '初めてのタロットリーディングを始めましょう',
     newReading: '新規リーディング',
+    spreadCategories: {
+      recommended: 'おすすめ',
+      basic: '基本',
+      love: '恋愛',
+      decision: '決定',
+      career: 'キャリア',
+      self: '自己探求',
+      advanced: '上級',
+    },
   },
   spreadSelector: {
     singleCardTitle: 'シングルカード',

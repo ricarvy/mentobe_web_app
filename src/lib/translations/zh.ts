@@ -96,6 +96,15 @@ export const zh = {
     noHistory: '暂无解读历史',
     startReading: '开始你的第一次塔罗解读',
     newReading: '新解读',
+    spreadCategories: {
+      recommended: '推荐牌阵',
+      basic: '基础通用',
+      love: '爱情感情',
+      decision: '选择决策',
+      career: '事业财富',
+      self: '自我探索',
+      advanced: '高级预测',
+    },
   },
   spreadSelector: {
     singleCardTitle: '单牌解读',

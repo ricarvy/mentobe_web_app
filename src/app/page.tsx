@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { spreads, drawCards, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
@@ -50,6 +51,7 @@ export default function Home() {
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
+  const [selectedCategory, setSelectedCategory] = useState<'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced'>('recommended');
 
   // 从localStorage加载用户信息
   useEffect(() => {
@@ -290,10 +292,80 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <TarotSpreadSelector
-                spreads={spreads}
-                onSpreadSelect={handleSpreadSelect}
-              />
+              <Tabs defaultValue="recommended" className="w-full" onValueChange={(value) => setSelectedCategory(value as any)}>
+                <TabsList className="w-full justify-start bg-black/20 border-purple-500/30">
+                  <TabsTrigger value="recommended" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.recommended}
+                  </TabsTrigger>
+                  <TabsTrigger value="basic" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.basic}
+                  </TabsTrigger>
+                  <TabsTrigger value="love" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.love}
+                  </TabsTrigger>
+                  <TabsTrigger value="decision" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.decision}
+                  </TabsTrigger>
+                  <TabsTrigger value="career" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.career}
+                  </TabsTrigger>
+                  <TabsTrigger value="self" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.self}
+                  </TabsTrigger>
+                  <TabsTrigger value="advanced" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
+                    {t.home.spreadCategories.advanced}
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="recommended" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'recommended')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="basic" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'basic')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="love" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'love')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="decision" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'decision')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="career" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'career')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="self" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'self')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+
+                <TabsContent value="advanced" className="mt-6">
+                  <TarotSpreadSelector
+                    spreads={spreads.filter(s => s.category === 'advanced')}
+                    onSpreadSelect={handleSpreadSelect}
+                  />
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         )}

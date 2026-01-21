@@ -22,6 +22,7 @@ export interface Spread {
   name: string;
   description: string;
   positions: SpreadPosition[];
+  category: 'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced';
 }
 
 export interface SpreadPosition {
@@ -45,10 +46,12 @@ export const majorArcanaCards: Omit<TarotCard, 'isReversed'>[] = allTarotCards.f
 
 // 常用牌阵
 export const spreads: Spread[] = [
+  // 推荐牌阵
   {
     id: 'single',
     name: '单张牌',
     description: '针对单一问题的快速解读',
+    category: 'recommended',
     positions: [
       {
         id: 'position1',
@@ -61,6 +64,7 @@ export const spreads: Spread[] = [
     id: 'three',
     name: '三张牌阵',
     description: '过去-现在-未来，了解事情的演变',
+    category: 'recommended',
     positions: [
       {
         id: 'position1',
@@ -83,6 +87,7 @@ export const spreads: Spread[] = [
     id: 'cross',
     name: '凯尔特十字',
     description: '全面分析问题的牌阵',
+    category: 'recommended',
     positions: [
       {
         id: 'position1',
@@ -133,6 +138,403 @@ export const spreads: Spread[] = [
         id: 'position10',
         name: '结果',
         description: '最终可能的结果',
+      },
+    ],
+  },
+
+  // 基础通用牌阵
+  {
+    id: 'time-flow',
+    name: '时间流牌阵',
+    description: '预测未来 & 窥探未知，有时间指向的占卜',
+    category: 'basic',
+    positions: [
+      {
+        id: 'position1',
+        name: '过去',
+        description: '已经发生的事情',
+      },
+      {
+        id: 'position2',
+        name: '现在',
+        description: '当前的状况',
+      },
+      {
+        id: 'position3',
+        name: '未来',
+        description: '未来的发展',
+      },
+    ],
+  },
+  {
+    id: 'holy-triangle',
+    name: '圣三角牌阵',
+    description: '判断情势 & 寻找成因，理清事情原委',
+    category: 'basic',
+    positions: [
+      {
+        id: 'position1',
+        name: '问题核心',
+        description: '事情的核心问题',
+      },
+      {
+        id: 'position2',
+        name: '影响因素',
+        description: '影响事情的因素',
+      },
+      {
+        id: 'position3',
+        name: '解决方案',
+        description: '可能的解决方案',
+      },
+    ],
+  },
+  {
+    id: 'core-focus',
+    name: '直指核心牌阵',
+    description: '问题探索 & 切中要害，快速找到问题症结',
+    category: 'basic',
+    positions: [
+      {
+        id: 'position1',
+        name: '现状',
+        description: '当前情况',
+      },
+      {
+        id: 'position2',
+        name: '障碍',
+        description: '面临的障碍',
+      },
+      {
+        id: 'position3',
+        name: '解决',
+        description: '解决方法',
+      },
+    ],
+  },
+
+  // 爱情感情专题
+  {
+    id: 'lover-pyramid',
+    name: '恋人金字塔',
+    description: '恋人关系 & 互动解析，简洁直接',
+    category: 'love',
+    positions: [
+      {
+        id: 'position1',
+        name: '你的想法',
+        description: '你内心的想法',
+      },
+      {
+        id: 'position2',
+        name: '对方的想法',
+        description: '对方内心的想法',
+      },
+      {
+        id: 'position3',
+        name: '关系现状',
+        description: '你们关系的现状',
+      },
+    ],
+  },
+  {
+    id: 'love-cross',
+    name: '爱情大十字',
+    description: '两性关系 & 爱情状况，注重内心情感',
+    category: 'love',
+    positions: [
+      {
+        id: 'position1',
+        name: '你的位置',
+        description: '你在关系中的位置',
+      },
+      {
+        id: 'position2',
+        name: '对方的位置',
+        description: '对方在关系中的位置',
+      },
+      {
+        id: 'position3',
+        name: '关系问题',
+        description: '关系中存在的问题',
+      },
+      {
+        id: 'position4',
+        name: '未来走向',
+        description: '关系的未来走向',
+      },
+    ],
+  },
+  {
+    id: 'find-partner',
+    name: '寻找对象牌阵',
+    description: '寻找意中人 & 有缘人',
+    category: 'love',
+    positions: [
+      {
+        id: 'position1',
+        name: '你的状态',
+        description: '你当前的状态',
+      },
+      {
+        id: 'position2',
+        name: '意中人特征',
+        description: '意中人的特征',
+      },
+      {
+        id: 'position3',
+        name: '相遇机会',
+        description: '相遇的机会',
+      },
+    ],
+  },
+  {
+    id: 'love-tree',
+    name: '爱情树牌阵',
+    description: '溯本求源 & 寻找症结，回溯爱情过往',
+    category: 'love',
+    positions: [
+      {
+        id: 'position1',
+        name: '根源',
+        description: '感情的根源',
+      },
+      {
+        id: 'position2',
+        name: '现状',
+        description: '感情的现状',
+      },
+      {
+        id: 'position3',
+        name: '结果',
+        description: '感情的走向',
+      },
+    ],
+  },
+
+  // 选择决策牌阵
+  {
+    id: 'choose-two',
+    name: '二选一牌阵',
+    description: '抉择 & 判断，两种情况选择',
+    category: 'decision',
+    positions: [
+      {
+        id: 'position1',
+        name: '选项A',
+        description: '第一个选项的情况',
+      },
+      {
+        id: 'position2',
+        name: '选项B',
+        description: '第二个选项的情况',
+      },
+    ],
+  },
+  {
+    id: 'choose-three',
+    name: '三选一牌阵',
+    description: '事情抉择 & 选择占卜，三个选项分析',
+    category: 'decision',
+    positions: [
+      {
+        id: 'position1',
+        name: '选项A',
+        description: '第一个选项的情况',
+      },
+      {
+        id: 'position2',
+        name: '选项B',
+        description: '第二个选项的情况',
+      },
+      {
+        id: 'position3',
+        name: '选项C',
+        description: '第三个选项的情况',
+      },
+    ],
+  },
+
+  // 事业财富牌阵
+  {
+    id: 'wealth-tree',
+    name: '财富之树',
+    description: '事业发展 & 财运状况',
+    category: 'career',
+    positions: [
+      {
+        id: 'position1',
+        name: '当前状况',
+        description: '当前的财务状况',
+      },
+      {
+        id: 'position2',
+        name: '发展机会',
+        description: '发展的机会',
+      },
+      {
+        id: 'position3',
+        name: '未来趋势',
+        description: '未来的趋势',
+      },
+    ],
+  },
+  {
+    id: 'problem-solve',
+    name: '问题解决牌阵',
+    description: '问题剖析 & 答疑解惑',
+    category: 'career',
+    positions: [
+      {
+        id: 'position1',
+        name: '问题核心',
+        description: '问题的核心',
+      },
+      {
+        id: 'position2',
+        name: '解决方案',
+        description: '可能的解决方案',
+      },
+      {
+        id: 'position3',
+        name: '结果',
+        description: '解决后的结果',
+      },
+    ],
+  },
+
+  // 自我探索牌阵
+  {
+    id: 'body-mind-spirit',
+    name: '身心灵牌阵',
+    description: '自我探索 & 了解自己',
+    category: 'self',
+    positions: [
+      {
+        id: 'position1',
+        name: '身体层面',
+        description: '身体层面的状态',
+      },
+      {
+        id: 'position2',
+        name: '心智层面',
+        description: '心智层面的状态',
+      },
+      {
+        id: 'position3',
+        name: '灵性层面',
+        description: '灵性层面的状态',
+      },
+    ],
+  },
+  {
+    id: 'four-elements',
+    name: '四元素牌阵',
+    description: '问题探索 & 多方解析',
+    category: 'self',
+    positions: [
+      {
+        id: 'position1',
+        name: '火元素',
+        description: '行动和激情',
+      },
+      {
+        id: 'position2',
+        name: '水元素',
+        description: '情感和直觉',
+      },
+      {
+        id: 'position3',
+        name: '风元素',
+        description: '思想和沟通',
+      },
+      {
+        id: 'position4',
+        name: '土元素',
+        description: '物质和现实',
+      },
+    ],
+  },
+
+  // 高级预测牌阵
+  {
+    id: 'weekly-fortune',
+    name: '周运势牌阵',
+    description: '周运分析 & 单周占卜',
+    category: 'advanced',
+    positions: [
+      {
+        id: 'position1',
+        name: '周一',
+        description: '周一的运势',
+      },
+      {
+        id: 'position2',
+        name: '周二',
+        description: '周二的运势',
+      },
+      {
+        id: 'position3',
+        name: '周三',
+        description: '周三的运势',
+      },
+      {
+        id: 'position4',
+        name: '周四',
+        description: '周四的运势',
+      },
+      {
+        id: 'position5',
+        name: '周五',
+        description: '周五的运势',
+      },
+      {
+        id: 'position6',
+        name: '周末',
+        description: '周末的运势',
+      },
+      {
+        id: 'position7',
+        name: '总结',
+        description: '整周总结',
+      },
+    ],
+  },
+  {
+    id: 'hexagram',
+    name: '六芒星牌阵',
+    description: '事物发展 & 预测未来',
+    category: 'advanced',
+    positions: [
+      {
+        id: 'position1',
+        name: '现状',
+        description: '当前情况',
+      },
+      {
+        id: 'position2',
+        name: '障碍',
+        description: '面临的障碍',
+      },
+      {
+        id: 'position3',
+        name: '目标',
+        description: '你的目标',
+      },
+      {
+        id: 'position4',
+        name: '过去',
+        description: '过去的影响',
+      },
+      {
+        id: 'position5',
+        name: '未来',
+        description: '未来的可能',
+      },
+      {
+        id: 'position6',
+        name: '结果',
+        description: '最终的结果',
       },
     ],
   },

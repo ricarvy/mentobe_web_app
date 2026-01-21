@@ -96,6 +96,15 @@ export const en = {
     noHistory: 'No reading history yet',
     startReading: 'Start your first tarot reading today',
     newReading: 'New Reading',
+    spreadCategories: {
+      recommended: 'Recommended',
+      basic: 'Basic',
+      love: 'Love',
+      decision: 'Decision',
+      career: 'Career',
+      self: 'Self-Exploration',
+      advanced: 'Advanced',
+    },
   },
   spreadSelector: {
     singleCardTitle: 'Single Card',
