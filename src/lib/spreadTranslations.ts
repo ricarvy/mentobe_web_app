@@ -67,10 +67,8 @@ export function useSpreadTranslations() {
         }
       } else {
         // Handle other spreads
-        if (translations[spread.id + 'Desc']) {
-          translatedName = translations[spread.id];
-          translatedDesc = translations[spread.id + 'Desc'];
-        }
+        translatedName = translations[spread.id] || spread.name;
+        translatedDesc = translations[spread.id + 'Desc'] || spread.description;
       }
 
       return {
