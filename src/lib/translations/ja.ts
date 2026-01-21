@@ -403,6 +403,10 @@ export const ja = {
     },
   },
   payment: {
+    loading: {
+      title: 'Stripe にリダイレクト中...',
+      subtitle: 'サブスクリプションを設定中ですので、しばらくお待ちください',
+    },
     success: {
       title: '支払いが完了しました！',
       description: 'サブスクリプションが正常にアクティベートされました。',

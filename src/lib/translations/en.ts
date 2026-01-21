@@ -403,6 +403,10 @@ export const en = {
     },
   },
   payment: {
+    loading: {
+      title: 'Redirecting to Stripe...',
+      subtitle: 'Please wait while we set up your subscription',
+    },
     success: {
       title: 'Payment Successful!',
       description: 'Your subscription has been activated successfully.',

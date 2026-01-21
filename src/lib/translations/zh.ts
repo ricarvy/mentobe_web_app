@@ -403,6 +403,10 @@ export const zh = {
     },
   },
   payment: {
+    loading: {
+      title: '正在跳转到 Stripe...',
+      subtitle: '请稍候，我们正在为您设置订阅',
+    },
     success: {
       title: '支付成功！',
       description: '您的订阅已成功激活。',

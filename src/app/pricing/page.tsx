@@ -131,7 +131,103 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <>
+      {/* 自定义动画样式 */}
+      <style jsx global>{`
+        @keyframes progress {
+          0% {
+            width: 0%;
+          }
+          50% {
+            width: 70%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+        
+        @keyframes twinkle {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.2);
+          }
+        }
+        
+        .animate-progress {
+          animation: progress 2s ease-in-out infinite;
+        }
+        
+        .twinkle {
+          animation: twinkle ease-in-out infinite;
+        }
+      `}</style>
+
+      <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* 加载遮罩层 */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-purple-950/90 via-black/90 to-pink-950/90 backdrop-blur-sm">
+          {/* 动态背景星星 */}
+          <div className="absolute inset-0">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-white"
+                style={{
+                  width: Math.random() * 3 + 1,
+                  height: Math.random() * 3 + 1,
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `twinkle ${Math.random() * 2 + 1}s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 2}s`,
+                  opacity: Math.random() * 0.7 + 0.3,
+                }}
+              />
+            ))}
+          </div>
+          
+          <div className="relative flex flex-col items-center gap-8">
+            {/* 旋转加载动画 */}
+            <div className="relative w-32 h-32">
+              {/* 外圈 - 紫色 */}
+              <div className="absolute inset-0 border-4 border-purple-500/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin" style={{ animationDuration: '2s' }}></div>
+              
+              {/* 中圈 - 粉色 */}
+              <div className="absolute inset-4 border-3 border-pink-500/20 rounded-full"></div>
+              <div className="absolute inset-4 border-3 border-transparent border-t-pink-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+              
+              {/* 内圈 - 紫色 */}
+              <div className="absolute inset-8 border-2 border-purple-400/30 rounded-full"></div>
+              <div className="absolute inset-8 border-2 border-transparent border-t-purple-400 rounded-full animate-spin" style={{ animationDuration: '1s' }}></div>
+              
+              {/* 中心图标 */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-purple-400 animate-pulse" />
+              </div>
+            </div>
+            
+            {/* 加载文字 */}
+            <div className="text-center space-y-3">
+              <div className="text-white text-2xl font-bold animate-pulse">
+                {t.payment?.loading?.title || 'Redirecting to Stripe...'}
+              </div>
+              <div className="text-gray-300 text-base">
+                {t.payment?.loading?.subtitle || 'Please wait while we set up your subscription'}
+              </div>
+            </div>
+            
+            {/* 进度条 */}
+            <div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-progress"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 星空背景 */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
@@ -339,5 +435,6 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
