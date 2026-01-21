@@ -415,6 +415,7 @@ export const en = {
         },
       ],
     },
+    downgradeWarning: 'Downgrading from Premium is not allowed',
   },
   payment: {
     loading: {

@@ -109,7 +109,13 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-2"
+                    className={`text-purple-200 hover:text-white hover:bg-purple-500/10 gap-2 relative p-1.5 ${
+                      user.vipLevel === 'pro'
+                        ? 'vip-pro-border'
+                        : user.vipLevel === 'premium'
+                        ? 'vip-premium-border'
+                        : ''
+                    }`}
                   >
                     <User className="h-4 w-4" />
                     <span>{user.username}</span>
@@ -294,6 +300,54 @@ export function Header() {
           </Sheet>
         </div>
       </div>
+
+      {/* Custom Styles for VIP Borders */}
+      <style jsx global>{`
+        .vip-pro-border {
+          position: relative;
+          background: linear-gradient(135deg, #a855f7, #ec4899, #a855f7);
+          background-size: 200% 200%;
+          animation: pro-border-rotate 3s linear infinite;
+          border-radius: 8px;
+        }
+        .vip-pro-border::before {
+          content: '';
+          position: absolute;
+          inset: 2px;
+          background: rgba(0, 0, 0, 0.9);
+          border-radius: 6px;
+          z-index: -1;
+        }
+        @keyframes pro-border-rotate {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .vip-premium-border {
+          position: relative;
+          background: linear-gradient(135deg, #a855f7, #fbbf24, #ec4899, #fbbf24, #a855f7);
+          background-size: 300% 300%;
+          animation: premium-border-rotate 2s linear infinite;
+          border-radius: 8px;
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), 0 0 40px rgba(168, 85, 247, 0.3);
+        }
+        .vip-premium-border::before {
+          content: '';
+          position: absolute;
+          inset: 2px;
+          background: rgba(0, 0, 0, 0.9);
+          border-radius: 6px;
+          z-index: -1;
+        }
+        @keyframes premium-border-rotate {
+          0% { background-position: 0% 50%; }
+          25% { background-position: 100% 0%; }
+          50% { background-position: 100% 100%; }
+          75% { background-position: 0% 100%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </header>
   );
 }

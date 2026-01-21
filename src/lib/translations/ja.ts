@@ -415,6 +415,7 @@ export const ja = {
         },
       ],
     },
+    downgradeWarning: 'Premium からのダウングレードはできません',
   },
   payment: {
     loading: {

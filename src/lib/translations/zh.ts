@@ -415,6 +415,7 @@ export const zh = {
         },
       ],
     },
+    downgradeWarning: '无法从 Premium 降级',
   },
   payment: {
     loading: {

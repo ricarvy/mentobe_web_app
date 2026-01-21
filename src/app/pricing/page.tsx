@@ -24,6 +24,15 @@ export default function PricingPage() {
       return;
     }
 
+    // 检查是否允许升级：Premium用户不能降级到Pro
+    if (user.vipLevel === 'premium' && plan === 'pro') {
+      alert('You already have Premium membership. Downgrading to Pro is not allowed. You can continue with Premium or renew your subscription.');
+      return;
+    }
+
+    // Pro用户可以继续订阅Pro（续费）或升级到Premium
+    // 普通用户可以订阅Pro或Premium
+
     setLoading(true);
 
     try {
@@ -339,18 +348,35 @@ export default function PricingPage() {
                       {plan.button}
                     </Button>
                   ) : (
-                    <Button
-                      onClick={() => plan.planType && handleSubscribe(plan.planType)}
-                      disabled={loading}
-                      className={`w-full ${
-                        plan.popular
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
-                          : 'bg-purple-600 hover:bg-purple-700'
-                      }`}
-                    >
-                      {loading ? 'Processing...' : plan.button}
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
+                    <>
+                      {/* 为Premium用户禁用Pro计划 */}
+                      {user && user.vipLevel === 'premium' && plan.planType === 'pro' ? (
+                        <div className="w-full space-y-2">
+                          <Button
+                            disabled
+                            className="w-full bg-gray-600 cursor-not-allowed"
+                          >
+                            {plan.button}
+                          </Button>
+                          <p className="text-xs text-center text-purple-300/60">
+                            {t.pricing?.downgradeWarning || 'Downgrading from Premium is not allowed'}
+                          </p>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => plan.planType && handleSubscribe(plan.planType)}
+                          disabled={loading}
+                          className={`w-full ${
+                            plan.popular
+                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+                              : 'bg-purple-600 hover:bg-purple-700'
+                          }`}
+                        >
+                          {loading ? 'Processing...' : plan.button}
+                          <ArrowRight className="ml-2 w-4 h-4" />
+                        </Button>
+                      )}
+                    </>
                   )}
                 </CardFooter>
               </Card>
