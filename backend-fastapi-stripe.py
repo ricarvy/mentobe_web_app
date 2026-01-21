@@ -2,7 +2,7 @@
 FastAPI Stripe Checkout Session API
 文件位置：后端项目的 routes/stripe.py 或 app/api/stripe.py
 
-功能：创建 Stripe Checkout Session，支持一次性支付
+功能：创建 Stripe Checkout Session，支持订阅支付
 """
 
 import os
@@ -73,7 +73,7 @@ async def create_checkout_session(
     功能：
     - 创建一个 Stripe 支付会话
     - 返回会话ID和支付页面URL
-    - 支持一次性支付模式
+    - 支持订阅支付模式
 
     请求示例：
     ```json
@@ -125,7 +125,7 @@ async def create_checkout_session(
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 data={
-                    "mode": "payment",  # 一次性支付模式（如需订阅模式改为 "subscription"）
+                    "mode": "subscription",  # 订阅支付模式
                     "payment_method_types": "card",
                     "line_items[0][price]": request.price_id,
                     "line_items[0][quantity]": 1,
