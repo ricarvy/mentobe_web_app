@@ -9,6 +9,13 @@ export const zh = {
     profile: '个人资料',
     username: '用户名',
     email: '邮箱',
+    accountType: '账户类型',
+    subscriptionPlan: '订阅计划',
+    subscriptionExpires: '订阅到期时间',
+    demoAccount: '演示账户',
+    standardAccount: '标准账户',
+    proMember: 'Pro 会员',
+    premiumMember: 'Premium 会员',
   },
   header: {
     home: '首页',

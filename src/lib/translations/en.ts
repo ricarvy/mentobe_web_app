@@ -9,6 +9,13 @@ export const en = {
     profile: 'Profile',
     username: 'Username',
     email: 'Email',
+    accountType: 'Account Type',
+    subscriptionPlan: 'Subscription Plan',
+    subscriptionExpires: 'Subscription Expires',
+    demoAccount: 'Demo Account',
+    standardAccount: 'Standard Account',
+    proMember: 'Pro Member',
+    premiumMember: 'Premium Member',
   },
   header: {
     home: 'Home',

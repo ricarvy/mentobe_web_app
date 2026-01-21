@@ -9,6 +9,13 @@ export const ja = {
     profile: 'プロフィール',
     username: 'ユーザー名',
     email: 'メール',
+    accountType: 'アカウントタイプ',
+    subscriptionPlan: 'サブスクリプションプラン',
+    subscriptionExpires: 'サブスクリプション有効期限',
+    demoAccount: 'デモアカウント',
+    standardAccount: 'スタンダードアカウント',
+    proMember: 'Pro メンバー',
+    premiumMember: 'Premium メンバー',
   },
   header: {
     home: 'ホーム',

@@ -6,7 +6,11 @@ interface User {
   id: string;
   username: string;
   email: string;
+  isActive?: boolean;
   isDemo?: boolean;
+  unlimitedQuota?: boolean;
+  vipLevel?: number; // 0: Free, 1: Pro, 2: Premium
+  vipExpireAt?: string | null; // ISO 8601 日期字符串或 null
 }
 
 interface UserContextType {

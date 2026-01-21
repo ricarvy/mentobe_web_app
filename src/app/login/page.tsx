@@ -97,7 +97,11 @@ export default function LoginPage() {
           id: string;
           username: string;
           email: string;
+          isActive: boolean;
           isDemo: boolean;
+          unlimitedQuota: boolean;
+          vipLevel: number;
+          vipExpireAt: string | null;
         }>('/api/auth/login', {
           method: 'POST',
           body: JSON.stringify({

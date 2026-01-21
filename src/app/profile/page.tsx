@@ -113,6 +113,45 @@ export default function ProfilePage() {
                 </p>
               </div>
             </div>
+
+            {/* VIP Level */}
+            {user.vipLevel !== undefined && user.vipLevel > 0 && (
+              <div className="flex items-center gap-3 text-purple-200">
+                <Sparkles className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm text-purple-300">Subscription Plan</p>
+                  <p className="font-semibold text-white flex items-center gap-2">
+                    {user.vipLevel === 1 && (
+                      <Badge variant="default" className="bg-gradient-to-r from-purple-600 to-pink-600">
+                        Pro Member
+                      </Badge>
+                    )}
+                    {user.vipLevel === 2 && (
+                      <Badge variant="default" className="bg-gradient-to-r from-yellow-600 to-orange-600">
+                        Premium Member
+                      </Badge>
+                    )}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* VIP Expire Date */}
+            {user.vipExpireAt && (
+              <div className="flex items-center gap-3 text-purple-200">
+                <Calendar className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm text-purple-300">Subscription Expires</p>
+                  <p className="font-semibold text-white">
+                    {new Date(user.vipExpireAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
