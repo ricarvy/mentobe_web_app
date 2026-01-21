@@ -166,84 +166,6 @@ export default function PricingPage() {
           }
         }
         
-        @keyframes premium-glow {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.6;
-            transform: scale(1.05);
-          }
-        }
-
-        @keyframes premium-border-rotate {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        @keyframes premium-border-reverse {
-          0% {
-            background-position: 100% 50%;
-          }
-          50% {
-            background-position: 0% 50%;
-          }
-          100% {
-            background-position: 100% 50%;
-          }
-        }
-
-        @keyframes premium-flow {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(200%);
-          }
-        }
-
-        @keyframes premium-particle {
-          0%, 100% {
-            opacity: 0;
-            transform: translateY(0) scale(0);
-          }
-          50% {
-            opacity: 1;
-            transform: translateY(-10px) scale(1);
-          }
-        }
-
-        @keyframes premium-icon-pulse {
-          0%, 100% {
-            transform: scale(1);
-            filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.5));
-          }
-          50% {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8));
-          }
-        }
-
-        @keyframes premium-icon-spin {
-          0% {
-            transform: rotateY(0deg) scale(1);
-          }
-          50% {
-            transform: rotateY(180deg) scale(1.2);
-          }
-          100% {
-            transform: rotateY(360deg) scale(1);
-          }
-        }
-        
         .animate-progress {
           animation: progress 2s ease-in-out infinite;
         }
@@ -441,97 +363,18 @@ export default function PricingPage() {
                           </p>
                         </div>
                       ) : (
-                        <>
-                          {/* Premium计划使用超酷炫按钮 */}
-                          {plan.planType === 'premium' ? (
-                            <button
-                              onClick={() => handleSubscribe('premium')}
-                              disabled={loading}
-                              className="relative group w-full"
-                            >
-                              {/* Outer glow pulse */}
-                              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 rounded-lg blur-xl opacity-30 group-hover:opacity-60 group-hover:blur-2xl transition-all duration-500 animate-premium-glow"></div>
-
-                              {/* Rotating border effect */}
-                              <div
-                                className="absolute -inset-[2px] bg-gradient-to-r from-purple-600 via-pink-500 via-purple-400 to-purple-600 rounded-lg opacity-75"
-                                style={{
-                                  backgroundSize: '300% 300%',
-                                  animation: 'premium-border-rotate 3s linear infinite',
-                                }}
-                              ></div>
-
-                              {/* Second rotating border (reverse) */}
-                              <div
-                                className="absolute -inset-[2px] bg-gradient-to-r from-pink-400 via-purple-600 via-pink-500 to-pink-400 rounded-lg opacity-50"
-                                style={{
-                                  backgroundSize: '300% 300%',
-                                  animation: 'premium-border-reverse 4s linear infinite',
-                                }}
-                              ></div>
-
-                              {/* Button container */}
-                              <div className="relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 rounded-lg overflow-hidden">
-                                {/* Inner flow light effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-premium-flow"></div>
-
-                                {/* Top sheen effect */}
-                                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                                {/* Shimmer particles */}
-                                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                                  {[...Array(6)].map((_, i) => (
-                                    <div
-                                      key={i}
-                                      className="absolute w-1 h-1 bg-white/80 rounded-full animate-premium-particle"
-                                      style={{
-                                        left: `${15 + i * 15}%`,
-                                        top: `${30 + (i % 3) * 20}%`,
-                                        animationDelay: `${i * 0.15}s`,
-                                      }}
-                                    ></div>
-                                  ))}
-                                </div>
-
-                                {/* Button content */}
-                                <div className="relative px-6 py-3 flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-105 group-active:scale-95">
-                                  {/* Crown icon */}
-                                  <svg
-                                    className="w-5 h-5 text-white animate-premium-icon-pulse group-hover:animate-premium-icon-spin"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
-                                  </svg>
-
-                                  {/* Text */}
-                                  <span className="font-bold text-white">
-                                    {loading ? 'Processing...' : plan.button}
-                                  </span>
-
-                                  {/* Arrow icon */}
-                                  <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
-                                </div>
-
-                                {/* Bottom glow line */}
-                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity group-hover:w-full"></div>
-                              </div>
-                            </button>
-                          ) : (
-                            <Button
-                              onClick={() => plan.planType && handleSubscribe(plan.planType)}
-                              disabled={loading}
-                              className={`w-full ${
-                                plan.popular
-                                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
-                                  : 'bg-purple-600 hover:bg-purple-700'
-                              }`}
-                            >
-                              {loading ? 'Processing...' : plan.button}
-                              <ArrowRight className="ml-2 w-4 h-4" />
-                            </Button>
-                          )}
-                        </>
+                        <Button
+                          onClick={() => plan.planType && handleSubscribe(plan.planType)}
+                          disabled={loading}
+                          className={`w-full ${
+                            plan.popular
+                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+                              : 'bg-purple-600 hover:bg-purple-700'
+                          }`}
+                        >
+                          {loading ? 'Processing...' : plan.button}
+                          <ArrowRight className="ml-2 w-4 h-4" />
+                        </Button>
                       )}
                     </>
                   )}
