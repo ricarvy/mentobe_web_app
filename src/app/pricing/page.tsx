@@ -360,7 +360,7 @@ export default function PricingPage() {
                         </div>
                       ) : (
                         <Button
-                          onClick={() => handleSubscribe(plan.planType)}
+                          onClick={() => plan.planType && handleSubscribe(plan.planType)}
                           disabled={loading}
                           className={`w-full ${
                             plan.popular
