@@ -230,32 +230,40 @@ export default function ProfilePage() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
-          <CardHeader>
+        <Card className="relative bg-gradient-to-br from-purple-900/30 via-black/40 to-pink-900/30 backdrop-blur-sm border-purple-500/30 shadow-lg shadow-purple-500/5 overflow-hidden">
+          {/* 光晕效果 */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl"></div>
+
+          <CardHeader className="relative z-10">
             <CardTitle className="text-white flex items-center gap-2">
-              <Settings className="h-6 w-6 text-purple-400" />
-              {t.common.quickActions}
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-500/30 to-pink-500/30">
+                <Settings className="h-5 w-5 text-purple-300" />
+              </div>
+              <span className="bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
+                {t.common.quickActions}
+              </span>
             </CardTitle>
-            <CardDescription className="text-purple-200">
+            <CardDescription className="text-purple-300/80 text-sm">
               {t.common.quickActionsDescription}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="relative z-10 space-y-2.5">
             <Link href="/history">
               <Button
                 variant="outline"
-                className="w-full justify-start border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                className="w-full justify-start bg-black/30 border-blue-500/20 text-blue-200/90 hover:bg-blue-500/20 hover:border-blue-400/40 hover:text-blue-100 hover:shadow-md hover:shadow-blue-500/10 transition-all duration-200"
               >
-                <History className="mr-3 h-5 w-5" />
+                <History className="mr-3 h-5 w-5 text-blue-400" />
                 {t.home.history || 'View Reading History'}
               </Button>
             </Link>
             <Link href="/">
               <Button
                 variant="outline"
-                className="w-full justify-start border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                className="w-full justify-start bg-black/30 border-purple-500/20 text-purple-200/90 hover:bg-purple-500/20 hover:border-purple-400/40 hover:text-purple-100 hover:shadow-md hover:shadow-purple-500/10 transition-all duration-200"
               >
-                <Sparkles className="mr-3 h-5 w-5" />
+                <Sparkles className="mr-3 h-5 w-5 text-purple-400" />
                 {t.home.newReading || 'New Reading'}
               </Button>
             </Link>
@@ -265,9 +273,9 @@ export default function ProfilePage() {
                 window.location.href = '/';
               }}
               variant="outline"
-              className="w-full justify-start border-red-500/30 text-red-200 hover:bg-red-500/10"
+              className="w-full justify-start bg-black/30 border-red-500/20 text-red-200/90 hover:bg-red-500/20 hover:border-red-400/40 hover:text-red-100 hover:shadow-md hover:shadow-red-500/10 transition-all duration-200"
             >
-              <LogOut className="mr-3 h-5 w-5" />
+              <LogOut className="mr-3 h-5 w-5 text-red-400" />
               {t.common.logout}
             </Button>
           </CardContent>
