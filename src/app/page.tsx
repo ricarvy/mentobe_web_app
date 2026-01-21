@@ -485,9 +485,9 @@ export default function Home() {
                   <Button
                     onClick={() => setSelectedSpread(null)}
                     variant="outline"
-                    className="w-full mt-3 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                    className="w-full mt-3 border-purple-400/40 text-purple-200 hover:bg-purple-900/30 hover:border-purple-400/60 transition-all duration-200"
                   >
-                    {t.header.tarotSpreads}
+                    {t.home.reselectSpread}
                   </Button>
                 </CardContent>
               </Card>
@@ -526,9 +526,9 @@ export default function Home() {
                   <Button
                     onClick={() => setSelectedSpread(null)}
                     variant="outline"
-                    className="w-full mt-3 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                    className="w-full mt-3 border-purple-400/40 text-purple-200 hover:bg-purple-900/30 hover:border-purple-400/60 transition-all duration-200"
                   >
-                    {t.header.tarotSpreads}
+                    {t.home.reselectSpread}
                   </Button>
                 </CardContent>
               </Card>

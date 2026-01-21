@@ -71,6 +71,7 @@ export const zh = {
     chooseQuestion: '输入你的问题',
     drawCards: '抽牌',
     getAiInterpretation: '获取AI解读',
+    reselectSpread: '重新选择牌阵',
     interpretation: '解读结果',
     questionPlaceholder: '请输入你想要问的问题...',
     singleCard: '单牌',

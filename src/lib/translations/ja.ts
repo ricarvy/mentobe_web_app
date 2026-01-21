@@ -71,6 +71,7 @@ export const ja = {
     chooseQuestion: '質問を入力',
     drawCards: 'カードを引く',
     getAiInterpretation: 'AI解釈を取得',
+    reselectSpread: 'スプレッドを再選択',
     interpretation: '解釈結果',
     questionPlaceholder: '質問を入力してください...',
     singleCard: 'シングルカード',

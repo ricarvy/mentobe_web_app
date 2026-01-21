@@ -71,6 +71,7 @@ export const en = {
     chooseQuestion: 'Enter Your Question',
     drawCards: 'Draw Cards',
     getAiInterpretation: 'Get AI Interpretation',
+    reselectSpread: 'Reselect Spread',
     interpretation: 'Interpretation Results',
     questionPlaceholder: 'Please enter your question...',
     singleCard: 'Single Card',
