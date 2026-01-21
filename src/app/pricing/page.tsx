@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,51 +11,13 @@ import { getPriceId } from '@/config/stripe';
 import { useUser } from '@/lib/userContext';
 import { apiRequest } from '@/lib/api-client';
 
-// Stripe.js 类型定义
-declare global {
-  interface Window {
-    Stripe?: (publishableKey: string) => {
-      redirectToCheckout: (options: { sessionId: string }) => Promise<void>;
-      initEmbeddedCheckout: (options: {
-        fetchClientSecret: () => Promise<string>;
-      }) => {
-        mount: (element: HTMLElement) => void;
-        destroy: () => void;
-      };
-    };
-  }
-}
-
 export default function PricingPage() {
   const { t, language } = useI18n();
   const { user } = useUser();
-  const [stripeLoaded, setStripeLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
-  useEffect(() => {
-    // 动态加载 Stripe.js
-    const script = document.createElement('script');
-    script.src = 'https://js.stripe.com/v3/';
-    script.async = true;
-    script.onload = () => {
-      setStripeLoaded(true);
-    };
-    document.body.appendChild(script);
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
-
   const handleSubscribe = async (plan: 'pro' | 'premium') => {
-    if (!stripeLoaded) {
-      console.error('Stripe.js not loaded');
-      return;
-    }
-
     if (!user) {
       // 如果用户未登录，跳转到登录页面
       window.location.href = '/login';
@@ -75,23 +37,23 @@ export default function PricingPage() {
 
       // 调用后端 API 创建 Checkout Session
       const response = await apiRequest<{
-        sessionId: string;
-        publishableKey: string;
+        url: string;
       }>('/api/stripe/create-checkout-session', {
         method: 'POST',
         requireAuth: true,
         body: JSON.stringify({
-          priceId,
-          userId: user.id,
-          userEmail: user.email,
+          price_id: priceId,
+          success_url: window.location.origin + '/success',
+          cancel_url: window.location.origin + '/cancel',
+          user_id: user.id,
+          user_email: user.email,
         }),
       });
 
-      // 使用 Stripe.js 重定向到 Checkout 页面
-      const stripe = window.Stripe!(response.publishableKey);
-      await stripe.redirectToCheckout({
-        sessionId: response.sessionId,
-      });
+      // 直接重定向到 Stripe Checkout URL
+      if (response.url) {
+        window.location.href = response.url;
+      }
     } catch (error) {
       console.error('Failed to create checkout session:', error);
       alert('Failed to create checkout session. Please try again.');
@@ -283,7 +245,7 @@ export default function PricingPage() {
                   ) : (
                     <Button
                       onClick={() => plan.planType && handleSubscribe(plan.planType)}
-                      disabled={!stripeLoaded || loading}
+                      disabled={loading}
                       className={`w-full ${
                         plan.popular
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
@@ -366,7 +328,7 @@ export default function PricingPage() {
             </p>
             <Button
               size="lg"
-              disabled={!stripeLoaded || loading}
+              disabled={loading}
               onClick={() => handleSubscribe('pro')}
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8"
             >
