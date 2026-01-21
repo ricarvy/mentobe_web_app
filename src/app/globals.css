@@ -198,6 +198,49 @@ body {
   }
 }
 
+/* 慢速旋转动画 */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* 反向慢速旋转动画 */
+@keyframes spin-slow-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-slow-reverse {
+  animation: spin-slow-reverse 12s linear infinite;
+}
+
+/* VIP头像样式 */
+.vip-avatar-free {
+  /* 普通用户：无边框 */
+}
+
+.vip-avatar-pro {
+  /* Pro用户：紫色边框容器 */
+  padding: 3px;
+}
+
+.vip-avatar-premium {
+  /* Premium用户：金色边框容器 */
+  padding: 4px;
+}
+
 .animate-glow {
   animation: glow 3s ease-in-out infinite;
 }

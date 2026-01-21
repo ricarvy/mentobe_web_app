@@ -15,14 +15,76 @@ import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
+import { useUser } from '@/lib/userContext';
+import { VipLevel, getVipInfo } from '@/lib/vip';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
 
+// VIP Avatar Component
+interface VipAvatarProps {
+  username: string;
+  vipLevel?: number;
+  vipExpireAt?: string | null;
+}
+
+function VipAvatar({ username, vipLevel, vipExpireAt }: VipAvatarProps) {
+  const vipInfo = getVipInfo(vipLevel, vipExpireAt);
+
+  // 根据VIP等级获取头像边框样式
+  const getAvatarBorderClass = () => {
+    switch (vipInfo.level) {
+      case VipLevel.PRO:
+        return 'vip-avatar-pro';
+      case VipLevel.PREMIUM:
+        return 'vip-avatar-premium';
+      case VipLevel.FREE:
+      default:
+        return 'vip-avatar-free';
+    }
+  };
+
+  // 获取用户首字母作为头像
+  const avatarInitial = username.charAt(0).toUpperCase();
+
+  return (
+    <div className={`relative ${getAvatarBorderClass()} rounded-full`}>
+      {/* VIP等级1：紫色边框 */}
+      {vipInfo.level === VipLevel.PRO && (
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 animate-pulse blur-sm opacity-75"></div>
+      )}
+
+      {/* VIP等级2：金色边框 */}
+      {vipInfo.level === VipLevel.PREMIUM && (
+        <>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-500 animate-pulse blur-md opacity-75"></div>
+          <div className="absolute inset-[-4px] rounded-full border-2 border-yellow-300/30 animate-spin-slow"></div>
+          <div className="absolute inset-[-8px] rounded-full border border-orange-300/20 animate-spin-slow-reverse"></div>
+        </>
+      )}
+
+      {/* 头像主体 */}
+      <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white text-2xl font-bold shadow-xl overflow-hidden">
+        {avatarInitial}
+      </div>
+
+      {/* VIP徽章 */}
+      {vipInfo.level !== VipLevel.FREE && (
+        <div className={`absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-xs font-bold text-white shadow-lg ${
+          vipInfo.level === VipLevel.PRO ? 'bg-purple-600' : 'bg-yellow-500'
+        }`}>
+          {vipInfo.name}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const { t } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
+  const { user: contextUser } = useUser();
   const {
     state: {
       selectedSpread,
@@ -44,22 +106,18 @@ export default function Home() {
     setIsGenerating,
     resetFlow,
   } = useTarotFlow();
-  const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
 
-  // 从localStorage加载用户信息
+  // 当用户登录时获取quota信息
   useEffect(() => {
-    const savedUser = localStorage.getItem('tarot_user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      fetchQuota(parsedUser.id);
+    if (contextUser?.id) {
+      fetchQuota(contextUser.id);
     }
-  }, []);
+  }, [contextUser?.id]);
 
   const fetchQuota = async (userId: string) => {
     try {
@@ -97,11 +155,13 @@ export default function Home() {
         requireAuth: false, // 登录接口不需要Authorization header，但会在请求体中包含凭证
       });
 
-      setUser(userData);
       // 存储用户信息和认证凭证
       saveAuthCredentials(userData, email, password);
       setShowLoginModal(false);
+      // UserContext会自动更新，不需要手动setUser
       await fetchQuota(userData.id);
+      // 刷新页面以更新用户信息
+      window.location.reload();
     } catch (error) {
       console.error('Login error:', error);
       if (error instanceof ApiRequestError) {
@@ -131,7 +191,7 @@ export default function Home() {
   };
 
   const handleGetAiInterpretation = async () => {
-    if (!user) {
+    if (!contextUser) {
       setShowLoginModal(true);
       return;
     }
@@ -150,7 +210,7 @@ export default function Home() {
         {
           method: 'POST',
           body: JSON.stringify({
-            userId: user.id,
+            userId: contextUser.id,
             question,
             spread: selectedSpread,
             cards: drawnCards,
@@ -163,7 +223,9 @@ export default function Home() {
           // 流式响应完成
           console.log('Interpretation completed, length:', fullText.length);
           // 更新剩余限额
-          await fetchQuota(user.id);
+          if (contextUser?.id) {
+            await fetchQuota(contextUser.id);
+          }
         },
         (error) => {
           console.error('Stream error:', error);
@@ -214,6 +276,17 @@ export default function Home() {
             {t.home.subtitle}
           </p>
         </div>
+
+        {/* User Avatar Section */}
+        {contextUser && (
+          <div className="flex justify-center mb-8">
+            <VipAvatar
+              username={contextUser.username}
+              vipLevel={contextUser.vipLevel}
+              vipExpireAt={contextUser.vipExpireAt}
+            />
+          </div>
+        )}
 
         {!selectedSpread && (
           <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30" id="spreads">
@@ -284,7 +357,7 @@ export default function Home() {
               spread={selectedSpread!}
             />
 
-            {!user && (
+            {!contextUser && (
               <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
                 <CardHeader>
                   <CardTitle className="text-white">{t.home.getAiInterpretation}</CardTitle>
@@ -303,7 +376,7 @@ export default function Home() {
               </Card>
             )}
 
-            {user && !showAiInterpretation && (
+            {contextUser && !showAiInterpretation && (
               <Card className="mt-8 bg-black/40 backdrop-blur-sm border-purple-500/30">
                 <CardHeader>
                   <CardTitle className="text-white">{t.home.getAiInterpretation}</CardTitle>
