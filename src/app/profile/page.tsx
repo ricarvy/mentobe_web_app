@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useUser } from '@/lib/userContext';
+import { useUser, convertVipLevelFromApi } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
 import { ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
@@ -121,21 +121,30 @@ export default function ProfilePage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-purple-300">{t.common.subscriptionPlan}</p>
                   <p className="font-semibold text-white flex items-center gap-2">
-                    {user.vipLevel === 'pro' && (
-                      <Badge variant="default" className="bg-gradient-to-r from-purple-600 to-pink-600">
-                        {t.common.proMember}
-                      </Badge>
-                    )}
-                    {user.vipLevel === 'premium' && (
-                      <Badge variant="default" className="bg-gradient-to-r from-yellow-600 to-orange-600">
-                        {t.common.premiumMember}
-                      </Badge>
-                    )}
-                    {!user.vipLevel && (
-                      <Badge variant="outline" className="border-purple-500/30 text-purple-300">
-                        Free
-                      </Badge>
-                    )}
+                    {(() => {
+                      const normalizedVipLevel = convertVipLevelFromApi(
+                        typeof user.vipLevel === 'number' ? user.vipLevel : user.vipLevel === 'pro' ? 1 : user.vipLevel === 'premium' ? 2 : 0
+                      );
+                      if (normalizedVipLevel === 'pro') {
+                        return (
+                          <Badge variant="default" className="bg-gradient-to-r from-purple-600 to-pink-600">
+                            {t.common.proMember}
+                          </Badge>
+                        );
+                      }
+                      if (normalizedVipLevel === 'premium') {
+                        return (
+                          <Badge variant="default" className="bg-gradient-to-r from-yellow-600 to-orange-600">
+                            {t.common.premiumMember}
+                          </Badge>
+                        );
+                      }
+                      return (
+                        <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                          Free
+                        </Badge>
+                      );
+                    })()}
                   </p>
                 </div>
               </div>
