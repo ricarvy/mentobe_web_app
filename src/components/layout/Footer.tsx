@@ -13,7 +13,6 @@ export function Footer() {
       { name: t.footer.features, href: '#features' },
       { name: t.footer.pricing, href: '/pricing' },
       { name: t.header.tarotSpreads, href: '#spreads' },
-      { name: t.footer.api, href: '#api' },
     ],
     company: [
       { name: t.footer.aboutUs, href: '#about' },
