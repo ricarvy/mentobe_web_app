@@ -11,7 +11,7 @@ interface User {
   isActive?: boolean;
   isDemo?: boolean;
   unlimitedQuota?: boolean;
-  vipLevel?: number; // 0: Free, 1: Pro, 2: Premium
+  vipLevel?: 'pro' | 'premium'; // 'pro': Pro会员, 'premium': Premium会员, undefined: 普通用户
   vipExpireAt?: string | null; // ISO 8601 日期字符串或 null
 }
 
@@ -20,6 +20,38 @@ interface UserContextType {
   setUser: (user: User | null) => void;
   logout: () => void;
   refreshUser: () => Promise<void>;
+}
+
+// 后端API响应类型
+interface ApiResponseUser {
+  id: string;
+  username: string;
+  email: string;
+  isActive: boolean;
+  isDemo: boolean;
+  unlimitedQuota: boolean;
+  vipLevel: number; // 0: Free, 1: Pro, 2: Premium
+  vipExpireAt: string | null;
+}
+
+// 将后端的数字VIP等级转换为前端的字符串类型
+export function convertVipLevelFromApi(vipLevel: number | undefined): 'pro' | 'premium' | undefined {
+  switch (vipLevel) {
+    case 1:
+      return 'pro';
+    case 2:
+      return 'premium';
+    default:
+      return undefined;
+  }
+}
+
+// 转换API响应为User类型
+export function convertApiUserToUser(apiUser: ApiResponseUser): User {
+  return {
+    ...apiUser,
+    vipLevel: convertVipLevelFromApi(apiUser.vipLevel),
+  };
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -53,16 +85,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       }
 
       // 使用登录API获取最新的用户信息
-      const data = await apiRequest<{
-        id: string;
-        username: string;
-        email: string;
-        isActive: boolean;
-        isDemo: boolean;
-        unlimitedQuota: boolean;
-        vipLevel: number;
-        vipExpireAt: string | null;
-      }>('/api/auth/login', {
+      const apiData = await apiRequest<ApiResponseUser>('/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({
           email: credentials.email,
@@ -71,14 +94,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
         requireAuth: false,
       });
 
+      // 转换API响应为User类型
+      const userData = convertApiUserToUser(apiData);
+
       // 更新localStorage
-      saveAuthCredentials(data, credentials.email, credentials.password);
+      saveAuthCredentials(userData, credentials.email, credentials.password);
       // 更新state
-      setUser(data);
+      setUser(userData);
 
       console.log('[refreshUser] User info refreshed successfully', {
-        vipLevel: data.vipLevel,
-        vipExpireAt: data.vipExpireAt,
+        vipLevel: userData.vipLevel,
+        vipExpireAt: userData.vipExpireAt,
       });
     } catch (error) {
       console.error('[refreshUser] Failed to refresh user info:', error);

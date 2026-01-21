@@ -115,18 +115,18 @@ export default function ProfilePage() {
             </div>
 
             {/* VIP Level */}
-            {user.vipLevel !== undefined && user.vipLevel > 0 && (
+            {user.vipLevel && (
               <div className="flex items-center gap-3 text-purple-200">
                 <Sparkles className="h-5 w-5 text-purple-400 flex-shrink-0" />
                 <div className="flex-1">
                   <p className="text-sm text-purple-300">{t.common.subscriptionPlan}</p>
                   <p className="font-semibold text-white flex items-center gap-2">
-                    {user.vipLevel === 1 && (
+                    {user.vipLevel === 'pro' && (
                       <Badge variant="default" className="bg-gradient-to-r from-purple-600 to-pink-600">
                         {t.common.proMember}
                       </Badge>
                     )}
-                    {user.vipLevel === 2 && (
+                    {user.vipLevel === 'premium' && (
                       <Badge variant="default" className="bg-gradient-to-r from-yellow-600 to-orange-600">
                         {t.common.premiumMember}
                       </Badge>

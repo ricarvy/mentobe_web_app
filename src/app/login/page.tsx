@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
+import { convertApiUserToUser } from '@/lib/userContext';
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -93,7 +94,7 @@ export default function LoginPage() {
     try {
       if (isLogin) {
         // Handle login
-        const data = await apiRequest<{
+        const apiData = await apiRequest<{
           id: string;
           username: string;
           email: string;
@@ -111,8 +112,11 @@ export default function LoginPage() {
           requireAuth: false,
         });
 
+        // 转换API响应为User类型
+        const userData = convertApiUserToUser(apiData);
+
         // Store user info and auth credentials in localStorage
-        saveAuthCredentials(data, formData.email, formData.password);
+        saveAuthCredentials(userData, formData.email, formData.password);
         // Redirect to home page
         window.location.href = '/';
       } else {

@@ -3,14 +3,10 @@
  * 用于判断和格式化用户 VIP 信息
  */
 
-export enum VipLevel {
-  FREE = 0,
-  PRO = 1,
-  PREMIUM = 2,
-}
+export type VipLevel = 'pro' | 'premium';
 
 export interface VipInfo {
-  level: VipLevel;
+  level: VipLevel | 'free';
   name: string;
   displayName: string;
   badgeColor: string;
@@ -20,20 +16,19 @@ export interface VipInfo {
 
 /**
  * 获取用户 VIP 信息
- * @param vipLevel - 用户 VIP 等级 (0: Free, 1: Pro, 2: Premium)
+ * @param vipLevel - 用户 VIP 等级 ('pro': Pro会员, 'premium': Premium会员, undefined: 普通用户)
  * @param vipExpireAt - VIP 到期时间 (ISO 8601 字符串或 null)
  * @returns VIP 信息对象
  */
-export function getVipInfo(vipLevel: number | undefined, vipExpireAt: string | null | undefined): VipInfo {
-  const level = vipLevel ?? VipLevel.FREE;
+export function getVipInfo(vipLevel: VipLevel | undefined, vipExpireAt: string | null | undefined): VipInfo {
   const expireDate = vipExpireAt ? new Date(vipExpireAt) : null;
   const now = new Date();
   const isExpired = expireDate && expireDate < now;
 
-  switch (level) {
-    case VipLevel.PRO:
+  switch (vipLevel) {
+    case 'pro':
       return {
-        level: VipLevel.PRO,
+        level: 'pro',
         name: 'Pro',
         displayName: 'Pro Member',
         badgeColor: 'bg-gradient-to-r from-purple-600 to-pink-600',
@@ -41,9 +36,9 @@ export function getVipInfo(vipLevel: number | undefined, vipExpireAt: string | n
         expireDate,
       };
 
-    case VipLevel.PREMIUM:
+    case 'premium':
       return {
-        level: VipLevel.PREMIUM,
+        level: 'premium',
         name: 'Premium',
         displayName: 'Premium Member',
         badgeColor: 'bg-gradient-to-r from-yellow-600 to-orange-600',
@@ -51,10 +46,9 @@ export function getVipInfo(vipLevel: number | undefined, vipExpireAt: string | n
         expireDate,
       };
 
-    case VipLevel.FREE:
     default:
       return {
-        level: VipLevel.FREE,
+        level: 'free',
         name: 'Free',
         displayName: 'Free User',
         badgeColor: 'bg-purple-600',
@@ -70,8 +64,8 @@ export function getVipInfo(vipLevel: number | undefined, vipExpireAt: string | n
  * @param vipExpireAt - VIP 到期时间
  * @returns 是否有有效 VIP
  */
-export function hasValidVip(vipLevel: number | undefined, vipExpireAt: string | null | undefined): boolean {
-  if (!vipLevel || vipLevel === VipLevel.FREE) {
+export function hasValidVip(vipLevel: VipLevel | undefined, vipExpireAt: string | null | undefined): boolean {
+  if (!vipLevel) {
     return false;
   }
 
@@ -113,16 +107,14 @@ export function formatVipExpireDate(vipExpireAt: string | null | undefined): str
  * @param language - 语言代码
  * @returns VIP 等级显示文本
  */
-export function getVipLevelText(vipLevel: number | undefined, language: string = 'en'): string {
-  const level = vipLevel ?? VipLevel.FREE;
-
-  switch (level) {
-    case VipLevel.PRO:
+export function getVipLevelText(vipLevel: VipLevel | undefined, language: string = 'en'): string {
+  switch (vipLevel) {
+    case 'pro':
       return 'Pro Member';
-    case VipLevel.PREMIUM:
+    case 'premium':
       return 'Premium Member';
-    case VipLevel.FREE:
     default:
       return 'Free User';
   }
 }
+
