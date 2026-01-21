@@ -96,6 +96,7 @@ export const ja = {
     noHistory: 'リーディング履歴がありません',
     startReading: '初めてのタロットリーディングを始めましょう',
     newReading: '新規リーディング',
+    proUpgradeRequired: 'このスプレッドはProまたはPremiumサブスクリプションが必要です。今すぐアップグレードしますか？',
     spreadCategories: {
       recommended: 'おすすめ',
       basic: '基本',

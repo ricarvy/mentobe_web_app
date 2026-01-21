@@ -96,6 +96,7 @@ export const zh = {
     noHistory: '暂无解读历史',
     startReading: '开始你的第一次塔罗解读',
     newReading: '新解读',
+    proUpgradeRequired: '此牌阵需要 Pro 或 Premium 订阅。立即升级？',
     spreadCategories: {
       recommended: '推荐牌阵',
       basic: '基础通用',

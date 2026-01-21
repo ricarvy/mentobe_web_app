@@ -96,6 +96,7 @@ export const en = {
     noHistory: 'No reading history yet',
     startReading: 'Start your first tarot reading today',
     newReading: 'New Reading',
+    proUpgradeRequired: 'This spread requires a Pro or Premium subscription. Upgrade now?',
     spreadCategories: {
       recommended: 'Recommended',
       basic: 'Basic',

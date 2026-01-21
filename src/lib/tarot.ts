@@ -23,6 +23,7 @@ export interface Spread {
   description: string;
   positions: SpreadPosition[];
   category: 'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced';
+  isPro?: boolean;
 }
 
 export interface SpreadPosition {
@@ -219,6 +220,7 @@ export const spreads: Spread[] = [
     name: '恋人金字塔',
     description: '恋人关系 & 互动解析，简洁直接',
     category: 'love',
+    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -242,6 +244,7 @@ export const spreads: Spread[] = [
     name: '爱情大十字',
     description: '两性关系 & 爱情状况，注重内心情感',
     category: 'love',
+    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -270,6 +273,7 @@ export const spreads: Spread[] = [
     name: '寻找对象牌阵',
     description: '寻找意中人 & 有缘人',
     category: 'love',
+    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -293,6 +297,7 @@ export const spreads: Spread[] = [
     name: '爱情树牌阵',
     description: '溯本求源 & 寻找症结，回溯爱情过往',
     category: 'love',
+    isPro: true,
     positions: [
       {
         id: 'position1',

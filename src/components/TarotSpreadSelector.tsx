@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { type Spread } from '@/lib/tarot';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 
@@ -19,10 +20,15 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
         return (
           <Card
             key={spread.id}
-            className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 bg-black/20 border-purple-500/30"
+            className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 bg-black/20 border-purple-500/30 relative"
             onClick={() => onSpreadSelect(spread)}
           >
-            <CardHeader className="text-center">
+            {spread.isPro && (
+              <Badge className="absolute top-3 right-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-1">
+                PRO
+              </Badge>
+            )}
+            <CardHeader className="text-center pr-16">
               <CardTitle className="text-white">{translatedSpread.name}</CardTitle>
               <CardDescription className="text-purple-200">{translatedSpread.description}</CardDescription>
             </CardHeader>

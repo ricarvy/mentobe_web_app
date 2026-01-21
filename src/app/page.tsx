@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -16,14 +17,17 @@ import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
+import { useUser, convertApiUserToUser } from '@/lib/userContext';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
 
 export default function Home() {
+  const router = useRouter();
   const { t } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
+  const { user, setUser } = useUser();
   const {
     state: {
       selectedSpread,
@@ -45,7 +49,6 @@ export default function Home() {
     setIsGenerating,
     resetFlow,
   } = useTarotFlow();
-  const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
@@ -92,18 +95,24 @@ export default function Home() {
         id: string;
         username: string;
         email: string;
+        isActive: boolean;
         isDemo: boolean;
+        unlimitedQuota: boolean;
+        vipLevel: number;
+        vipExpireAt: string | null;
       }>('/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
         requireAuth: false, // 登录接口不需要Authorization header，但会在请求体中包含凭证
       });
 
-      setUser(userData);
+      // 转换API响应为User类型
+      const convertedUser = convertApiUserToUser(userData);
+      setUser(convertedUser);
       // 存储用户信息和认证凭证
-      saveAuthCredentials(userData, email, password);
+      saveAuthCredentials(convertedUser, email, password);
       setShowLoginModal(false);
-      await fetchQuota(userData.id);
+      await fetchQuota(convertedUser.id);
     } catch (error) {
       console.error('Login error:', error);
       if (error instanceof ApiRequestError) {
@@ -116,6 +125,24 @@ export default function Home() {
   };
 
   const handleSpreadSelect = (spread: Spread) => {
+    // 检查是否为 Pro 专用的牌阵
+    if (spread.isPro) {
+      // 检查用户是否登录
+      if (!user) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      // 检查用户是否为 Pro 或 Premium
+      if (user.vipLevel !== 'pro' && user.vipLevel !== 'premium') {
+        // 提示需要升级
+        if (confirm(t.home.proUpgradeRequired || 'This spread requires a Pro or Premium subscription. Upgrade now?')) {
+          router.push('/pricing');
+        }
+        return;
+      }
+    }
+
     setSelectedSpread(spread);
   };
 
