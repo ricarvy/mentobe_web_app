@@ -24,6 +24,7 @@ export interface Spread {
   positions: SpreadPosition[];
   category: 'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced';
   isPro?: boolean;
+  isPremium?: boolean;
 }
 
 export interface SpreadPosition {
@@ -366,6 +367,7 @@ export const spreads: Spread[] = [
     name: '财富之树',
     description: '事业发展 & 财运状况',
     category: 'career',
+    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -389,6 +391,7 @@ export const spreads: Spread[] = [
     name: '问题解决牌阵',
     description: '问题剖析 & 答疑解惑',
     category: 'career',
+    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -414,6 +417,7 @@ export const spreads: Spread[] = [
     name: '身心灵牌阵',
     description: '自我探索 & 了解自己',
     category: 'self',
+    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -437,6 +441,7 @@ export const spreads: Spread[] = [
     name: '四元素牌阵',
     description: '问题探索 & 多方解析',
     category: 'self',
+    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -467,6 +472,7 @@ export const spreads: Spread[] = [
     name: '周运势牌阵',
     description: '周运分析 & 单周占卜',
     category: 'advanced',
+    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -510,6 +516,7 @@ export const spreads: Spread[] = [
     name: '六芒星牌阵',
     description: '事物发展 & 预测未来',
     category: 'advanced',
+    isPremium: true,
     positions: [
       {
         id: 'position1',

@@ -102,6 +102,14 @@ export const zh = {
       description: '此牌阵需要 Pro 或 Premium 订阅才能解锁。',
       subscribeNow: '立即订阅',
     },
+    premiumUpgradeRequired: {
+      title: '仅限Premium用户',
+      description: '解锁专属Premium牌阵，获得高级洞察和个性化解读。',
+      feature1: '访问所有Premium牌阵',
+      feature2: '高级AI解读',
+      feature3: '优先支持和无限解读',
+      subscribeNow: '解锁Premium',
+    },
     spreadCategories: {
       recommended: '推荐牌阵',
       basic: '基础通用',

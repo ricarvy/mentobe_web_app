@@ -102,6 +102,14 @@ export const ja = {
       description: 'このスプレッドはProまたはPremiumサブスクリプションが必要です。',
       subscribeNow: '今すぐ購読',
     },
+    premiumUpgradeRequired: {
+      title: 'プレミアム限定',
+      description: '限定プレミアムスプレッドをアンロックし、高度な洞察とパーソナライズされたリーディングを取得。',
+      feature1: 'すべてのプレミアムスプレッドにアクセス',
+      feature2: '高度なAI解釈',
+      feature3: '優先サポートと無制限リーディング',
+      subscribeNow: 'プレミアムをアンロック',
+    },
     spreadCategories: {
       recommended: 'おすすめ',
       basic: '基本',

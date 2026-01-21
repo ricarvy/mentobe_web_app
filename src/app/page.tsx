@@ -15,6 +15,7 @@ import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
 import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { ProUpgradeModal } from '@/components/ProUpgradeModal';
+import { PremiumUpgradeModal } from '@/components/PremiumUpgradeModal';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
@@ -52,6 +53,7 @@ export default function Home() {
   } = useTarotFlow();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false);
+  const [showPremiumUpgradeModal, setShowPremiumUpgradeModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [remainingQuota, setRemainingQuota] = useState(3);
@@ -127,6 +129,22 @@ export default function Home() {
   };
 
   const handleSpreadSelect = (spread: Spread) => {
+    // 检查是否为 Premium 专用的牌阵
+    if (spread.isPremium) {
+      // 检查用户是否登录
+      if (!user) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      // 检查用户是否为 Premium
+      if (user.vipLevel !== 'premium') {
+        // 打开Premium升级提示弹窗
+        setShowPremiumUpgradeModal(true);
+        return;
+      }
+    }
+
     // 检查是否为 Pro 专用的牌阵
     if (spread.isPro) {
       // 检查用户是否登录
@@ -566,6 +584,16 @@ export default function Home() {
         onClose={() => setShowProUpgradeModal(false)}
         onSubscribe={() => {
           setShowProUpgradeModal(false);
+          router.push('/pricing');
+        }}
+      />
+
+      {/* Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={showPremiumUpgradeModal}
+        onClose={() => setShowPremiumUpgradeModal(false)}
+        onSubscribe={() => {
+          setShowPremiumUpgradeModal(false);
           router.push('/pricing');
         }}
       />

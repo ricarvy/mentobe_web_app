@@ -102,6 +102,14 @@ export const en = {
       description: 'This spread requires a Pro or Premium subscription to unlock.',
       subscribeNow: 'Subscribe Now',
     },
+    premiumUpgradeRequired: {
+      title: 'Premium Access Only',
+      description: 'Unlock exclusive premium spreads with advanced insights and personalized readings.',
+      feature1: 'Access to all premium spreads',
+      feature2: 'Advanced AI interpretations',
+      feature3: 'Priority support & unlimited readings',
+      subscribeNow: 'Unlock Premium',
+    },
     spreadCategories: {
       recommended: 'Recommended',
       basic: 'Basic',
