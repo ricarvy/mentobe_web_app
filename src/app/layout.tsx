@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/Footer';
 import { StarBackground } from '@/components/StarBackground';
 import { I18nProvider } from '@/lib/i18n';
 import { UserProvider } from '@/lib/userContext';
+import { TarotFlowProvider } from '@/lib/tarotFlowContext';
 import { SidebarProvider } from '@/components/layout/SidebarContext';
 import { StructuredData } from '@/components/layout/StructuredData';
 
@@ -103,19 +104,21 @@ export default function RootLayout({
       <body className="antialiased">
         <I18nProvider>
           <UserProvider>
-            <SidebarProvider>
-              <StarBackground />
-              <div className="flex min-h-screen flex-col">
-                <Header />
-                <div className="flex flex-1">
-                  <Sidebar />
-                  <MainContent>
-                    {children}
-                  </MainContent>
+            <TarotFlowProvider>
+              <SidebarProvider>
+                <StarBackground />
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <div className="flex flex-1">
+                    <Sidebar />
+                    <MainContent>
+                      {children}
+                    </MainContent>
+                  </div>
+                  <Footer />
                 </div>
-                <Footer />
-              </div>
-            </SidebarProvider>
+              </SidebarProvider>
+            </TarotFlowProvider>
           </UserProvider>
         </I18nProvider>
       </body>

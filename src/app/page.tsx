@@ -7,13 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { spreads, drawCards, type TarotCard, type Spread } from '@/lib/tarot';
+import { spreads, drawCards, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
 import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
+import { useTarotFlow } from '@/lib/tarotFlowContext';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
@@ -22,18 +23,31 @@ import { getQuota } from '@/lib/quota';
 export default function Home() {
   const { t } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
-  const [selectedSpread, setSelectedSpread] = useState<Spread | null>(null);
-  const [question, setQuestion] = useState('');
-  const [drawnCards, setDrawnCards] = useState<TarotCard[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const {
+    state: {
+      selectedSpread,
+      question,
+      drawnCards,
+      isDrawing,
+      showResult,
+      aiInterpretation,
+      showAiInterpretation,
+      isGenerating,
+    },
+    setSelectedSpread,
+    setQuestion,
+    setDrawnCards,
+    setIsDrawing,
+    setShowResult,
+    setAiInterpretation,
+    setShowAiInterpretation,
+    setIsGenerating,
+    resetFlow,
+  } = useTarotFlow();
   const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
-  const [aiInterpretation, setAiInterpretation] = useState('');
-  const [showAiInterpretation, setShowAiInterpretation] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
 
@@ -173,13 +187,7 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setSelectedSpread(null);
-    setQuestion('');
-    setDrawnCards([]);
-    setIsDrawing(false);
-    setShowResult(false);
-    setAiInterpretation('');
-    setShowAiInterpretation(false);
+    resetFlow();
   };
 
   const handleSelectQuestion = (selectedQuestion: string) => {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -10,13 +11,17 @@ import { Menu, Sparkles, Globe, User, LogOut, Zap } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { languages } from '@/lib/translations';
 import { useUser } from '@/lib/userContext';
+import { useTarotFlow } from '@/lib/tarotFlowContext';
 import { getQuota } from '@/lib/quota';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useI18n();
   const { user, logout } = useUser();
+  const { isInFlow, resetFlow } = useTarotFlow();
   const [quota, setQuota] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Fetch quota when user changes
   useEffect(() => {
@@ -35,12 +40,25 @@ export function Header() {
     { name: t.header.pricing, href: '/pricing' },
   ];
 
+  // 处理Home点击：如果在流程中，重置流程；否则正常跳转
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (isInFlow && pathname === '/') {
+      e.preventDefault();
+      resetFlow();
+      // 滚动到页面顶部
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // 如果不在流程中或在其他页面，让Link正常工作
+    // 移动端关闭菜单
+    setIsOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-500/20 bg-black/40 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href="/" onClick={handleHomeClick} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Sparkles className="h-6 w-6 text-purple-400" />
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Mentob AI
@@ -53,6 +71,7 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={item.href === '/' ? handleHomeClick : undefined}
                 className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
               >
                 {item.name}
@@ -165,7 +184,13 @@ export function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(e) => {
+                      if (item.href === '/') {
+                        handleHomeClick(e);
+                      } else {
+                        setIsOpen(false);
+                      }
+                    }}
                     className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
                   >
                     {item.name}
