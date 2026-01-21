@@ -135,19 +135,19 @@ export function Header() {
               </DropdownMenu>
             ) : (
               <>
-                <Link href="/login">
-                  <Button
-                    variant="ghost"
-                    className="text-purple-200 hover:text-white hover:bg-purple-500/10"
-                  >
-                    {t.common.signIn}
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-                    {t.common.getStarted}
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost"
+                  className="text-purple-200 hover:text-white hover:bg-purple-500/10"
+                  asChild
+                >
+                  <Link href="/login">{t.common.signIn}</Link>
+                </Button>
+                <Button
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  asChild
+                >
+                  <Link href="/login">{t.common.getStarted}</Link>
+                </Button>
               </>
             )}
           </div>
@@ -220,15 +220,16 @@ export function Header() {
                         </div>
                       )}
 
-                      <Link href="/profile" onClick={() => setIsOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full justify-start gap-2"
-                        >
-                          <User className="h-4 w-4" />
+                      <Button
+                        variant="ghost"
+                        className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full justify-start"
+                        asChild
+                      >
+                        <Link href="/profile" onClick={() => setIsOpen(false)}>
+                          <User className="h-4 w-4 mr-2" />
                           <span>{user.username}</span>
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                       <Button
                         variant="ghost"
                         onClick={() => {
@@ -243,19 +244,23 @@ export function Header() {
                     </>
                   ) : (
                     <>
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
-                        >
+                      <Button
+                        variant="ghost"
+                        className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
+                        asChild
+                      >
+                        <Link href="/login" onClick={() => setIsOpen(false)}>
                           {t.common.signIn}
-                        </Button>
-                      </Link>
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
+                        </Link>
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full"
+                        asChild
+                      >
+                        <Link href="/login" onClick={() => setIsOpen(false)}>
                           {t.common.getStarted}
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                     </>
                   )}
                 </div>
