@@ -16,12 +16,10 @@ import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
-import { useUser } from '@/lib/userContext';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
-import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { t } = useI18n();
@@ -47,9 +45,7 @@ export default function Home() {
     setIsGenerating,
     resetFlow,
   } = useTarotFlow();
-  const { user } = useUser();
-  const router = useRouter();
-  const [userState, setUserState] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
+  const [user, setUser] = useState<{ id: string; username: string; email: string; isDemo?: boolean } | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
@@ -62,7 +58,7 @@ export default function Home() {
     const savedUser = localStorage.getItem('tarot_user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
-      setUserState(parsedUser);
+      setUser(parsedUser);
       fetchQuota(parsedUser.id);
     }
   }, []);
@@ -103,7 +99,7 @@ export default function Home() {
         requireAuth: false, // 登录接口不需要Authorization header，但会在请求体中包含凭证
       });
 
-      setUserState(userData);
+      setUser(userData);
       // 存储用户信息和认证凭证
       saveAuthCredentials(userData, email, password);
       setShowLoginModal(false);
@@ -121,26 +117,6 @@ export default function Home() {
 
   const handleSpreadSelect = (spread: Spread) => {
     setSelectedSpread(spread);
-  };
-
-  const isProUser = (): boolean => {
-    return user?.vipLevel === 'pro' || user?.vipLevel === 'premium';
-  };
-
-  const handleCategoryChange = (value: string) => {
-    const proCategories = ['basic', 'love', 'decision'];
-
-    if (proCategories.includes(value) && !isProUser()) {
-      if (!user) {
-        setShowLoginModal(true);
-        return;
-      }
-      // 跳转到定价页面
-      router.push('/pricing');
-      return;
-    }
-
-    setSelectedCategory(value as any);
   };
 
   const handleDraw = () => {
@@ -316,28 +292,19 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="recommended" className="w-full" onValueChange={handleCategoryChange}>
+              <Tabs defaultValue="recommended" className="w-full" onValueChange={(value) => setSelectedCategory(value as any)}>
                 <TabsList className="w-full justify-start bg-black/20 border-purple-500/30">
                   <TabsTrigger value="recommended" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.recommended}
                   </TabsTrigger>
-                  <TabsTrigger value="basic" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white relative">
+                  <TabsTrigger value="basic" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.basic}
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-purple-500 text-white rounded-full">
-                      PRO
-                    </span>
                   </TabsTrigger>
-                  <TabsTrigger value="love" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white relative">
+                  <TabsTrigger value="love" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.love}
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-purple-500 text-white rounded-full">
-                      PRO
-                    </span>
                   </TabsTrigger>
-                  <TabsTrigger value="decision" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white relative">
+                  <TabsTrigger value="decision" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.decision}
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-purple-500 text-white rounded-full">
-                      PRO
-                    </span>
                   </TabsTrigger>
                   <TabsTrigger value="career" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.career}
