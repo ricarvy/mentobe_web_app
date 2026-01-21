@@ -81,44 +81,44 @@ export default function ProfilePage() {
               Your account details and settings
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 text-purple-200">
-              <User className="h-5 w-5 text-purple-400 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="text-sm text-purple-300">{t.common.username || 'Username'}</p>
-                <p className="font-semibold text-white">{user.username}</p>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 text-purple-200">
+                <User className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-purple-300">{t.common.username || 'Username'}</p>
+                  <p className="font-semibold text-white truncate">{user.username}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3 text-purple-200">
-              <Mail className="h-5 w-5 text-purple-400 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="text-sm text-purple-300">{t.common.email || 'Email'}</p>
-                <p className="font-semibold text-white">{user.email}</p>
+              <div className="flex items-center gap-3 text-purple-200">
+                <Mail className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-purple-300">{t.common.email || 'Email'}</p>
+                  <p className="font-semibold text-white truncate">{user.email}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3 text-purple-200">
-              <Shield className="h-5 w-5 text-purple-400 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="text-sm text-purple-300">{t.common.accountType}</p>
-                <p className="font-semibold text-white">
-                  {user.isDemo ? (
-                    <Badge variant="outline" className="border-purple-500/30 text-purple-300">
-                      {t.common.demoAccount}
-                    </Badge>
-                  ) : (
-                    <Badge variant="default" className="bg-purple-600">
-                      {t.common.standardAccount}
-                    </Badge>
-                  )}
-                </p>
+              <div className="flex items-center gap-3 text-purple-200">
+                <Shield className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-purple-300">{t.common.accountType}</p>
+                  <p className="font-semibold text-white">
+                    {user.isDemo ? (
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                        {t.common.demoAccount}
+                      </Badge>
+                    ) : (
+                      <Badge variant="default" className="bg-purple-600">
+                        {t.common.standardAccount}
+                      </Badge>
+                    )}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {/* VIP Level */}
-            {user.vipLevel && (
+              {/* VIP Level */}
               <div className="flex items-center gap-3 text-purple-200">
                 <Sparkles className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="text-sm text-purple-300">{t.common.subscriptionPlan}</p>
                   <p className="font-semibold text-white flex items-center gap-2">
                     {user.vipLevel === 'pro' && (
@@ -131,16 +131,21 @@ export default function ProfilePage() {
                         {t.common.premiumMember}
                       </Badge>
                     )}
+                    {!user.vipLevel && (
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+                        Free
+                      </Badge>
+                    )}
                   </p>
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* VIP Expire Date */}
+            {/* VIP Expire Date - Full Width */}
             {user.vipExpireAt && (
-              <div className="flex items-center gap-3 text-purple-200">
+              <div className="flex items-center gap-3 text-purple-200 mt-4 pt-4 border-t border-purple-500/20">
                 <Calendar className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="text-sm text-purple-300">{t.common.subscriptionExpires}</p>
                   <p className="font-semibold text-white">
                     {new Date(user.vipExpireAt).toLocaleDateString('en-US', {
