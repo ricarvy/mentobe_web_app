@@ -482,6 +482,13 @@ export default function Home() {
                   >
                     {t.common.signIn}
                   </Button>
+                  <Button
+                    onClick={() => setSelectedSpread(null)}
+                    variant="outline"
+                    className="w-full mt-3 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                  >
+                    {t.header.tarotSpreads}
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -515,6 +522,13 @@ export default function Home() {
                     <span className={isGenerating ? 'pl-8' : ''}>
                       {isGenerating ? `${t.home.generating}...` : (!quotaInfo.isDemo && remainingQuota <= 0) ? t.home.quotaExceeded : t.home.getAiInterpretation}
                     </span>
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedSpread(null)}
+                    variant="outline"
+                    className="w-full mt-3 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
+                  >
+                    {t.header.tarotSpreads}
                   </Button>
                 </CardContent>
               </Card>
