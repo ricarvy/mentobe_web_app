@@ -146,7 +146,7 @@ export const spreads: Spread[] = [
 
   // 基础通用牌阵
   {
-    id: 'time-flow',
+    id: 'timeFlow',
     name: '时间流牌阵',
     description: '预测未来 & 窥探未知，有时间指向的占卜',
     category: 'basic',
@@ -169,7 +169,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'holy-triangle',
+    id: 'holyTriangle',
     name: '圣三角牌阵',
     description: '判断情势 & 寻找成因，理清事情原委',
     category: 'basic',
@@ -192,7 +192,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'core-focus',
+    id: 'coreFocus',
     name: '直指核心牌阵',
     description: '问题探索 & 切中要害，快速找到问题症结',
     category: 'basic',
@@ -217,7 +217,7 @@ export const spreads: Spread[] = [
 
   // 爱情感情专题
   {
-    id: 'lover-pyramid',
+    id: 'loverPyramid',
     name: '恋人金字塔',
     description: '恋人关系 & 互动解析，简洁直接',
     category: 'love',
@@ -241,7 +241,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'love-cross',
+    id: 'loveCross',
     name: '爱情大十字',
     description: '两性关系 & 爱情状况，注重内心情感',
     category: 'love',
@@ -270,7 +270,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'find-partner',
+    id: 'findPartner',
     name: '寻找对象牌阵',
     description: '寻找意中人 & 有缘人',
     category: 'love',
@@ -294,7 +294,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'love-tree',
+    id: 'loveTree',
     name: '爱情树牌阵',
     description: '溯本求源 & 寻找症结，回溯爱情过往',
     category: 'love',
@@ -320,7 +320,7 @@ export const spreads: Spread[] = [
 
   // 选择决策牌阵
   {
-    id: 'choose-two',
+    id: 'chooseTwo',
     name: '二选一牌阵',
     description: '抉择 & 判断，两种情况选择',
     category: 'decision',
@@ -338,7 +338,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'choose-three',
+    id: 'chooseThree',
     name: '三选一牌阵',
     description: '事情抉择 & 选择占卜，三个选项分析',
     category: 'decision',
@@ -363,7 +363,7 @@ export const spreads: Spread[] = [
 
   // 事业财富牌阵
   {
-    id: 'wealth-tree',
+    id: 'wealthTree',
     name: '财富之树',
     description: '事业发展 & 财运状况',
     category: 'career',
@@ -387,7 +387,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'problem-solve',
+    id: 'problemSolve',
     name: '问题解决牌阵',
     description: '问题剖析 & 答疑解惑',
     category: 'career',
@@ -413,7 +413,7 @@ export const spreads: Spread[] = [
 
   // 自我探索牌阵
   {
-    id: 'body-mind-spirit',
+    id: 'bodyMindSpirit',
     name: '身心灵牌阵',
     description: '自我探索 & 了解自己',
     category: 'self',
@@ -437,7 +437,7 @@ export const spreads: Spread[] = [
     ],
   },
   {
-    id: 'four-elements',
+    id: 'fourElements',
     name: '四元素牌阵',
     description: '问题探索 & 多方解析',
     category: 'self',
@@ -468,7 +468,7 @@ export const spreads: Spread[] = [
 
   // 高级预测牌阵
   {
-    id: 'weekly-fortune',
+    id: 'weeklyFortune',
     name: '周运势牌阵',
     description: '周运分析 & 单周占卜',
     category: 'advanced',
