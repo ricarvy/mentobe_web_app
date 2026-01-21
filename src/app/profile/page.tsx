@@ -99,15 +99,15 @@ export default function ProfilePage() {
             <div className="flex items-center gap-3 text-purple-200">
               <Shield className="h-5 w-5 text-purple-400 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm text-purple-300">Account Type</p>
+                <p className="text-sm text-purple-300">{t.common.accountType}</p>
                 <p className="font-semibold text-white">
                   {user.isDemo ? (
                     <Badge variant="outline" className="border-purple-500/30 text-purple-300">
-                      Demo Account
+                      {t.common.demoAccount}
                     </Badge>
                   ) : (
                     <Badge variant="default" className="bg-purple-600">
-                      Standard Account
+                      {t.common.standardAccount}
                     </Badge>
                   )}
                 </p>
@@ -119,16 +119,16 @@ export default function ProfilePage() {
               <div className="flex items-center gap-3 text-purple-200">
                 <Sparkles className="h-5 w-5 text-purple-400 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm text-purple-300">Subscription Plan</p>
+                  <p className="text-sm text-purple-300">{t.common.subscriptionPlan}</p>
                   <p className="font-semibold text-white flex items-center gap-2">
                     {user.vipLevel === 1 && (
                       <Badge variant="default" className="bg-gradient-to-r from-purple-600 to-pink-600">
-                        Pro Member
+                        {t.common.proMember}
                       </Badge>
                     )}
                     {user.vipLevel === 2 && (
                       <Badge variant="default" className="bg-gradient-to-r from-yellow-600 to-orange-600">
-                        Premium Member
+                        {t.common.premiumMember}
                       </Badge>
                     )}
                   </p>
@@ -141,7 +141,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-3 text-purple-200">
                 <Calendar className="h-5 w-5 text-purple-400 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm text-purple-300">Subscription Expires</p>
+                  <p className="text-sm text-purple-300">{t.common.subscriptionExpires}</p>
                   <p className="font-semibold text-white">
                     {new Date(user.vipExpireAt).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -160,10 +160,10 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Calendar className="h-6 w-6 text-purple-400" />
-              Daily Quota
+              {t.common.dailyQuota}
             </CardTitle>
             <CardDescription className="text-purple-200">
-              Your AI interpretation usage for today
+              {t.common.quotaDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -209,21 +209,21 @@ export default function ProfilePage() {
                       />
                     </div>
                     <p className="text-xs text-purple-300">
-                      {quotaInfo.total - quotaInfo.remaining} of {quotaInfo.total} interpretations used today
+                      {t.common.interpretationsUsed.replace('{}', String(quotaInfo.total - quotaInfo.remaining)).replace('{}', String(quotaInfo.total))}
                     </p>
                   </div>
                 )}
 
                 {quotaInfo.isDemo && (
                   <p className="text-sm text-purple-300">
-                    Demo accounts have unlimited AI interpretations.
+                    {t.common.demoAccountQuotaHint}
                   </p>
                 )}
               </div>
             ) : (
               <div className="flex items-center justify-center py-4 text-purple-200">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400 mr-2" />
-                Loading quota information...
+                {t.common.loadingQuota}
               </div>
             )}
           </CardContent>
@@ -234,10 +234,10 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Settings className="h-6 w-6 text-purple-400" />
-              Quick Actions
+              {t.common.quickActions}
             </CardTitle>
             <CardDescription className="text-purple-200">
-              Common tasks and navigation
+              {t.common.quickActionsDescription}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">

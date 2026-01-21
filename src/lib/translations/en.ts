@@ -16,6 +16,13 @@ export const en = {
     standardAccount: 'Standard Account',
     proMember: 'Pro Member',
     premiumMember: 'Premium Member',
+    dailyQuota: 'Daily Quota',
+    quotaDescription: 'Your AI interpretation usage for today',
+    interpretationsUsed: '{0} of {1} interpretations used today',
+    demoAccountQuotaHint: 'Demo accounts have unlimited AI interpretations.',
+    quickActions: 'Quick Actions',
+    quickActionsDescription: 'Common tasks and navigation',
+    loadingQuota: 'Loading quota information...',
   },
   header: {
     home: 'Home',

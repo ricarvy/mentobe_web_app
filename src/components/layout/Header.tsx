@@ -140,7 +140,7 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/profile" className="flex items-center gap-2 cursor-pointer text-purple-200 hover:text-white hover:bg-purple-500/10">
                       <User className="h-4 w-4" />
-                      <span>Profile</span>
+                      <span>{t.common.profile}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
