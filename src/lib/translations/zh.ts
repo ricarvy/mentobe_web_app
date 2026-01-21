@@ -23,6 +23,7 @@ export const zh = {
     quickActions: '快速操作',
     quickActionsDescription: '常用功能和导航',
     loadingQuota: '加载配额信息中...',
+    cancel: '取消',
   },
   header: {
     home: '首页',
@@ -96,7 +97,11 @@ export const zh = {
     noHistory: '暂无解读历史',
     startReading: '开始你的第一次塔罗解读',
     newReading: '新解读',
-    proUpgradeRequired: '此牌阵需要 Pro 或 Premium 订阅。立即升级？',
+    proUpgradeRequired: {
+      title: '需要升级',
+      description: '此牌阵需要 Pro 或 Premium 订阅才能解锁。',
+      subscribeNow: '立即订阅',
+    },
     spreadCategories: {
       recommended: '推荐牌阵',
       basic: '基础通用',

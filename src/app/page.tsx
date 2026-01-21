@@ -14,6 +14,7 @@ import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
 import { SuggestedQuestions } from '@/components/SuggestedQuestions';
+import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
@@ -50,6 +51,7 @@ export default function Home() {
     resetFlow,
   } = useTarotFlow();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showProUpgradeModal, setShowProUpgradeModal] = useState(false);
   const [email, setEmail] = useState(DEMO_ACCOUNT.email);
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [remainingQuota, setRemainingQuota] = useState(3);
@@ -135,10 +137,8 @@ export default function Home() {
 
       // 检查用户是否为 Pro 或 Premium
       if (user.vipLevel !== 'pro' && user.vipLevel !== 'premium') {
-        // 提示需要升级
-        if (confirm(t.home.proUpgradeRequired || 'This spread requires a Pro or Premium subscription. Upgrade now?')) {
-          router.push('/pricing');
-        }
+        // 打开升级提示弹窗
+        setShowProUpgradeModal(true);
         return;
       }
     }
@@ -559,6 +559,16 @@ export default function Home() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Pro Upgrade Modal */}
+      <ProUpgradeModal
+        isOpen={showProUpgradeModal}
+        onClose={() => setShowProUpgradeModal(false)}
+        onSubscribe={() => {
+          setShowProUpgradeModal(false);
+          router.push('/pricing');
+        }}
+      />
     </div>
   );
 }

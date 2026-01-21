@@ -23,6 +23,7 @@ export const en = {
     quickActions: 'Quick Actions',
     quickActionsDescription: 'Common tasks and navigation',
     loadingQuota: 'Loading quota information...',
+    cancel: 'Cancel',
   },
   header: {
     home: 'Home',
@@ -96,7 +97,11 @@ export const en = {
     noHistory: 'No reading history yet',
     startReading: 'Start your first tarot reading today',
     newReading: 'New Reading',
-    proUpgradeRequired: 'This spread requires a Pro or Premium subscription. Upgrade now?',
+    proUpgradeRequired: {
+      title: 'Upgrade Required',
+      description: 'This spread requires a Pro or Premium subscription to unlock.',
+      subscribeNow: 'Subscribe Now',
+    },
     spreadCategories: {
       recommended: 'Recommended',
       basic: 'Basic',

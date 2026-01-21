@@ -24,18 +24,16 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
             onClick={() => onSpreadSelect(spread)}
           >
             <CardHeader className="text-center">
-              <CardTitle className="text-white flex items-center justify-center gap-2">
-                {spread.isPro && (
-                  <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-1.5 py-0.5 hover:from-purple-500 hover:to-pink-500">
-                    PRO
-                  </Badge>
-                )}
-                {translatedSpread.name}
-              </CardTitle>
+              <CardTitle className="text-white">{translatedSpread.name}</CardTitle>
               <CardDescription className="text-purple-200">{translatedSpread.description}</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-sm text-purple-300">{spread.positions.length} cards</p>
+              {spread.isPro && (
+                <Badge className="mt-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-1 hover:from-purple-500 hover:to-pink-500">
+                  PRO
+                </Badge>
+              )}
             </CardContent>
           </Card>
         );

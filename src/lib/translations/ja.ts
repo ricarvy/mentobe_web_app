@@ -23,6 +23,7 @@ export const ja = {
     quickActions: 'クイックアクション',
     quickActionsDescription: '一般的なタスクとナビゲーション',
     loadingQuota: 'クォータ情報を読み込み中...',
+    cancel: 'キャンセル',
   },
   header: {
     home: 'ホーム',
@@ -96,7 +97,11 @@ export const ja = {
     noHistory: 'リーディング履歴がありません',
     startReading: '初めてのタロットリーディングを始めましょう',
     newReading: '新規リーディング',
-    proUpgradeRequired: 'このスプレッドはProまたはPremiumサブスクリプションが必要です。今すぐアップグレードしますか？',
+    proUpgradeRequired: {
+      title: 'アップグレードが必要',
+      description: 'このスプレッドはProまたはPremiumサブスクリプションが必要です。',
+      subscribeNow: '今すぐ購読',
+    },
     spreadCategories: {
       recommended: 'おすすめ',
       basic: '基本',
