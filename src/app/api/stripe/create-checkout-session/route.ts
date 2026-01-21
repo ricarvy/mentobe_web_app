@@ -49,57 +49,6 @@ function getLanguageFromRequest(request: NextRequest): string {
   return 'en';
 }
 
-/**
- * 直接调用 Stripe API (临时方案)
- * 注意：这仅用于测试，生产环境应在后端实现 Stripe API
- *
- * ⚠️ 安全警告：
- * - 在生产环境中，STRIPE_SECRET_KEY 必须配置在后端服务器
- * - 不要在前端或客户端代码中使用 Secret Key
- * - 此方案仅用于测试环境验证前端逻辑
- */
-async function createStripeSessionDirect(
-  priceId: string,
-  userId: string,
-  userEmail: string,
-  successUrl: string,
-  cancelUrl: string
-) {
-  const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '';
-
-  if (!STRIPE_SECRET_KEY || STRIPE_SECRET_KEY.includes('sk_test_')) {
-    throw new Error('STRIPE_SECRET_KEY 未配置或无效。请在 .env.local 中配置：STRIPE_SECRET_KEY=sk_test_xxx');
-  }
-
-  const stripeResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      mode: 'payment',
-      payment_method_types: 'card',
-      line_items: JSON.stringify([
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ]),
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      customer_email: userEmail,
-      client_reference_id: userId,
-      metadata: {
-        userId: userId,
-        userEmail: userEmail,
-      },
-    }),
-  });
-
-  return await stripeResponse.json();
-}
-
 export async function POST(request: NextRequest) {
   try {
     // 解析请求体
@@ -120,38 +69,51 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 临时方案：直接调用 Stripe API（绕过后端）
-    console.log('[Stripe Checkout] Using direct Stripe API call (test mode)');
+    // 调用后端 API 创建 Checkout Session
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
+    const lang = getLanguageFromRequest(request);
+    const backendUrlWithLang = `${backendUrl}/api/stripe/create-checkout-session?lang=${lang}`;
 
-    const stripeData = await createStripeSessionDirect(
-      priceId,
-      userId,
-      userEmail,
-      stripeConfig.successUrl,
-      stripeConfig.cancelUrl
-    );
+    console.log('[Stripe Checkout] Calling backend API:', backendUrlWithLang);
 
-    if (stripeData.error) {
-      console.error('[Stripe Checkout] Stripe API error:', stripeData.error);
+    const response = await fetch(backendUrlWithLang, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...addAuthHeader({}),
+      },
+      body: JSON.stringify({
+        priceId,
+        userId,
+        userEmail,
+        successUrl: stripeConfig.successUrl,
+        cancelUrl: stripeConfig.cancelUrl,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      console.error('[Stripe Checkout] Backend API error:', data.error);
       return NextResponse.json(
         {
           success: false,
-          error: {
-            code: stripeData.error.code || 'STRIPE_ERROR',
-            message: stripeData.error.message || 'Stripe API 调用失败',
+          error: data.error || {
+            code: 'BACKEND_ERROR',
+            message: '创建支付会话失败',
           },
         },
-        { status: 400 }
+        { status: response.status || 500 }
       );
     }
 
-    console.log('[Stripe Checkout] Session created:', stripeData.id);
+    console.log('[Stripe Checkout] Session created:', data.data.sessionId);
 
     // 返回 session ID 和 publishable key
     return NextResponse.json({
       success: true,
       data: {
-        sessionId: stripeData.id,
+        sessionId: data.data.sessionId,
         publishableKey: stripeConfig.publishableKey,
       },
     });
