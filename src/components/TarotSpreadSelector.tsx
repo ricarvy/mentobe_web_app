@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { type Spread } from '@/lib/tarot';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
+import { useI18n } from '@/lib/i18n';
 
 interface TarotSpreadSelectorProps {
   spreads: Spread[];
@@ -12,6 +13,7 @@ interface TarotSpreadSelectorProps {
 
 export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSelectorProps) {
   const { getTranslatedSpread } = useSpreadTranslations();
+  const { t } = useI18n();
 
   return (
     <>
@@ -47,7 +49,7 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
                 <CardDescription className="text-purple-200">{translatedSpread.description}</CardDescription>
               </CardHeader>
               <CardContent className="text-center relative z-10">
-                <p className="text-sm text-purple-300">{spread.positions.length} cards</p>
+                <p className="text-sm text-purple-300">{spread.positions.length} {t.common.cards}</p>
                 {spread.isPro && (
                   <Badge className="mt-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-1 hover:from-purple-500 hover:to-pink-500">
                     PRO

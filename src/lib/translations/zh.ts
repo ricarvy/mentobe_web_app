@@ -24,6 +24,7 @@ export const zh = {
     quickActionsDescription: '常用功能和导航',
     loadingQuota: '加载配额信息中...',
     cancel: '取消',
+    cards: '张牌',
   },
   header: {
     home: '首页',

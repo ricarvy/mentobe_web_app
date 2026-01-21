@@ -24,6 +24,7 @@ export const ja = {
     quickActionsDescription: '一般的なタスクとナビゲーション',
     loadingQuota: 'クォータ情報を読み込み中...',
     cancel: 'キャンセル',
+    cards: '枚',
   },
   header: {
     home: 'ホーム',

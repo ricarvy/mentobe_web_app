@@ -24,6 +24,7 @@ export const en = {
     quickActionsDescription: 'Common tasks and navigation',
     loadingQuota: 'Loading quota information...',
     cancel: 'Cancel',
+    cards: 'cards',
   },
   header: {
     home: 'Home',
