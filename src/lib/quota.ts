@@ -23,7 +23,7 @@ export async function getQuota(userId: string): Promise<QuotaInfo> {
       `/api/auth/quota?userId=${userId}`,
       {
         method: 'GET',
-        requireAuth: false,
+        requireAuth: true,
       }
     );
     return data;
