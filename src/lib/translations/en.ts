@@ -402,6 +402,23 @@ export const en = {
       ],
     },
   },
+  payment: {
+    success: {
+      title: 'Payment Successful!',
+      description: 'Your subscription has been activated successfully.',
+      message: 'Thank you for your purchase. You now have access to all premium features.',
+      note: 'A confirmation email will be sent to your registered email address.',
+      backToHome: 'Back to Home',
+    },
+    cancel: {
+      title: 'Payment Cancelled',
+      description: 'Your payment process was not completed.',
+      reason: 'You cancelled the payment or there was an issue with your payment method. Your card was not charged.',
+      backToPricing: 'Try Again',
+      backToHome: 'Back to Home',
+      help: 'Need help? Contact our support team for assistance.',
+    },
+  },
   termsOfService: {
     title: 'Terms of Service',
     lastUpdated: 'Last Updated: January 1, 2025',

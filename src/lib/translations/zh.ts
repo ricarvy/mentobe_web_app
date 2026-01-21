@@ -402,6 +402,23 @@ export const zh = {
       ],
     },
   },
+  payment: {
+    success: {
+      title: '支付成功！',
+      description: '您的订阅已成功激活。',
+      message: '感谢您的购买。您现在可以使用所有高级功能。',
+      note: '确认邮件将发送到您的注册邮箱。',
+      backToHome: '返回首页',
+    },
+    cancel: {
+      title: '支付已取消',
+      description: '您的支付流程未完成。',
+      reason: '您取消了支付或您的支付方式出现问题。您的卡未被扣款。',
+      backToPricing: '再次尝试',
+      backToHome: '返回首页',
+      help: '需要帮助？请联系我们的客服团队获取协助。',
+    },
+  },
   termsOfService: {
     title: '服务条款',
     lastUpdated: '最后更新：2025年1月1日',
