@@ -2,7 +2,7 @@
 import { allTarotCards, type TarotCardData } from './tarot-cards';
 
 export interface TarotCard {
-  id: number;
+  id: number | string;
   name: string;
   nameEn: string;
   meaning: string;

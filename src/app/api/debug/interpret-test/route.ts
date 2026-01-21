@@ -11,7 +11,23 @@ import {
 export async function POST(request: NextRequest) {
   return withErrorHandler(async () => {
     const startTime = Date.now();
-    const results: any = {
+    const results: {
+      timestamp: string;
+      tests: Array<{
+        name: string;
+        status: 'success' | 'failed';
+        duration: number;
+        error?: string;
+        data?: unknown;
+        stack?: string;
+      }>;
+      totalDuration: number;
+      summary?: {
+        totalTests: number;
+        successCount: number;
+        failedCount: number;
+      };
+    } = {
       timestamp: new Date().toISOString(),
       tests: [],
       totalDuration: 0,
@@ -174,8 +190,8 @@ export async function POST(request: NextRequest) {
     results.totalDuration = Date.now() - startTime;
     results.summary = {
       totalTests: results.tests.length,
-      successCount: results.tests.filter((t: any) => t.status === 'success').length,
-      failedCount: results.tests.filter((t: any) => t.status === 'failed').length,
+      successCount: results.tests.filter((t) => t.status === 'success').length,
+      failedCount: results.tests.filter((t) => t.status === 'failed').length,
     };
 
     console.log('=== Interpret Debug Test Completed ===', results.summary);

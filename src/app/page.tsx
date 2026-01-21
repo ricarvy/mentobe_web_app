@@ -15,7 +15,7 @@ import { SuggestedQuestions } from '@/components/SuggestedQuestions';
 import { useI18n } from '@/lib/i18n';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
-import { saveAuthCredentials, addAuthHeader, clearAuthCredentials } from '@/lib/auth';
+import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
 
@@ -97,14 +97,6 @@ export default function Home() {
         alert(t.auth.loginFailed);
       }
     }
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    clearAuthCredentials();
-    setRemainingQuota(3);
-    setEmail(DEMO_ACCOUNT.email);
-    setPassword(DEMO_ACCOUNT.password);
   };
 
   const handleSpreadSelect = (spread: Spread) => {

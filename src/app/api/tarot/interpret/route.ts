@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { LLMClient, Config } from 'coze-coding-dev-sdk';
 import { dailyQuotaManager, tarotInterpretationManager } from '@/storage/database';
 import { llmConfig } from '@/config';
-import type { TarotCard, Spread, SpreadPosition } from '@/lib/tarot';
+import type { TarotCard, Spread } from '@/lib/tarot';
 import {
   ApiError,
   ERROR_CODES,

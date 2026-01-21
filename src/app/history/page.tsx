@@ -50,6 +50,7 @@ export default function HistoryPage() {
     if (user) {
       fetchHistory();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // 流式显示效果
@@ -61,6 +62,7 @@ export default function HistoryPage() {
         startStreamingText(expandedItem, item.interpretation);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedItem, history]);
 
   const startStreamingText = (itemId: string, text: string) => {
@@ -120,9 +122,9 @@ export default function HistoryPage() {
   const parseCards = (cardsJson: string): TarotCard[] => {
     try {
       const parsedCards = JSON.parse(cardsJson);
-      return parsedCards.map((card: any) => {
+      return parsedCards.map((card: Partial<TarotCard> & { id: string | number }) => {
         // 从本地卡牌数据中查找完整信息
-        const localCard = allTarotCards.find(c => c.id === card.id);
+        const localCard = allTarotCards.find(c => String(c.id) === String(card.id));
         return {
           ...card,
           nameEn: localCard?.nameEn || card.nameEn || '',

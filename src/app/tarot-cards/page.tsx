@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { allTarotCards, type TarotCardData } from '@/lib/tarot-cards';
+import { allTarotCards } from '@/lib/tarot-cards';
 import { useI18n } from '@/lib/i18n';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 

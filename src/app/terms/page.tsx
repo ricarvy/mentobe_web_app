@@ -3,6 +3,17 @@
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 
+// 在模块级别生成星星数据，避免在渲染过程中调用不纯函数
+const STAR_COUNT = 100;
+const starsData = Array.from({ length: STAR_COUNT }, () => ({
+  width: Math.random() * 3 + 1,
+  height: Math.random() * 3 + 1,
+  left: `${Math.random() * 100}%`,
+  top: `${Math.random() * 100}%`,
+  animationDelay: `${Math.random() * 3}s`,
+  animationDuration: `${Math.random() * 3 + 2}s`,
+}));
+
 export default function TermsOfServicePage() {
   const { t } = useI18n();
 
@@ -12,17 +23,17 @@ export default function TermsOfServicePage() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
         <div className="absolute inset-0">
-          {[...Array(100)].map((_, i) => (
+          {starsData.map((star, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-white animate-twinkle"
               style={{
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
+                width: star.width,
+                height: star.height,
+                left: star.left,
+                top: star.top,
+                animationDelay: star.animationDelay,
+                animationDuration: star.animationDuration,
               }}
             />
           ))}

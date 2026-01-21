@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
-import { addAuthHeader } from '@/lib/auth';
-import { apiRequest, ApiRequestError } from '@/lib/api-client';
+import { ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
 import { User, Mail, Calendar, History, Settings, Shield, LogOut, Sparkles, Check, X, Infinity } from 'lucide-react';
 
@@ -17,13 +16,7 @@ export default function ProfilePage() {
   const { t } = useI18n();
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchQuota();
-    }
-  }, [user]);
-
-  const fetchQuota = async () => {
+  const fetchQuota = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -40,7 +33,14 @@ export default function ProfilePage() {
         console.error('[Quota Error]', error.message, error.code, error.details);
       }
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchQuota();
+    }
+  }, [user, fetchQuota]);
 
   if (!user) {
     return (

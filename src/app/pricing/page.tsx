@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { stripeConfig, getPriceId } from '@/config/stripe';
+import { getPriceId } from '@/config/stripe';
 import { useUser } from '@/lib/userContext';
 import { apiRequest } from '@/lib/api-client';
 

@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 
 interface TestResult {
   name: string;
   status: 'success' | 'failed';
   duration: number;
-  data?: any;
+  data?: Record<string, unknown>;
   error?: string;
 }
 
@@ -27,7 +27,7 @@ interface DebugTestResponse {
 export default function DebugPage() {
   const [loading, setLoading] = useState(false);
   const [testResults, setTestResults] = useState<DebugTestResponse | null>(null);
-  const [configData, setConfigData] = useState<any>(null);
+  const [configData, setConfigData] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const runTest = async (skipLLM = false) => {

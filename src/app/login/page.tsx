@@ -152,7 +152,7 @@ export default function LoginPage() {
       // In production, redirect to OAuth provider
       console.log(`${provider} login initiated`);
       alert(`${provider} login will be implemented with OAuth`);
-    } catch (error) {
+    } catch {
       setErrors({ submit: `${provider} ${t.auth.loginFailed}` });
     } finally {
       setIsLoading(false);
