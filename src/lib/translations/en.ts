@@ -377,8 +377,8 @@ export const en = {
       ],
     },
     guarantee: {
-      title: '30-Day Money-Back Guarantee',
-      description: 'Not satisfied? Get a full refund within 30 days, no questions asked.',
+      title: '7-Day Money-Back Guarantee',
+      description: 'Not satisfied? Get a full refund within 7 days, no questions asked.',
     },
     faq: {
       title: 'Frequently Asked Questions',
@@ -415,7 +415,7 @@ export const en = {
       paidServices: '3. Paid Services',
       paidServicesDesc: 'We offer both free and paid subscription plans. Paid services are subject to additional terms:\n- Subscription fees are charged automatically on a recurring basis\n- You may cancel your subscription at any time\n- Cancellation takes effect at the end of the current billing period\n- No refunds will be issued for partial months',
       refundPolicy: '4. Refund Policy',
-      refundPolicyDesc: 'We offer a 30-day money-back guarantee for new subscriptions. If you are not satisfied with our paid services within the first 30 days, you may request a full refund. After 30 days, all sales are final.',
+      refundPolicyDesc: 'We offer a 7-day money-back guarantee for new subscriptions. If you are not satisfied with our paid services within the first 7 days, you may request a full refund. After 7 days, all sales are final.',
       userConduct: '5. User Conduct',
       userConductDesc: 'You agree not to use our services to:\n- Violate any applicable laws or regulations\n- Infringe on the intellectual property rights of others\n- Harass, abuse, or harm others\n- Attempt to gain unauthorized access to our systems\n- Use automated tools to access our services',
       intellectualProperty: '6. Intellectual Property',
