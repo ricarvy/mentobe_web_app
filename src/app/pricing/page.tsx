@@ -224,11 +224,11 @@ export default function PricingPage() {
         @keyframes premium-icon-pulse {
           0%, 100% {
             transform: scale(1);
-            filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.5));
+            filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.5));
           }
           50% {
             transform: scale(1.1);
-            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8));
+            filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8));
           }
         }
 
@@ -450,11 +450,11 @@ export default function PricingPage() {
                               className="relative group w-full"
                             >
                               {/* Outer glow pulse */}
-                              <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-lg blur-xl opacity-30 group-hover:opacity-60 group-hover:blur-2xl transition-all duration-500 animate-premium-glow"></div>
+                              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 rounded-lg blur-xl opacity-30 group-hover:opacity-60 group-hover:blur-2xl transition-all duration-500 animate-premium-glow"></div>
 
                               {/* Rotating border effect */}
                               <div
-                                className="absolute -inset-[2px] bg-gradient-to-r from-amber-500 via-yellow-400 via-amber-300 to-amber-500 rounded-lg opacity-75"
+                                className="absolute -inset-[2px] bg-gradient-to-r from-purple-600 via-pink-500 via-purple-400 to-purple-600 rounded-lg opacity-75"
                                 style={{
                                   backgroundSize: '300% 300%',
                                   animation: 'premium-border-rotate 3s linear infinite',
@@ -463,7 +463,7 @@ export default function PricingPage() {
 
                               {/* Second rotating border (reverse) */}
                               <div
-                                className="absolute -inset-[2px] bg-gradient-to-r from-yellow-300 via-amber-500 via-yellow-400 to-amber-300 rounded-lg opacity-50"
+                                className="absolute -inset-[2px] bg-gradient-to-r from-pink-400 via-purple-600 via-pink-500 to-pink-400 rounded-lg opacity-50"
                                 style={{
                                   backgroundSize: '300% 300%',
                                   animation: 'premium-border-reverse 4s linear infinite',
@@ -471,7 +471,7 @@ export default function PricingPage() {
                               ></div>
 
                               {/* Button container */}
-                              <div className="relative bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-lg overflow-hidden">
+                              <div className="relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 rounded-lg overflow-hidden">
                                 {/* Inner flow light effect */}
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-premium-flow"></div>
 
@@ -497,7 +497,7 @@ export default function PricingPage() {
                                 <div className="relative px-6 py-3 flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-105 group-active:scale-95">
                                   {/* Crown icon */}
                                   <svg
-                                    className="w-5 h-5 text-amber-900 animate-premium-icon-pulse group-hover:animate-premium-icon-spin"
+                                    className="w-5 h-5 text-white animate-premium-icon-pulse group-hover:animate-premium-icon-spin"
                                     fill="currentColor"
                                     viewBox="0 0 24 24"
                                   >
@@ -505,16 +505,16 @@ export default function PricingPage() {
                                   </svg>
 
                                   {/* Text */}
-                                  <span className="font-bold text-amber-900">
+                                  <span className="font-bold text-white">
                                     {loading ? 'Processing...' : plan.button}
                                   </span>
 
                                   {/* Arrow icon */}
-                                  <ArrowRight className="w-4 h-4 text-amber-700 group-hover:translate-x-1 transition-transform" />
+                                  <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
                                 </div>
 
                                 {/* Bottom glow line */}
-                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-yellow-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity group-hover:w-full"></div>
+                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity group-hover:w-full"></div>
                               </div>
                             </button>
                           ) : (
