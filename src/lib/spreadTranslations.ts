@@ -65,6 +65,12 @@ export function useSpreadTranslations() {
           translatedPosName = translations.positions.cross.position10;
           translatedPosDesc = translations.positions.cross.position10Desc;
         }
+      } else {
+        // Handle other spreads
+        if (translations[spread.id + 'Desc']) {
+          translatedName = translations[spread.id];
+          translatedDesc = translations[spread.id + 'Desc'];
+        }
       }
 
       return {
