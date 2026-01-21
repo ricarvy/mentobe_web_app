@@ -1,22 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { XCircle, Home, CreditCard, ExternalLink } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 
-export default function CancelPage() {
+// 内部组件：处理 searchParams
+function CancelContent() {
   const { t } = useI18n();
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
-    // 这里可以添加页面访问统计或日志
-    console.log('Payment cancel page accessed', { sessionId });
-  }, [sessionId]);
+    // 在客户端动态获取 searchParams
+    const params = new URLSearchParams(window.location.search);
+    setSessionId(params.get('session_id'));
+    console.log('Payment cancel page accessed', { sessionId: params.get('session_id') });
+  }, []);
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center py-8">
@@ -134,5 +135,18 @@ export default function CancelPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+// 主页面组件，使用 Suspense 避免构建错误
+export default function CancelPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <CancelContent />
+    </Suspense>
   );
 }
