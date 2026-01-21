@@ -22,11 +22,11 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
             className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 bg-black/20 border-purple-500/30"
             onClick={() => onSpreadSelect(spread)}
           >
-            <CardHeader>
+            <CardHeader className="text-center">
               <CardTitle className="text-white">{translatedSpread.name}</CardTitle>
               <CardDescription className="text-purple-200">{translatedSpread.description}</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center">
               <p className="text-sm text-purple-300">{spread.positions.length} cards</p>
             </CardContent>
           </Card>
