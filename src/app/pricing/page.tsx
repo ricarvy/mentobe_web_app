@@ -111,6 +111,18 @@ export default function PricingPage() {
     planType?: 'pro' | 'premium';
   };
 
+  // 价格配置
+  const prices = {
+    pro: {
+      monthly: { price: '19.9', period: '/month' },
+      yearly: { price: '199.9', period: '/year' },
+    },
+    premium: {
+      monthly: { price: '39.9', period: '/month' },
+      yearly: { price: '399.9', period: '/year' },
+    },
+  };
+
   const plans: Plan[] = [
     {
       ...t.pricing.plans.free,
@@ -118,10 +130,14 @@ export default function PricingPage() {
     {
       ...t.pricing.plans.pro,
       planType: 'pro',
+      price: prices.pro[billingCycle].price,
+      period: prices.pro[billingCycle].period,
     },
     {
       ...t.pricing.plans.premium,
       planType: 'premium',
+      price: prices.premium[billingCycle].price,
+      period: prices.premium[billingCycle].period,
     },
   ];
 
