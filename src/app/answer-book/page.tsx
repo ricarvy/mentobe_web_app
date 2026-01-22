@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Sparkles, Star, Crown, RefreshCw, ArrowLeft, Heart, Lightbulb } from 'lucide-react';
+import { ANSWERS } from '@/data/answers';
 
 type Stage = 'prompt' | 'revealing' | 'answer';
 
@@ -20,43 +21,8 @@ export default function AnswerBookPage() {
     // 模拟神秘的延迟，让用户感受到神圣的氛围
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // 这里可以调用后端API获取真实的答案
-    // 暂时使用预设的神秘答案
-    const mysticAnswers = [
-      "宇宙在低语：相信眼前的道路，因为其中蕴含着意想不到的宝藏。",
-      "答案在静默中等待。平息你的心灵，倾听内心的声音。",
-      "星辰为你而闪耀。现在是带着勇气和信念行动的时刻。",
-      "你追寻的也在追寻着你。睁开眼，看清周围的机会。",
-      "你需要流淌的智慧在血管中。永远相信你的直觉。",
-      "耐心，亲爱的寻求者。答案会在完美的时刻显现。",
-      "你的梦想比想象中更近。今天向前迈出一步。",
-      "古老的智慧说：平衡是你所渴望的一切的关键。",
-      "爱与光环绕着你。拥抱那些关心你的人的支持。",
-      "宇宙的能量正向你转变。为即将到来的转变做好准备。",
-      "你的内心智慧比任何外在指引都更明亮。向内看。",
-      "牌面揭示：一个新的开始正等待着那些敢于迈出第一步的人。",
-      "不要恐惧未知，因为它蕴藏着你最大成长的种子。",
-      "宇宙会帮助那些自助的人。相信这个过程。",
-      "你的问题本身就承载着答案。反思什么对你来说真正重要。",
-      "神秘领域提供：清晰来自于行动，而不仅仅是沉思。",
-      "拥抱改变，因为这是宇宙引导你走向命运的方式。",
-      "你的道路是独一无二的。不要将你的旅程与他人的时间线进行比较。",
-      "答案在于问题本身。你的心真正在问什么？",
-      "相信一切都有原因，即使你此刻还无法看到。",
-      "古老的智慧提醒我们：我们相信自己是什么，就会成为什么。",
-      "你的潜力是无限的。不要让怀疑熄灭你的内在之光。",
-      "宇宙会奖励那些承担经过计算的风险的人。带着信仰跳跃。",
-      "每一个结束都蕴含着一个新的开始。拥抱生命的循环。",
-      "你的话语拥有力量。只说那些你希望显化成现实的话。",
-      "神秘的答案：你此刻正处于你需要的地方。",
-      "爱是宇宙中最强大的力量。让它引导你的决定。",
-      "你寻求的不是你预期的，而是你真正需要的。",
-      "相信这段旅程，即使你看不到终点。",
-      "你的直觉是你最伟大的指南针。毫不犹豫地跟随它的指引。",
-      "宇宙提供：所有答案都在内心。以开放的心灵向内看。",
-    ];
-
-    const finalAnswer = mysticAnswers[Math.floor(Math.random() * mysticAnswers.length)];
+    // 从答案池中随机获取一个答案
+    const finalAnswer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
     setAnswer(finalAnswer);
     setStage('answer');
     setIsAnimating(false);
