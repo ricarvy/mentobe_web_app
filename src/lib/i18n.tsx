@@ -19,6 +19,20 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const savedLang = localStorage.getItem('tarot_language') as Language;
     if (savedLang && translations[savedLang]) {
       setLanguageState(savedLang);
+    } else if (savedLang) {
+      // 兼容旧的语言代码
+      const langMap: Record<string, Language> = {
+        'cn': 'zh',
+        'zh-CN': 'zh',
+        'zh-TW': 'zh',
+        'jp': 'ja',
+        'ja-JP': 'ja',
+      };
+      const mappedLang = langMap[savedLang];
+      if (mappedLang && translations[mappedLang]) {
+        setLanguageState(mappedLang);
+        localStorage.setItem('tarot_language', mappedLang);
+      }
     } else {
       // 检测浏览器语言
       const browserLang = navigator.language.split('-')[0] as Language;

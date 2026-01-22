@@ -425,13 +425,13 @@ export const ANSWERS = {
 // 根据语言获取答案列表
 export const getAnswers = (lang: string = 'en') => {
   const langMap: Record<string, keyof typeof ANSWERS> = {
-    'cn': 'zh',
     'zh': 'zh',
     'en': 'en',
-    'ja': 'jp',
-    'jp': 'ja',
+    'ja': 'ja',
+    'cn': 'zh', // 兼容后端使用的 cn
+    'jp': 'ja', // 兼容后端使用的 jp
   };
-  
+
   const mappedLang = langMap[lang] || 'en';
   return ANSWERS[mappedLang] || ANSWERS.en;
 };
