@@ -633,4 +633,17 @@ export const zh = {
     },
     footer: '由Mentob AI驱动 • 用人工智能解锁塔罗的神秘',
   },
+  answerBook: {
+    badge: '神秘答案之书',
+    title: '答案之书',
+    subtitle: '在心中默想一个问题，让宇宙为你揭示答案',
+    promptTitle: '请在心中默想一个问题',
+    promptSubtitle: '想好了吗？想好了就点下面的按钮',
+    revealButton: '揭示答案',
+    revealingTitle: '宇宙正在聆听你的心声...',
+    askAgainButton: '再次提问',
+    footerText: '愿宇宙的智慧照亮你的道路',
+    tips: '答案之书会根据你内心的能量给出指引，相信你的直觉，让宇宙为你指引方向',
+    backToHome: '返回首页',
+  },
 };

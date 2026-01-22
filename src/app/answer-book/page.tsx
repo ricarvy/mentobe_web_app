@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Sparkles, Star, Crown, RefreshCw, ArrowLeft, Heart, Lightbulb } from 'lucide-react';
-import { ANSWERS } from '@/data/answers';
+import { getAnswers } from '@/data/answers';
+import { useI18n } from '@/lib/i18n';
 
 type Stage = 'prompt' | 'revealing' | 'answer';
 
 export default function AnswerBookPage() {
+  const { t, lang } = useI18n();
   const [stage, setStage] = useState<Stage>('prompt');
   const [answer, setAnswer] = useState('');
   const [isAnimating, setIsAnimating] = useState(false);
@@ -22,7 +24,8 @@ export default function AnswerBookPage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // 从答案池中随机获取一个答案
-    const finalAnswer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
+    const answers = getAnswers(lang);
+    const finalAnswer = answers[Math.floor(Math.random() * answers.length)];
     setAnswer(finalAnswer);
     setStage('answer');
     setIsAnimating(false);
@@ -144,6 +147,10 @@ export default function AnswerBookPage() {
           50% { opacity: 0.5; filter: blur(5px); }
           100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
+        @keyframes breathe {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+        }
         .animate-twinkle { animation: twinkle ease-in-out infinite; }
         .animate-shimmer { animation: shimmer 4s ease-in-out infinite; }
         .animate-shooting-star { animation: shooting-star 3s ease-out infinite; }
@@ -155,6 +162,7 @@ export default function AnswerBookPage() {
         .animate-fade-in-scale { animation: fadeInScale 0.8s ease-out forwards; }
         .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
         .animate-mystic-reveal { animation: mystic-reveal 2s ease-out forwards; }
+        .animate-breathe { animation: breathe 3s ease-in-out infinite; }
         .gradient-animate {
           background-size: 200% 200%;
           animation: gradient-rotate 6s ease infinite;
@@ -165,7 +173,7 @@ export default function AnswerBookPage() {
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-purple-300/80 hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm">返回首页</span>
+          <span className="text-sm">{t('answerBook.backToHome')}</span>
         </Link>
 
         {/* Header */}
@@ -173,17 +181,17 @@ export default function AnswerBookPage() {
           {/* Decorative Badge */}
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
             <BookOpen className="w-5 h-5 text-purple-400" />
-            <span className="text-sm font-semibold text-purple-200 tracking-wide">神秘答案之书</span>
+            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t('answerBook.badge')}</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-text-glow">
-            答案之书
+            {t('answerBook.title')}
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg text-purple-200/70 max-w-2xl mx-auto leading-relaxed">
-            在心中默想一个问题，让宇宙为你揭示答案
+            {t('answerBook.subtitle')}
           </p>
         </div>
 
@@ -201,8 +209,8 @@ export default function AnswerBookPage() {
                     <div className="relative inline-block">
                       {/* Glowing Halo */}
                       <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full animate-pulse-glow" />
-                      <h2 className="relative text-3xl md:text-4xl font-bold text-white animate-text-glow leading-relaxed">
-                        请在心中默想一个问题
+                      <h2 className="relative text-3xl md:text-4xl font-bold text-white animate-text-glow leading-relaxed animate-breathe">
+                        {t('answerBook.promptTitle')}
                       </h2>
                     </div>
                   </div>
@@ -210,7 +218,7 @@ export default function AnswerBookPage() {
                   {/* Sub Prompt */}
                   <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                     <p className="text-lg text-purple-200/80 mb-8">
-                      想好了吗？想好了就点下面的按钮
+                      {t('answerBook.promptSubtitle')}
                     </p>
                   </div>
 
@@ -223,7 +231,7 @@ export default function AnswerBookPage() {
                       className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 px-12 py-6 text-xl font-semibold gradient-animate animate-pulse-glow transition-all hover:scale-105"
                     >
                       <Sparkles className="mr-3 w-6 h-6" />
-                      揭示答案
+                      {t('answerBook.revealButton')}
                       <Sparkles className="ml-3 w-6 h-6" />
                     </Button>
                   </div>
@@ -254,7 +262,7 @@ export default function AnswerBookPage() {
                   {/* Loading Text */}
                   <div className="animate-fade-in-up">
                     <p className="text-xl text-purple-200/90 animate-text-glow">
-                      宇宙正在聆听你的心声...
+                      {t('answerBook.revealingTitle')}
                     </p>
                     <div className="mt-4 flex justify-center gap-2">
                       {[...Array(3)].map((_, i) => (
@@ -299,7 +307,7 @@ export default function AnswerBookPage() {
                       className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-8 py-3 gradient-animate animate-pulse-glow transition-all hover:scale-105"
                     >
                       <RefreshCw className="mr-2 w-5 h-5" />
-                      再次提问
+                      {t('answerBook.askAgainButton')}
                     </Button>
                   </div>
 
@@ -307,7 +315,7 @@ export default function AnswerBookPage() {
                   <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '1s' }}>
                     <p className="text-sm text-purple-300/60 flex items-center justify-center gap-2">
                       <Heart className="w-4 h-4 text-pink-400" />
-                      愿宇宙的智慧照亮你的道路
+                      {t('answerBook.footerText')}
                       <Heart className="w-4 h-4 text-pink-400" />
                     </p>
                   </div>
@@ -320,7 +328,7 @@ export default function AnswerBookPage() {
         {/* Footer Tips */}
         <div className="text-center mt-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <p className="text-sm text-purple-300/50 max-w-2xl mx-auto leading-relaxed">
-            答案之书会根据你内心的能量给出指引，相信你的直觉，让宇宙为你指引方向
+            {t('answerBook.tips')}
           </p>
         </div>
       </div>

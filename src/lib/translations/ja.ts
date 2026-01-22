@@ -633,4 +633,17 @@ export const ja = {
     },
     footer: 'Mentob AI駆動 • 人工知能でタロットの神秘を解き放つ',
   },
+  answerBook: {
+    badge: '神秘の答えの本',
+    title: '答えの本',
+    subtitle: '心の中で質問を思い浮かべ、宇宙が答えを明らかにするのを待ちましょう',
+    promptTitle: '心の中で質問を思い浮かべてください',
+    promptSubtitle: '準備はいいですか？準備ができたら下のボタンをクリックしてください',
+    revealButton: '答えを明らかにする',
+    revealingTitle: '宇宙があなたの心の声を聞いています...',
+    askAgainButton: '再度質問する',
+    footerText: '宇宙の知恵があなたの道を照らしますように',
+    tips: '答えの本はあなたの内なるエネルギーに基づいて導きを与えます。直感を信じ、宇宙に導かれましょう',
+    backToHome: 'ホームに戻る',
+  },
 };

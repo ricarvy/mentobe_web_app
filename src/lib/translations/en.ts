@@ -633,4 +633,17 @@ export const en = {
     },
     footer: 'Powered by Mentob AI • Unlock the mysteries of tarot with artificial intelligence',
   },
+  answerBook: {
+    badge: 'Mystic Answer Book',
+    title: 'Answer Book',
+    subtitle: 'Think of a question in your heart, and let the universe reveal the answer',
+    promptTitle: 'Please think of a question in your heart',
+    promptSubtitle: 'Ready? When you are, click the button below',
+    revealButton: 'Reveal Answer',
+    revealingTitle: 'The universe is listening to your heart...',
+    askAgainButton: 'Ask Again',
+    footerText: 'May the wisdom of the universe illuminate your path',
+    tips: 'The Answer Book will guide you based on the energy within you. Trust your intuition and let the universe guide you',
+    backToHome: 'Back to Home',
+  },
 };
