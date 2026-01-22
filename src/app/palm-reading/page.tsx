@@ -193,20 +193,20 @@ export default function PalmReadingPage() {
         </Link>
 
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in-up">
+        <div className="text-center mb-16">
           {/* Decorative Badge */}
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
-            <Hand className="w-5 h-5 text-pink-400" />
+            <Hand className="w-5 h-5 text-purple-400" />
             <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.palmReading.badge}</span>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-text-glow">
             {t.palmReading.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl text-purple-200/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg text-purple-200/70 max-w-2xl mx-auto leading-relaxed">
             {t.palmReading.subtitle}
           </p>
         </div>

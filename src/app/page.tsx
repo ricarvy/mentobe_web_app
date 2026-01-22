@@ -82,6 +82,10 @@ export default function Home() {
             0%, 100% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5), 0 0 80px rgba(236, 72, 153, 0.3); }
             50% { box-shadow: 0 0 60px rgba(168, 85, 247, 0.8), 0 0 100px rgba(236, 72, 153, 0.5); }
           }
+          @keyframes text-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(236, 72, 153, 0.5), 0 0 40px rgba(168, 85, 247, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 60px rgba(168, 85, 247, 0.5); }
+          }
           @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
@@ -109,6 +113,7 @@ export default function Home() {
           .animate-aurora { animation: aurora 8s ease-in-out infinite; }
           .animate-float { animation: float 6s ease-in-out infinite; }
           .animate-glow { animation: glow 4s ease-in-out infinite; }
+          .animate-text-glow { animation: text-glow 3s ease-in-out infinite; }
           .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
           .animate-fade-in-scale { animation: fadeInScale 0.8s ease-out forwards; }
           .animate-pulse-border { animation: pulse-border 3s ease-in-out infinite; }
@@ -121,20 +126,20 @@ export default function Home() {
 
         <div className="relative z-10 container mx-auto px-4 py-6 max-w-7xl">
           {/* Hero Section */}
-          <div className="text-center mb-12 animate-fade-in-up">
+          <div className="text-center mb-16 animate-fade-in-up">
             {/* Decorative Badge */}
-            <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-6 backdrop-blur-sm animate-glow">
-              <Crown className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs font-semibold text-purple-200 tracking-wide">{t.landingPage.badge}</span>
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.landingPage.badge}</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="text-4xl md:text-6xl font-bold mb-5 text-white animate-glow">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-text-glow">
               {t.landingPage.heroTitle}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg md:text-xl text-purple-200/80 max-w-4xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg text-purple-200/70 max-w-4xl mx-auto mb-10 leading-relaxed">
               {t.landingPage.heroSubtitle}
             </p>
 
