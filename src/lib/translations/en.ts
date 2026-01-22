@@ -646,4 +646,46 @@ export const en = {
     tips: 'The Answer Book will guide you based on the energy within you. Trust your intuition and let the universe guide you',
     backToHome: 'Back to Home',
   },
+  palmReading: {
+    backToHome: 'Back to Home',
+    badge: 'AI Palm Reading',
+    title: 'Read Your Palm',
+    subtitle: 'Upload or capture your palm print and discover the secrets of your destiny through advanced AI-powered palmistry analysis',
+    cameraSection: {
+      initializing: 'Initializing camera...',
+      placePalm: 'Place your palm here',
+      capturePhoto: 'Capture Photo',
+      or: 'or',
+      uploadImage: 'Upload Image',
+    },
+    tips: {
+      title: 'Palm Reading Tips',
+      tip1: 'Use good lighting to capture clear palm lines',
+      tip2: 'Spread your fingers naturally, not too tight',
+      tip3: 'Center your palm in the frame for best results',
+    },
+    preview: {
+      capturedPalm: 'Captured palm',
+      analyzePalm: 'Analyze Palm',
+      analyzing: 'Analyzing...',
+      retakePhoto: 'Retake Photo',
+    },
+    results: {
+      title: 'Your Palm Reading Results',
+      subtitle: 'Revealed by AI palmistry analysis',
+      readAnother: 'Read Another Palm',
+      backToHome: 'Back to Home',
+    },
+    disclaimer: {
+      title: 'Remember',
+      text: 'This AI palm reading is for entertainment and self-reflection purposes only. Trust your intuition and remember that you have the power to shape your own destiny.',
+    },
+    footer: 'Powered by Mentob AI • AI palmistry for the modern seeker',
+  },
+  palmLines: {
+    lifeLine: 'Life Line',
+    headLine: 'Head Line',
+    heartLine: 'Heart Line',
+    fateLine: 'Fate Line',
+  },
 };

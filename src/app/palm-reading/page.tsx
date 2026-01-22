@@ -6,35 +6,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Hand, Sparkles, Star, Crown, ArrowLeft, Camera, Upload, Eye, Heart, Zap } from 'lucide-react';
 import Image from 'next/image';
-
-const palmistryInsights = {
-  "Life Line": {
-    icon: "❤️",
-    description: "Your life line reveals your vitality and life journey",
-    detail: "A strong, unbroken life line indicates robust health and resilience. Any breaks or forks may signal significant life changes or challenges that will ultimately strengthen you."
-  },
-  "Head Line": {
-    icon: "🧠",
-    description: "Your head line reflects your intellect and mental approach",
-    detail: "A deep, straight head line suggests practical thinking and logical reasoning. A curved line indicates creativity and intuitive thinking."
-  },
-  "Heart Line": {
-    icon: "💕",
-    description: "Your heart line reveals your emotional nature and relationships",
-    detail: "A prominent heart line shows emotional depth and capacity for love. The length and shape indicate how you express and receive affection."
-  },
-  "Fate Line": {
-    icon: "⭐",
-    description: "Your fate line reveals destiny and career path",
-    detail: "A clear fate line suggests a well-defined life purpose. Its strength indicates how much external events versus personal choices shape your destiny."
-  }
-};
+import { useI18n } from '@/lib/i18n';
+import { getPalmistryInsights, PalmistryInsights } from '@/data/palmistry-insights';
 
 export default function PalmReadingPage() {
+  const { t, language } = useI18n();
   const [image, setImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCaptured, setIsCaptured] = useState(false);
-  const [insights, setInsights] = useState<typeof palmistryInsights | null>(null);
+  const [insights, setInsights] = useState<PalmistryInsights | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,7 +87,7 @@ export default function PalmReadingPage() {
     
     // Simulate AI analysis
     setTimeout(() => {
-      setInsights(palmistryInsights);
+      setInsights(getPalmistryInsights(language));
       setIsAnalyzing(false);
     }, 3000);
   };
@@ -209,7 +189,7 @@ export default function PalmReadingPage() {
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-purple-300 hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" />
-          <span>Back to Home</span>
+          <span>{t.palmReading.backToHome}</span>
         </Link>
 
         {/* Header */}
@@ -217,18 +197,17 @@ export default function PalmReadingPage() {
           {/* Decorative Badge */}
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
             <Hand className="w-5 h-5 text-pink-400" />
-            <span className="text-sm font-semibold text-purple-200 tracking-wide">AI PALM READING</span>
+            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.palmReading.badge}</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
-            Read Your Palm
+            {t.palmReading.title}
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl text-purple-200/80 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Upload or capture your palm print and discover the secrets of your destiny
-            through advanced AI-powered palmistry analysis
+            {t.palmReading.subtitle}
           </p>
         </div>
 
@@ -252,7 +231,7 @@ export default function PalmReadingPage() {
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
                           <Camera className="w-16 h-16 text-purple-400/50 mx-auto mb-4" />
-                          <p className="text-purple-400">Initializing camera...</p>
+                          <p className="text-purple-400">{t.palmReading.cameraSection.initializing}</p>
                         </div>
                       </div>
                     )}
@@ -260,7 +239,7 @@ export default function PalmReadingPage() {
                     {/* Palm Guide Overlay */}
                     <div className="absolute inset-4 border-2 border-dashed border-purple-500/30 rounded-xl pointer-events-none">
                       <div className="absolute top-2 left-2 right-2 flex justify-center">
-                        <span className="text-xs text-purple-400/70">Place your palm here</span>
+                        <span className="text-xs text-purple-400/70">{t.palmReading.cameraSection.placePalm}</span>
                       </div>
                     </div>
                   </div>
@@ -274,7 +253,7 @@ export default function PalmReadingPage() {
                       size="lg"
                     >
                       <Camera className="mr-2 w-5 h-5" />
-                      Capture Photo
+                      {t.palmReading.cameraSection.capturePhoto}
                     </Button>
                   </div>
                 </div>
@@ -282,7 +261,7 @@ export default function PalmReadingPage() {
                 {/* Divider */}
                 <div className="flex items-center gap-4 my-8">
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-                  <span className="text-sm text-purple-400">or</span>
+                  <span className="text-sm text-purple-400">{t.palmReading.cameraSection.or}</span>
                   <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
                 </div>
 
@@ -302,7 +281,7 @@ export default function PalmReadingPage() {
                     size="lg"
                   >
                     <Upload className="mr-2 w-5 h-5" />
-                    Upload Image
+                    {t.palmReading.cameraSection.uploadImage}
                   </Button>
                 </div>
               </CardContent>
@@ -316,19 +295,19 @@ export default function PalmReadingPage() {
                     <Eye className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white mb-2">Palm Reading Tips</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{t.palmReading.tips.title}</h3>
                     <ul className="space-y-2 text-sm text-purple-200/70">
                       <li className="flex items-start gap-2">
                         <Star className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-                        <span>Use good lighting to capture clear palm lines</span>
+                        <span>{t.palmReading.tips.tip1}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Star className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-                        <span>Spread your fingers naturally, not too tight</span>
+                        <span>{t.palmReading.tips.tip2}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Star className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-                        <span>Center your palm in the frame for best results</span>
+                        <span>{t.palmReading.tips.tip3}</span>
                       </li>
                     </ul>
                   </div>
@@ -347,7 +326,7 @@ export default function PalmReadingPage() {
                     {image && (
                       <Image
                         src={image}
-                        alt="Captured palm"
+                        alt={t.palmReading.preview.capturedPalm}
                         fill
                         className="object-cover"
                       />
@@ -371,12 +350,12 @@ export default function PalmReadingPage() {
                       {isAnalyzing ? (
                         <>
                           <Sparkles className="mr-2 w-5 h-5 animate-spin" />
-                          Analyzing...
+                          {t.palmReading.preview.analyzing}
                         </>
                       ) : (
                         <>
                           <Zap className="mr-2 w-5 h-5" />
-                          Analyze Palm
+                          {t.palmReading.preview.analyzePalm}
                         </>
                       )}
                     </Button>
@@ -387,7 +366,7 @@ export default function PalmReadingPage() {
                       size="lg"
                     >
                       <Camera className="mr-2 w-5 h-5" />
-                      Retake Photo
+                      {t.palmReading.preview.retakePhoto}
                     </Button>
                   </div>
                 </div>
@@ -408,10 +387,10 @@ export default function PalmReadingPage() {
 
                   {/* Title */}
                   <h2 className="text-3xl font-bold text-white mb-2">
-                    Your Palm Reading Results
+                    {t.palmReading.results.title}
                   </h2>
                   <p className="text-purple-200/70">
-                    Revealed by AI palmistry analysis
+                    {t.palmReading.results.subtitle}
                   </p>
                 </div>
 
@@ -426,7 +405,7 @@ export default function PalmReadingPage() {
                       <div className="flex items-start gap-4">
                         <div className="text-4xl">{value.icon}</div>
                         <div>
-                          <h3 className="text-xl font-bold text-white mb-2">{key}</h3>
+                          <h3 className="text-xl font-bold text-white mb-2">{t.palmLines[key as keyof typeof t.palmLines]}</h3>
                           <p className="text-sm text-purple-300 mb-3">{value.description}</p>
                           <p className="text-sm text-purple-200/70 leading-relaxed">
                             {value.detail}
@@ -445,7 +424,7 @@ export default function PalmReadingPage() {
                     size="lg"
                   >
                     <Camera className="mr-2 w-5 h-5" />
-                    Read Another Palm
+                    {t.palmReading.results.readAnother}
                   </Button>
                   <Link href="/">
                     <Button
@@ -454,7 +433,7 @@ export default function PalmReadingPage() {
                       size="lg"
                     >
                       <ArrowLeft className="mr-2 w-5 h-5" />
-                      Back to Home
+                      {t.palmReading.results.backToHome}
                     </Button>
                   </Link>
                 </div>
@@ -469,10 +448,9 @@ export default function PalmReadingPage() {
                     <Heart className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white mb-2">Remember</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{t.palmReading.disclaimer.title}</h3>
                     <p className="text-sm text-purple-200/70">
-                      This AI palm reading is for entertainment and self-reflection purposes only. 
-                      Trust your intuition and remember that you have the power to shape your own destiny.
+                      {t.palmReading.disclaimer.text}
                     </p>
                   </div>
                 </div>
@@ -488,7 +466,7 @@ export default function PalmReadingPage() {
         <div className="text-center mt-12 text-purple-300/50 text-sm">
           <p className="flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" />
-            Powered by Mentob AI • AI palmistry for the modern seeker
+            {t.palmReading.footer}
             <Sparkles className="w-4 h-4" />
           </p>
         </div>

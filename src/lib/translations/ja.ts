@@ -646,4 +646,46 @@ export const ja = {
     tips: '答えの本はあなたの内なるエネルギーに基づいて導きを与えます。直感を信じ、宇宙に導かれましょう',
     backToHome: 'ホームに戻る',
   },
+  palmReading: {
+    backToHome: 'ホームに戻る',
+    badge: 'AI手相分析',
+    title: 'あなたの手相を読む',
+    subtitle: '手のひらの写真をアップロードまたは撮影し、高度なAI手相分析で運命の秘密を発見しましょう',
+    cameraSection: {
+      initializing: 'カメラを初期化中...',
+      placePalm: '手のひらをここに置いてください',
+      capturePhoto: '写真を撮る',
+      or: 'または',
+      uploadImage: '画像をアップロード',
+    },
+    tips: {
+      title: '手相分析のヒント',
+      tip1: '十分な照明を使用して、手相をはっきりと撮影してください',
+      tip2: '指を自然に広げ、きつく握らないでください',
+      tip3: '手のひらをフレームの中央に配置して、最高の結果を得てください',
+    },
+    preview: {
+      capturedPalm: '撮影された手のひら',
+      analyzePalm: '手相を分析',
+      analyzing: '分析中...',
+      retakePhoto: '写真を撮り直す',
+    },
+    results: {
+      title: 'あなたの手相分析結果',
+      subtitle: 'AI手相分析で明らかにされました',
+      readAnother: '別の手のひらを読む',
+      backToHome: 'ホームに戻る',
+    },
+    disclaimer: {
+      title: '覚えておいてください',
+      text: 'このAI手相分析は、エンターテインメントと自己反省のみを目的としています。直感を信じ、自分の運命を形作る力を持っていることを覚えておいてください。',
+    },
+    footer: 'Mentob AIによる提供 • モダンな探求者のためのAI手相分析',
+  },
+  palmLines: {
+    lifeLine: '生命線',
+    headLine: '頭脳線',
+    heartLine: '感情線',
+    fateLine: '運命線',
+  },
 };

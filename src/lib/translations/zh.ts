@@ -646,4 +646,46 @@ export const zh = {
     tips: '答案之书会根据你内心的能量给出指引，相信你的直觉，让宇宙为你指引方向',
     backToHome: '返回首页',
   },
+  palmReading: {
+    backToHome: '返回首页',
+    badge: 'AI掌纹分析',
+    title: '读取你的掌纹',
+    subtitle: '上传或拍摄你的掌纹，通过先进的AI掌相分析发现你命运的奥秘',
+    cameraSection: {
+      initializing: '正在初始化摄像头...',
+      placePalm: '将你的手掌放在这里',
+      capturePhoto: '拍照',
+      or: '或',
+      uploadImage: '上传图片',
+    },
+    tips: {
+      title: '掌纹分析技巧',
+      tip1: '使用充足的光线以清晰捕捉掌纹',
+      tip2: '自然张开手指，不要太紧',
+      tip3: '将手掌置于画面中央以获得最佳效果',
+    },
+    preview: {
+      capturedPalm: '已拍摄的掌纹',
+      analyzePalm: '分析掌纹',
+      analyzing: '分析中...',
+      retakePhoto: '重新拍照',
+    },
+    results: {
+      title: '你的掌纹分析结果',
+      subtitle: '由AI掌相分析揭示',
+      readAnother: '读取另一只手掌',
+      backToHome: '返回首页',
+    },
+    disclaimer: {
+      title: '记住',
+      text: '此AI掌纹分析仅供娱乐和自我反思。相信你的直觉，记住你有力量塑造自己的命运。',
+    },
+    footer: '由 Mentob AI 提供支持 • 为现代探索者准备的AI掌相分析',
+  },
+  palmLines: {
+    lifeLine: '生命线',
+    headLine: '智慧线',
+    heartLine: '感情线',
+    fateLine: '命运线',
+  },
 };
