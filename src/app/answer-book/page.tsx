@@ -11,7 +11,7 @@ import { useI18n } from '@/lib/i18n';
 type Stage = 'prompt' | 'revealing' | 'answer';
 
 export default function AnswerBookPage() {
-  const { t, lang } = useI18n();
+  const { t, language } = useI18n();
   const [stage, setStage] = useState<Stage>('prompt');
   const [answer, setAnswer] = useState('');
   const [isAnimating, setIsAnimating] = useState(false);
@@ -24,7 +24,7 @@ export default function AnswerBookPage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // 从答案池中随机获取一个答案
-    const answers = getAnswers(lang);
+    const answers = getAnswers(language);
     const finalAnswer = answers[Math.floor(Math.random() * answers.length)];
     setAnswer(finalAnswer);
     setStage('answer');
