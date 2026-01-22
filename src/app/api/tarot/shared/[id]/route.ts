@@ -51,6 +51,11 @@ export async function GET(
 
     const interpretation = result[0];
 
+    // 如果username为null，使用默认值
+    if (!interpretation.username) {
+      interpretation.username = 'Mystic Seeker';
+    }
+
     return Response.json(createSuccessResponse(interpretation));
   });
 }
