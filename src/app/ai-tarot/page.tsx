@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Sparkles } from 'lucide-react';
 import { spreads, drawCards, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
@@ -253,51 +254,33 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-title-glow" style={{
-            animation: 'titleFloat 3s ease-in-out infinite, titleGlow 4s ease-in-out infinite alternate',
-            textShadow: '0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(236, 72, 153, 0.3)'
-          }}>
+        <div className="text-center mb-16">
+          {/* Decorative Badge */}
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
+            <Sparkles className="w-5 h-5 text-purple-400" />
+            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.home.subtitle}</span>
+          </div>
+
+          {/* Main Title */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-text-glow">
             {t.home.title}
           </h1>
-          <p className="text-lg text-purple-200" style={{
-            animation: 'subtitleFloat 4s ease-in-out infinite 0.5s',
-            textShadow: '0 0 10px rgba(168, 85, 247, 0.3)'
-          }}>
-            {t.home.subtitle}
+
+          {/* Subtitle */}
+          <p className="text-lg text-purple-200/70 max-w-2xl mx-auto leading-relaxed">
+            {t.landingPage.heroSubtitle}
           </p>
         </div>
 
         <style jsx>{`
-          @keyframes titleFloat {
-            0%, 100% {
-              transform: translateY(0px);
-            }
-            50% {
-              transform: translateY(-10px);
-            }
+          @keyframes glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5), 0 0 80px rgba(236, 72, 153, 0.3); }
+            50% { box-shadow: 0 0 60px rgba(168, 85, 247, 0.8), 0 0 100px rgba(236, 72, 153, 0.5); }
           }
-
-          @keyframes titleGlow {
-            0% {
-              filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
-            }
-            100% {
-              filter: drop-shadow(0 0 40px rgba(236, 72, 153, 0.8));
-            }
+          @keyframes text-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(236, 72, 153, 0.5), 0 0 40px rgba(168, 85, 247, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 60px rgba(168, 85, 247, 0.5); }
           }
-
-          @keyframes subtitleFloat {
-            0%, 100% {
-              transform: translateY(0px);
-              opacity: 0.8;
-            }
-            50% {
-              transform: translateY(-5px);
-              opacity: 1;
-            }
-          }
-
           @keyframes selectSpreadPulse {
             0%, 100% {
               transform: scale(1);
@@ -319,6 +302,8 @@ export default function Home() {
               filter: brightness(1.2);
             }
           }
+          .animate-glow { animation: glow 4s ease-in-out infinite; }
+          .animate-text-glow { animation: text-glow 3s ease-in-out infinite; }
         `}</style>
 
         {!selectedSpread && (
