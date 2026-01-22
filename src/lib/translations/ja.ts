@@ -525,4 +525,58 @@ export const ja = {
       emailValue: 'contact@mentobai.com',
     },
   },
+  share: {
+    loading: {
+      title: '神秘を明らかに...',
+      subtitle: 'カードに接続中',
+    },
+    notFound: {
+      title: 'リーディングが見つかりません',
+      description: 'この解釈は期限切れか削除された可能性があります',
+      button: 'あなたのリーディングを始める',
+    },
+    hero: {
+      badge: 'AI搭載タロット洞察',
+      title: '運命を解き放つ',
+      subtitle: '古代のタロットの知恵と最先端の人工知能技術を組み合わせ、深い洞察とガイダンスを発見',
+      feature1: '無制限AIリーディング',
+      feature2: '78枚の神聖なタロットカード',
+      feature3: 'プレミアム知恵',
+      button1: '無料リーディングを取得',
+      button2: 'このリーディングをシェア',
+      button2Copied: 'リンクをコピーしました！',
+    },
+    userInfo: {
+      readingBy: 'リーディング者',
+      anonymous: '匿名の探求者',
+      dateLabel: '日付',
+      timeLabel: '時間',
+    },
+    question: {
+      badge: '質問',
+    },
+    spreadInfo: {
+      label: 'スプレッド：',
+      label2: 'カード枚数：',
+    },
+    cards: {
+      title: 'カードが明かす',
+      reversed: '逆位置',
+    },
+    interpretation: {
+      title: 'AI解釈',
+      subtitle: '先進的な人工知能によって駆動',
+      streaming: 'AIが洞察を明らかにしています...',
+    },
+    cta: {
+      title: '自分の道を探る準備はできましたか？',
+      description: 'AI搭載タロットリーディングで深い洞察を解き放った何千人もの探求者に参加しましょう。無制限の解釈、プレミアムスプレッド、パーソナライズされたガイダンスを取得。',
+      button1: '無料リーディングを開始',
+      button2: 'プレミアムプランを表示',
+      stats1: '1万+リーディング',
+      stats2: '4.9評価',
+      stats3: '探求者に愛されている',
+    },
+    footer: 'Mentob AI駆動 • 人工知能でタロットの神秘を解き放つ',
+  },
 };

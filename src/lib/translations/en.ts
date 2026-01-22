@@ -525,4 +525,58 @@ export const en = {
       emailValue: 'contact@mentobai.com',
     },
   },
+  share: {
+    loading: {
+      title: 'Unveiling the mysteries...',
+      subtitle: 'Connecting to the cards',
+    },
+    notFound: {
+      title: 'Reading Not Found',
+      description: 'This interpretation may have expired or been removed',
+      button: 'Start Your Reading',
+    },
+    hero: {
+      badge: 'AI-POWERED TAROT INSIGHTS',
+      title: 'Unlock Your Destiny',
+      subtitle: 'Discover profound insights and guidance from the ancient wisdom of tarot, amplified by cutting-edge artificial intelligence',
+      feature1: 'Unlimited AI Readings',
+      feature2: '78 Sacred Tarot Cards',
+      feature3: 'Premium Wisdom',
+      button1: 'Get Your Free Reading',
+      button2: 'Share This Reading',
+      button2Copied: 'Link Copied!',
+    },
+    userInfo: {
+      readingBy: 'Reading by',
+      anonymous: 'Anonymous Seeker',
+      dateLabel: 'Date',
+      timeLabel: 'Time',
+    },
+    question: {
+      badge: 'The Question',
+    },
+    spreadInfo: {
+      label: 'Spread:',
+      label2: 'Cards Drawn:',
+    },
+    cards: {
+      title: 'The Cards Reveal',
+      reversed: 'Reversed',
+    },
+    interpretation: {
+      title: 'AI Interpretation',
+      subtitle: 'Powered by advanced artificial intelligence',
+      streaming: 'AI is revealing insights...',
+    },
+    cta: {
+      title: 'Ready to Discover Your Own Path?',
+      description: 'Join thousands of seekers who have unlocked profound insights with our AI-powered tarot readings. Get unlimited interpretations, premium spreads, and personalized guidance.',
+      button1: 'Start Your Free Reading',
+      button2: 'View Premium Plans',
+      stats1: '10k+ Readings',
+      stats2: '4.9 Rating',
+      stats3: 'Loved by Seekers',
+    },
+    footer: 'Powered by Mentob AI • Unlock the mysteries of tarot with artificial intelligence',
+  },
 };

@@ -525,4 +525,58 @@ export const zh = {
       emailValue: 'contact@mentobai.com',
     },
   },
+  share: {
+    loading: {
+      title: '揭示神秘...',
+      subtitle: '连接牌面',
+    },
+    notFound: {
+      title: '未找到解读',
+      description: '此解读可能已过期或被移除',
+      button: '开始您的解读',
+    },
+    hero: {
+      badge: 'AI驱动塔罗洞察',
+      title: '解锁你的命运',
+      subtitle: '通过古代塔罗牌的智慧，结合前沿人工智能技术，发现深刻的洞察和指引',
+      feature1: '无限AI解读',
+      feature2: '78张神圣塔罗牌',
+      feature3: '顶级智慧',
+      button1: '获取您的免费解读',
+      button2: '分享此解读',
+      button2Copied: '链接已复制！',
+    },
+    userInfo: {
+      readingBy: '解读者',
+      anonymous: '匿名探索者',
+      dateLabel: '日期',
+      timeLabel: '时间',
+    },
+    question: {
+      badge: '问题',
+    },
+    spreadInfo: {
+      label: '牌阵：',
+      label2: '抽牌数量：',
+    },
+    cards: {
+      title: '牌面揭示',
+      reversed: '逆位',
+    },
+    interpretation: {
+      title: 'AI解读',
+      subtitle: '由先进人工智能驱动',
+      streaming: 'AI正在揭示洞察...',
+    },
+    cta: {
+      title: '准备好探索自己的道路了吗？',
+      description: '加入数千名通过AI驱动塔罗解读解锁深刻洞察的探索者。获取无限解读、高级牌阵和个性化指引。',
+      button1: '开始您的免费解读',
+      button2: '查看高级计划',
+      stats1: '1万+解读',
+      stats2: '4.9评分',
+      stats3: '深受探索者喜爱',
+    },
+    footer: '由Mentob AI驱动 • 用人工智能解锁塔罗的神秘',
+  },
 };

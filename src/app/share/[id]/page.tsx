@@ -27,6 +27,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { allTarotCards } from '@/lib/tarot-cards';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
+import { useI18n } from '@/lib/i18n';
 
 interface TarotCard {
   id: string;
@@ -50,6 +51,7 @@ interface SharedInterpretation {
 }
 
 export default function SharePage({ params }: { params: Promise<{ id: string }> }) {
+  const { t, language } = useI18n();
   const [sharedData, setSharedData] = useState<SharedInterpretation | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -150,13 +152,20 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+    const localeMap: Record<string, string> = {
+      en: 'en-US',
+      zh: 'zh-CN',
+      ja: 'ja-JP',
+    };
+    const locale = localeMap[language] || 'en-US';
+
     return {
-      fullDate: date.toLocaleDateString('en-US', {
+      fullDate: date.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       }),
-      time: date.toLocaleTimeString('en-US', {
+      time: date.toLocaleTimeString(locale, {
         hour: '2-digit',
         minute: '2-digit'
       })
@@ -181,8 +190,8 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
             {/* Center Icon */}
             <Sparkles className="absolute inset-0 flex items-center justify-center h-8 w-8 text-purple-400" />
           </div>
-          <p className="text-purple-300 animate-pulse text-lg font-medium">Unveiling the mysteries...</p>
-          <p className="text-purple-500/60 mt-2 text-sm">Connecting to the cards</p>
+          <p className="text-purple-300 animate-pulse text-lg font-medium">{t.share.loading.title}</p>
+          <p className="text-purple-500/60 mt-2 text-sm">{t.share.loading.subtitle}</p>
         </div>
 
         <style jsx global>{`
@@ -204,11 +213,11 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
               <div className="absolute inset-0 border-4 border-red-500/20 rounded-full animate-pulse" />
               <Sparkles className="absolute inset-0 flex items-center justify-center h-10 w-10 text-red-400/50" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Reading Not Found</h3>
-            <p className="text-purple-200 mb-6">This interpretation may have expired or been removed</p>
+            <h3 className="text-2xl font-bold text-white mb-2">{t.share.notFound.title}</h3>
+            <p className="text-purple-200 mb-6">{t.share.notFound.description}</p>
             <Link href="/">
               <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-8">
-                Start Your Reading
+                {t.share.notFound.button}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -339,33 +348,32 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
           {/* Decorative Badge */}
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-6 backdrop-blur-sm animate-glow">
             <Crown className="w-5 h-5 text-yellow-400" />
-            <span className="text-sm font-semibold text-purple-200 tracking-wide">AI-POWERED TAROT INSIGHTS</span>
+            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.share.hero.badge}</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
-            Unlock Your Destiny
+            {t.share.hero.title}
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-purple-200/80 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Discover profound insights and guidance from the ancient wisdom of tarot,
-            amplified by cutting-edge artificial intelligence
+            {t.share.hero.subtitle}
           </p>
 
           {/* Feature Highlights */}
           <div className="flex flex-wrap justify-center gap-4 mb-10">
             <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
               <Sparkles className="w-5 h-5 text-purple-400" />
-              <span className="text-sm font-medium text-purple-200">Unlimited AI Readings</span>
+              <span className="text-sm font-medium text-purple-200">{t.share.hero.feature1}</span>
             </div>
             <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
               <Sparkles className="w-5 h-5 text-pink-400" />
-              <span className="text-sm font-medium text-purple-200">78 Sacred Tarot Cards</span>
+              <span className="text-sm font-medium text-purple-200">{t.share.hero.feature2}</span>
             </div>
             <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
               <Star className="w-5 h-5 text-yellow-400" />
-              <span className="text-sm font-medium text-purple-200">Premium Wisdom</span>
+              <span className="text-sm font-medium text-purple-200">{t.share.hero.feature3}</span>
             </div>
           </div>
 
@@ -376,7 +384,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-10 py-4 text-lg font-semibold gradient-animate transition-all hover:scale-105"
               >
                 <Zap className="mr-2 w-5 h-5" />
-                Get Your Free Reading
+                {t.share.hero.button1}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -388,12 +396,12 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
               {copied ? (
                 <>
                   <Check className="mr-2 w-5 h-5 text-green-400" />
-                  Link Copied!
+                  {t.share.hero.button2Copied}
                 </>
               ) : (
                 <>
                   <Share2 className="mr-2 w-5 h-5" />
-                  Share This Reading
+                  {t.share.hero.button2}
                 </>
               )}
             </Button>
@@ -413,9 +421,9 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
 
                   {/* User Info */}
                   <div>
-                    <p className="text-sm text-purple-400 mb-1">Reading by</p>
+                    <p className="text-sm text-purple-400 mb-1">{t.share.userInfo.readingBy}</p>
                     <p className="text-xl font-bold text-white">
-                      {sharedData.username || 'Anonymous Seeker'}
+                      {sharedData.username || t.share.userInfo.anonymous}
                     </p>
                   </div>
                 </div>
@@ -425,14 +433,14 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                   <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-purple-400" />
                     <div className="text-right">
-                      <p className="text-xs text-purple-400">Date</p>
+                      <p className="text-xs text-purple-400">{t.share.userInfo.dateLabel}</p>
                       <p className="text-sm font-semibold text-white">{dateInfo.fullDate}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-purple-400" />
                     <div className="text-right">
-                      <p className="text-xs text-purple-400">Time</p>
+                      <p className="text-xs text-purple-400">{t.share.userInfo.timeLabel}</p>
                       <p className="text-sm font-semibold text-white">{dateInfo.time}</p>
                     </div>
                   </div>
@@ -449,7 +457,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-6">
                   <Eye className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm font-medium text-purple-300">The Question</span>
+                  <span className="text-sm font-medium text-purple-300">{t.share.question.badge}</span>
                 </div>
                 <p className="text-2xl md:text-3xl font-bold text-white leading-relaxed max-w-4xl mx-auto">
                   "{sharedData.question}"
@@ -465,12 +473,12 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
             <div className="flex flex-wrap items-center justify-center gap-4">
               <div className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-lg">
                 <Wand2 className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-purple-200">Spread:</span>
+                <span className="text-sm text-purple-200">{t.share.spreadInfo.label}</span>
                 <span className="text-sm font-bold text-white">{sharedData.spreadType}</span>
               </div>
               <div className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-lg">
                 <Flame className="w-4 h-4 text-pink-400" />
-                <span className="text-sm text-purple-200">Cards Drawn:</span>
+                <span className="text-sm text-purple-200">{t.share.spreadInfo.label2}</span>
                 <span className="text-sm font-bold text-white">{cards.length}</span>
               </div>
             </div>
@@ -482,7 +490,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
           <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
             <div className="flex items-center justify-center gap-3 mb-6">
               <Sparkles className="w-6 h-6 text-purple-400" />
-              <h2 className="text-2xl font-bold text-white">The Cards Reveal</h2>
+              <h2 className="text-2xl font-bold text-white">{t.share.cards.title}</h2>
               <Sparkles className="w-6 h-6 text-pink-400" />
             </div>
 
@@ -527,7 +535,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                   {card.isReversed && (
                     <div className="absolute top-3 right-3">
                       <Badge className="bg-gradient-to-r from-red-600 to-red-500 backdrop-blur-sm text-xs font-bold px-3 py-1 shadow-lg animate-pulse">
-                        Reversed
+                        {t.share.cards.reversed}
                       </Badge>
                     </div>
                   )}
@@ -555,8 +563,8 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">AI Interpretation</h2>
-                  <p className="text-sm text-purple-300">Powered by advanced artificial intelligence</p>
+                  <h2 className="text-2xl font-bold text-white">{t.share.interpretation.title}</h2>
+                  <p className="text-sm text-purple-300">{t.share.interpretation.subtitle}</p>
                 </div>
               </div>
 
@@ -574,7 +582,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                     <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
                     <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                   </div>
-                  <span>AI is revealing insights...</span>
+                  <span>{t.share.interpretation.streaming}</span>
                 </div>
               )}
             </CardContent>
@@ -594,13 +602,12 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
 
                 {/* Main Heading */}
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  Ready to Discover Your Own Path?
+                  {t.share.cta.title}
                 </h2>
 
                 {/* Description */}
                 <p className="text-lg text-purple-200/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-                  Join thousands of seekers who have unlocked profound insights with our AI-powered tarot readings.
-                  Get unlimited interpretations, premium spreads, and personalized guidance.
+                  {t.share.cta.description}
                 </p>
 
                 {/* CTA Buttons */}
@@ -611,7 +618,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                       className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-10 py-4 text-lg font-semibold gradient-animate transition-all hover:scale-105"
                     >
                       <Zap className="mr-2 w-5 h-5" />
-                      Start Your Free Reading
+                      {t.share.cta.button1}
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
@@ -622,7 +629,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                       className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-10 py-4 text-lg transition-all hover:scale-105"
                     >
                       <Star className="mr-2 w-5 h-5 text-yellow-400" />
-                      View Premium Plans
+                      {t.share.cta.button2}
                     </Button>
                   </Link>
                 </div>
@@ -640,17 +647,17 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                         </div>
                       ))}
                     </div>
-                    <span className="font-medium">10k+ Readings</span>
+                    <span className="font-medium">{t.share.cta.stats1}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     ))}
-                    <span className="font-medium">4.9 Rating</span>
+                    <span className="font-medium">{t.share.cta.stats2}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Heart className="w-5 h-5 text-pink-400" />
-                    <span className="font-medium">Loved by Seekers</span>
+                    <span className="font-medium">{t.share.cta.stats3}</span>
                   </div>
                 </div>
               </div>
@@ -662,7 +669,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         <div className="text-center mt-12 text-purple-300/50 text-sm">
           <p className="flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" />
-            Powered by Mentob AI • Unlock the mysteries of tarot with artificial intelligence
+            {t.share.footer}
             <Sparkles className="w-4 h-4" />
           </p>
         </div>
