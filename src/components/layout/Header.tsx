@@ -36,6 +36,9 @@ export function Header() {
 
   const navItems = [
     { name: t.header.home, href: '/' },
+    { name: 'AI Tarot', href: '/ai-tarot' },
+    { name: 'Answer Book', href: '/answer-book' },
+    { name: 'Palm Reading', href: '/palm-reading' },
     { name: t.tarotCards?.title || 'All Tarot Cards', href: '/tarot-cards' },
     { name: t.header.pricing, href: '/pricing' },
   ];
