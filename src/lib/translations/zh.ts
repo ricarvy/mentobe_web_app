@@ -650,12 +650,10 @@ export const zh = {
     backToHome: '返回首页',
     badge: 'AI掌纹分析',
     title: '读取你的掌纹',
-    subtitle: '上传或拍摄你的掌纹，通过先进的AI掌相分析发现你命运的奥秘',
+    subtitle: '上传你的掌纹照片，通过先进的AI掌相分析发现你命运的奥秘',
     cameraSection: {
-      initializing: '正在初始化摄像头...',
-      placePalm: '将你的手掌放在这里',
-      capturePhoto: '拍照',
-      or: '或',
+      uploadTitle: '上传你的掌纹照片',
+      uploadSubtitle: '支持 JPG、PNG 格式，最大 10MB',
       uploadImage: '上传图片',
     },
     tips: {
@@ -665,10 +663,10 @@ export const zh = {
       tip3: '将手掌置于画面中央以获得最佳效果',
     },
     preview: {
-      capturedPalm: '已拍摄的掌纹',
+      capturedPalm: '已上传的掌纹',
       analyzePalm: '分析掌纹',
       analyzing: '分析中...',
-      retakePhoto: '重新拍照',
+      retakePhoto: '重新上传',
     },
     results: {
       title: '你的掌纹分析结果',

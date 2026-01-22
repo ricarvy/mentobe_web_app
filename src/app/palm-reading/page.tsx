@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Hand, Sparkles, Star, Crown, ArrowLeft, Camera, Upload, Eye, Heart, Zap } from 'lucide-react';
+import { Hand, Sparkles, Star, ArrowLeft, Upload, Eye, Heart, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useI18n } from '@/lib/i18n';
 import { getPalmistryInsights, PalmistryInsights } from '@/data/palmistry-insights';
@@ -15,53 +15,7 @@ export default function PalmReadingPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCaptured, setIsCaptured] = useState(false);
   const [insights, setInsights] = useState<PalmistryInsights | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    startCamera();
-    return () => {
-      stopCamera();
-    };
-  }, []);
-
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-    }
-  };
-
-  const capturePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const video = videoRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = canvas.toDataURL('image/png');
-        setImage(imageData);
-        setIsCaptured(true);
-        stopCamera();
-      }
-    }
-  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,16 +29,9 @@ export default function PalmReadingPage() {
     }
   };
 
-  const retakePhoto = () => {
-    setImage(null);
-    setIsCaptured(false);
-    setInsights(null);
-    startCamera();
-  };
-
   const analyzePalm = () => {
     setIsAnalyzing(true);
-    
+
     // Simulate AI analysis
     setTimeout(() => {
       setInsights(getPalmistryInsights(language));
@@ -96,7 +43,6 @@ export default function PalmReadingPage() {
     setImage(null);
     setIsCaptured(false);
     setInsights(null);
-    startCamera();
   };
 
   return (
@@ -213,76 +159,35 @@ export default function PalmReadingPage() {
 
         {!isCaptured ? (
           <>
-            {/* Camera Section */}
+            {/* Upload Section */}
             <Card className="bg-black/40 backdrop-blur-md border-2 border-purple-500/30 mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <CardContent className="pt-8 pb-8">
                 <div className="relative w-full max-w-lg mx-auto">
-                  {/* Video Container */}
-                  <div className="relative aspect-[3/4] bg-black/60 rounded-2xl overflow-hidden border-2 border-purple-500/30">
-                    {videoRef.current?.srcObject ? (
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center">
-                          <Camera className="w-16 h-16 text-purple-400/50 mx-auto mb-4" />
-                          <p className="text-purple-400">{t.palmReading.cameraSection.initializing}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Palm Guide Overlay */}
-                    <div className="absolute inset-4 border-2 border-dashed border-purple-500/30 rounded-xl pointer-events-none">
-                      <div className="absolute top-2 left-2 right-2 flex justify-center">
-                        <span className="text-xs text-purple-400/70">{t.palmReading.cameraSection.placePalm}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Capture Button */}
-                  <div className="mt-6 flex justify-center">
+                  {/* Upload Area */}
+                  <div className="relative aspect-[3/4] bg-black/60 rounded-2xl overflow-hidden border-2 border-dashed border-purple-500/30 flex flex-col items-center justify-center cursor-pointer hover:border-purple-500/60 transition-all hover:scale-[1.02]"
+                       onClick={() => fileInputRef.current?.click()}>
+                    <Upload className="w-20 h-20 text-purple-400/50 mb-6" />
+                    <p className="text-lg text-purple-300 mb-2">{t.palmReading.cameraSection.uploadTitle}</p>
+                    <p className="text-sm text-purple-400/70 mb-6">{t.palmReading.cameraSection.uploadSubtitle}</p>
                     <Button
-                      onClick={capturePhoto}
-                      disabled={!videoRef.current?.srcObject}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all hover:scale-105"
                       size="lg"
                     >
-                      <Camera className="mr-2 w-5 h-5" />
-                      {t.palmReading.cameraSection.capturePhoto}
+                      <Upload className="mr-2 w-5 h-5" />
+                      {t.palmReading.cameraSection.uploadImage}
                     </Button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
                   </div>
-                </div>
-
-                {/* Divider */}
-                <div className="flex items-center gap-4 my-8">
-                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-                  <span className="text-sm text-purple-400">{t.palmReading.cameraSection.or}</span>
-                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-                </div>
-
-                {/* Upload Button */}
-                <div className="text-center">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    onClick={() => fileInputRef.current?.click()}
-                    variant="outline"
-                    className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 transition-all hover:scale-105"
-                    size="lg"
-                  >
-                    <Upload className="mr-2 w-5 h-5" />
-                    {t.palmReading.cameraSection.uploadImage}
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -360,12 +265,12 @@ export default function PalmReadingPage() {
                       )}
                     </Button>
                     <Button
-                      onClick={retakePhoto}
+                      onClick={resetAnalysis}
                       variant="outline"
                       className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 transition-all hover:scale-105"
                       size="lg"
                     >
-                      <Camera className="mr-2 w-5 h-5" />
+                      <Upload className="mr-2 w-5 h-5" />
                       {t.palmReading.preview.retakePhoto}
                     </Button>
                   </div>
@@ -423,7 +328,7 @@ export default function PalmReadingPage() {
                     className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all hover:scale-105"
                     size="lg"
                   >
-                    <Camera className="mr-2 w-5 h-5" />
+                    <Upload className="mr-2 w-5 h-5" />
                     {t.palmReading.results.readAnother}
                   </Button>
                   <Link href="/">
@@ -458,9 +363,6 @@ export default function PalmReadingPage() {
             </Card>
           </>
         )}
-
-        {/* Hidden Canvas */}
-        <canvas ref={canvasRef} className="hidden" />
 
         {/* Footer */}
         <div className="text-center mt-12 text-purple-300/50 text-sm">

@@ -650,12 +650,10 @@ export const ja = {
     backToHome: 'ホームに戻る',
     badge: 'AI手相分析',
     title: 'あなたの手相を読む',
-    subtitle: '手のひらの写真をアップロードまたは撮影し、高度なAI手相分析で運命の秘密を発見しましょう',
+    subtitle: '手のひらの写真をアップロードし、高度なAI手相分析で運命の秘密を発見しましょう',
     cameraSection: {
-      initializing: 'カメラを初期化中...',
-      placePalm: '手のひらをここに置いてください',
-      capturePhoto: '写真を撮る',
-      or: 'または',
+      uploadTitle: '手のひらの写真をアップロード',
+      uploadSubtitle: 'JPG、PNG形式をサポート、最大10MB',
       uploadImage: '画像をアップロード',
     },
     tips: {
@@ -665,10 +663,10 @@ export const ja = {
       tip3: '手のひらをフレームの中央に配置して、最高の結果を得てください',
     },
     preview: {
-      capturedPalm: '撮影された手のひら',
+      capturedPalm: 'アップロードされた手のひら',
       analyzePalm: '手相を分析',
       analyzing: '分析中...',
-      retakePhoto: '写真を撮り直す',
+      retakePhoto: '新しい画像をアップロード',
     },
     results: {
       title: 'あなたの手相分析結果',

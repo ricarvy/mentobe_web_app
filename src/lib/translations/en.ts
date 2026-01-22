@@ -650,12 +650,10 @@ export const en = {
     backToHome: 'Back to Home',
     badge: 'AI Palm Reading',
     title: 'Read Your Palm',
-    subtitle: 'Upload or capture your palm print and discover the secrets of your destiny through advanced AI-powered palmistry analysis',
+    subtitle: 'Upload your palm photo and discover the secrets of your destiny through advanced AI-powered palmistry analysis',
     cameraSection: {
-      initializing: 'Initializing camera...',
-      placePalm: 'Place your palm here',
-      capturePhoto: 'Capture Photo',
-      or: 'or',
+      uploadTitle: 'Upload your palm photo',
+      uploadSubtitle: 'Support JPG, PNG format, max 10MB',
       uploadImage: 'Upload Image',
     },
     tips: {
@@ -665,10 +663,10 @@ export const en = {
       tip3: 'Center your palm in the frame for best results',
     },
     preview: {
-      capturedPalm: 'Captured palm',
+      capturedPalm: 'Uploaded palm',
       analyzePalm: 'Analyze Palm',
       analyzing: 'Analyzing...',
-      retakePhoto: 'Retake Photo',
+      retakePhoto: 'Upload New Image',
     },
     results: {
       title: 'Your Palm Reading Results',
