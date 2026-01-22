@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, BookOpen, Hand, Star, Crown, ArrowRight, Zap, Eye, Heart } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export default function Home() {
+  const { t } = useI18n();
+
   return (
     <>
       <div className="min-h-screen bg-black relative overflow-hidden">
@@ -122,33 +125,32 @@ export default function Home() {
             {/* Decorative Badge */}
             <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-6 backdrop-blur-sm animate-glow">
               <Crown className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs font-semibold text-purple-200 tracking-wide">AI-POWERED MYSTICAL WISDOM</span>
+              <span className="text-xs font-semibold text-purple-200 tracking-wide">{t.landingPage.badge}</span>
             </div>
 
             {/* Main Title */}
             <h1 className="text-4xl md:text-6xl font-bold mb-5 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
-              Discover Your Destiny
+              {t.landingPage.heroTitle}
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg md:text-xl text-purple-200/80 max-w-4xl mx-auto mb-10 leading-relaxed">
-              Unlock profound insights from ancient wisdom amplified by cutting-edge artificial intelligence.
-              Let the mystic arts guide you on your journey of self-discovery.
+              {t.landingPage.heroSubtitle}
             </p>
 
             {/* Feature Highlights */}
             <div className="flex flex-wrap justify-center gap-3 mb-10">
               <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
                 <Sparkles className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-medium text-purple-200">AI Tarot Reading</span>
+                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.aiTarot}</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
                 <BookOpen className="w-4 h-4 text-pink-400" />
-                <span className="text-xs font-medium text-purple-200">Mystic Answer Book</span>
+                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.answerBook}</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
                 <Hand className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-medium text-purple-200">AI Palm Reading</span>
+                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.palmReading}</span>
               </div>
             </div>
 
@@ -156,31 +158,15 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-6 text-xs text-purple-300/70 mb-10">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-yellow-400" />
-                <span className="font-medium">10k+ Readings</span>
+                <span className="font-medium">{t.landingPage.stats.readings}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-pink-400" />
-                <span className="font-medium">4.9 Rating</span>
+                <span className="font-medium">{t.landingPage.stats.rating}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Eye className="w-4 h-4 text-purple-400" />
-                <span className="font-medium">Global Seekers</span>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-purple-300/70 mb-12">
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400" />
-                <span className="font-medium">10k+ Readings</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-pink-400" />
-                <span className="font-medium">4.9 Rating</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-purple-400" />
-                <span className="font-medium">Global Seekers</span>
+                <span className="font-medium">{t.landingPage.stats.seekers}</span>
               </div>
             </div>
           </div>
@@ -209,27 +195,27 @@ export default function Home() {
 
                   {/* Title */}
                   <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
-                    AI Tarot Reading
+                    {t.landingPage.aiTarotCard.title}
                   </h2>
 
                   {/* Description */}
                   <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
-                    Discover your destiny with AI-powered tarot readings using 78 sacred cards and 20+ spreads
+                    {t.landingPage.aiTarotCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>78 Tarot Cards</span>
+                      <span>{t.landingPage.aiTarotCard.features.cards}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>20+ Spreads</span>
+                      <span>{t.landingPage.aiTarotCard.features.spreads}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>AI Interpretation</span>
+                      <span>{t.landingPage.aiTarotCard.features.ai}</span>
                     </div>
                   </div>
 
@@ -238,7 +224,7 @@ export default function Home() {
                     size="sm"
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all group-hover:scale-105"
                   >
-                    Start Reading
+                    {t.landingPage.aiTarotCard.cta}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </CardContent>
@@ -267,27 +253,27 @@ export default function Home() {
 
                   {/* Title */}
                   <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-pink-300 transition-colors">
-                    Mystic Answer Book
+                    {t.landingPage.answerBookCard.title}
                   </h2>
 
                   {/* Description */}
                   <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
-                    Ask any question and receive instant guidance from the mystical wisdom of the Answer Book
+                    {t.landingPage.answerBookCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>Instant Answers</span>
+                      <span>{t.landingPage.answerBookCard.features.instant}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>Deep Wisdom</span>
+                      <span>{t.landingPage.answerBookCard.features.wisdom}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>Mystical Insights</span>
+                      <span>{t.landingPage.answerBookCard.features.insights}</span>
                     </div>
                   </div>
 
@@ -296,7 +282,7 @@ export default function Home() {
                     size="sm"
                     className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 gradient-animate transition-all group-hover:scale-105"
                   >
-                    Ask Question
+                    {t.landingPage.answerBookCard.cta}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </CardContent>
@@ -325,27 +311,27 @@ export default function Home() {
 
                   {/* Title */}
                   <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
-                    AI Palm Reading
+                    {t.landingPage.palmReadingCard.title}
                   </h2>
 
                   {/* Description */}
                   <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
-                    Unlock the secrets of your future through advanced AI-powered palmistry analysis
+                    {t.landingPage.palmReadingCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>AI Analysis</span>
+                      <span>{t.landingPage.palmReadingCard.features.analysis}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>Life Lines</span>
+                      <span>{t.landingPage.palmReadingCard.features.lines}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
-                      <span>Destiny Insights</span>
+                      <span>{t.landingPage.palmReadingCard.features.destiny}</span>
                     </div>
                   </div>
 
@@ -354,7 +340,7 @@ export default function Home() {
                     size="sm"
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all group-hover:scale-105"
                   >
-                    Analyze Palm
+                    {t.landingPage.palmReadingCard.cta}
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </CardContent>
@@ -374,13 +360,12 @@ export default function Home() {
 
                 {/* Heading */}
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                  Begin Your Journey Today
+                  {t.landingPage.cta.title}
                 </h2>
 
                 {/* Description */}
                 <p className="text-base text-purple-200/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-                  Join thousands of seekers who have unlocked profound insights with our AI-powered mystical tools.
-                  Discover your destiny and navigate life's challenges with ancient wisdom.
+                  {t.landingPage.cta.description}
                 </p>
 
                 {/* CTA Buttons */}
@@ -390,7 +375,7 @@ export default function Home() {
                     className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-10 py-4 text-lg font-semibold gradient-animate transition-all hover:scale-105"
                   >
                     <Zap className="mr-2 w-5 h-5" />
-                    Start Free Reading
+                    {t.landingPage.cta.startFree}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                   <Link href="/pricing">
@@ -400,7 +385,7 @@ export default function Home() {
                       className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-10 py-4 text-lg transition-all hover:scale-105"
                     >
                       <Star className="mr-2 w-5 h-5 text-yellow-400" />
-                      View Premium Plans
+                      {t.landingPage.cta.viewPlans}
                     </Button>
                   </Link>
                 </div>
@@ -412,7 +397,7 @@ export default function Home() {
           <div className="text-center mt-12 text-purple-300/50 text-sm">
             <p className="flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4" />
-              Powered by Mentob AI • Unlock the mysteries of destiny with artificial intelligence
+              {t.footer.description}
               <Sparkles className="w-4 h-4" />
             </p>
           </div>

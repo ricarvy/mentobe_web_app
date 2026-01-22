@@ -36,6 +36,57 @@ export const ja = {
     howItWorks: '使い方',
     about: 'について',
   },
+  landingPage: {
+    badge: 'AI搭載の神秘的知恵',
+    heroTitle: '未来を探る',
+    heroSubtitle: '古代の知恵と最先端のAIを組み合わせて、深遠な洞察を得よう。神秘的な芸術があなたの自己発見の旅をガイドします。',
+    features: {
+      aiTarot: 'AIタロットリーディング',
+      answerBook: '神秘的な答えの書',
+      palmReading: 'AI手相分析',
+    },
+    stats: {
+      readings: '10k+リーディング',
+      rating: '4.9評価',
+      seekers: '世界中の探求者',
+    },
+    aiTarotCard: {
+      title: 'AIタロットリーディング',
+      description: '78枚の神聖なカードと20以上のスプレッドを使用したAI搭載タロットリーディングで運命を発見',
+      features: {
+        cards: '78枚のタロットカード',
+        spreads: '20以上のスプレッド',
+        ai: 'AI解釈',
+      },
+      cta: 'リーディング開始',
+    },
+    answerBookCard: {
+      title: '神秘的な答えの書',
+      description: 'どんな質問でも、答えの書の神秘的な知恵から即座のガイダンスを受け取る',
+      features: {
+        instant: '即座の答え',
+        wisdom: '深遠な知恵',
+        insights: '神秘的な洞察',
+      },
+      cta: '質問する',
+    },
+    palmReadingCard: {
+      title: 'AI手相分析',
+      description: '高度なAI搭載手相分析を通じて、未来の秘密を解き明かす',
+      features: {
+        analysis: 'AI分析',
+        lines: '生命線',
+        destiny: '運命の洞察',
+      },
+      cta: '手相を分析',
+    },
+    cta: {
+      title: '今日から旅を始めよう',
+      description: 'AI搭載の神秘的ツールで深遠な洞察を解き放った何千人もの探求者に参加しよう。古代の知恵で運命を発見し、人生の課題を乗り越えよう。',
+      startFree: '無料リーディングを開始',
+      viewPlans: 'プレミアムプランを表示',
+    },
+  },
   sidebar: {
     quickActions: 'クイックアクション',
     newReading: '新規リーディング',

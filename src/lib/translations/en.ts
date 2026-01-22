@@ -36,6 +36,57 @@ export const en = {
     howItWorks: 'How It Works',
     about: 'About',
   },
+  landingPage: {
+    badge: 'AI-POWERED MYSTICAL WISDOM',
+    heroTitle: 'Discover Your Destiny',
+    heroSubtitle: 'Unlock profound insights from ancient wisdom amplified by cutting-edge artificial intelligence. Let the mystic arts guide you on your journey of self-discovery.',
+    features: {
+      aiTarot: 'AI Tarot Reading',
+      answerBook: 'Mystic Answer Book',
+      palmReading: 'AI Palm Reading',
+    },
+    stats: {
+      readings: '10k+ Readings',
+      rating: '4.9 Rating',
+      seekers: 'Global Seekers',
+    },
+    aiTarotCard: {
+      title: 'AI Tarot Reading',
+      description: 'Discover your destiny with AI-powered tarot readings using 78 sacred cards and 20+ spreads',
+      features: {
+        cards: '78 Tarot Cards',
+        spreads: '20+ Spreads',
+        ai: 'AI Interpretation',
+      },
+      cta: 'Start Reading',
+    },
+    answerBookCard: {
+      title: 'Mystic Answer Book',
+      description: 'Ask any question and receive instant guidance from the mystical wisdom of the Answer Book',
+      features: {
+        instant: 'Instant Answers',
+        wisdom: 'Deep Wisdom',
+        insights: 'Mystical Insights',
+      },
+      cta: 'Ask Question',
+    },
+    palmReadingCard: {
+      title: 'AI Palm Reading',
+      description: 'Unlock the secrets of your future through advanced AI-powered palmistry analysis',
+      features: {
+        analysis: 'AI Analysis',
+        lines: 'Life Lines',
+        destiny: 'Destiny Insights',
+      },
+      cta: 'Analyze Palm',
+    },
+    cta: {
+      title: 'Begin Your Journey Today',
+      description: 'Join thousands of seekers who have unlocked profound insights with our AI-powered mystical tools. Discover your destiny and navigate life\'s challenges with ancient wisdom.',
+      startFree: 'Start Free Reading',
+      viewPlans: 'View Premium Plans',
+    },
+  },
   sidebar: {
     quickActions: 'Quick Actions',
     newReading: 'New Reading',

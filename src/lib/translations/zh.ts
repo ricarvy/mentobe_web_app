@@ -36,6 +36,57 @@ export const zh = {
     howItWorks: '如何使用',
     about: '关于',
   },
+  landingPage: {
+    badge: 'AI驱动的神秘智慧',
+    heroTitle: '探索你的未来',
+    heroSubtitle: '利用古老智慧结合尖端人工智能，解锁深刻的洞察。让神秘艺术引导你的自我发现之旅。',
+    features: {
+      aiTarot: 'AI塔罗解读',
+      answerBook: '神秘答案之书',
+      palmReading: 'AI掌纹分析',
+    },
+    stats: {
+      readings: '10k+解读',
+      rating: '4.9评分',
+      seekers: '全球探索者',
+    },
+    aiTarotCard: {
+      title: 'AI塔罗解读',
+      description: '使用78张神圣卡牌和20+种牌阵，通过AI驱动的塔罗解读探索你的命运',
+      features: {
+        cards: '78张塔罗牌',
+        spreads: '20+种牌阵',
+        ai: 'AI解读',
+      },
+      cta: '开始解读',
+    },
+    answerBookCard: {
+      title: '神秘答案之书',
+      description: '提出任何问题，从答案之书的神秘智慧中获得即时指引',
+      features: {
+        instant: '即时答案',
+        wisdom: '深层智慧',
+        insights: '神秘洞察',
+      },
+      cta: '提出问题',
+    },
+    palmReadingCard: {
+      title: 'AI掌纹分析',
+      description: '通过先进的AI掌纹分析，解锁你未来的秘密',
+      features: {
+        analysis: 'AI分析',
+        lines: '生命线',
+        destiny: '命运洞察',
+      },
+      cta: '分析掌纹',
+    },
+    cta: {
+      title: '今天开启你的旅程',
+      description: '加入成千上万的探索者，通过我们的AI驱动神秘工具解锁深刻洞察。用古老智慧发现你的命运，应对生活挑战。',
+      startFree: '开始免费解读',
+      viewPlans: '查看高级计划',
+    },
+  },
   sidebar: {
     quickActions: '快速操作',
     newReading: '新解读',
