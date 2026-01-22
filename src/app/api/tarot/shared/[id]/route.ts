@@ -1,5 +1,8 @@
 import { NextRequest } from 'next/server';
 import { tarotInterpretationManager } from '@/storage/database';
+import { getDb } from 'coze-coding-dev-sdk';
+import { tarotInterpretations, users } from '@/storage/database/shared/schema';
+import { eq } from 'drizzle-orm';
 import {
   withErrorHandler,
   createSuccessResponse,
@@ -21,15 +24,32 @@ export async function GET(
       );
     }
 
-    // 获取解读内容（不需要认证，因为这是公开分享）
-    const interpretation = await tarotInterpretationManager.getInterpretationById(interpretationId);
+    // 获取解读内容和用户名（不需要认证，因为这是公开分享）
+    const db = await getDb();
+    const result = await db
+      .select({
+        id: tarotInterpretations.id,
+        userId: tarotInterpretations.userId,
+        question: tarotInterpretations.question,
+        spreadType: tarotInterpretations.spreadType,
+        cards: tarotInterpretations.cards,
+        interpretation: tarotInterpretations.interpretation,
+        createdAt: tarotInterpretations.createdAt,
+        username: users.username,
+      })
+      .from(tarotInterpretations)
+      .leftJoin(users, eq(tarotInterpretations.userId, users.id))
+      .where(eq(tarotInterpretations.id, interpretationId))
+      .limit(1);
 
-    if (!interpretation) {
+    if (!result || result.length === 0) {
       throw new ApiError(
         ERROR_CODES.NOT_FOUND,
         'Interpretation not found'
       );
     }
+
+    const interpretation = result[0];
 
     return Response.json(createSuccessResponse(interpretation));
   });
