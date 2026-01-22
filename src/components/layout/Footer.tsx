@@ -12,7 +12,6 @@ export function Footer() {
     product: [
       { name: t.footer.features, href: '#features' },
       { name: t.footer.pricing, href: '/pricing' },
-      { name: t.header.tarotSpreads, href: '#spreads' },
     ],
     company: [
       { name: t.footer.aboutUs, href: '#about' },

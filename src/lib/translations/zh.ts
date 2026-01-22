@@ -28,7 +28,10 @@ export const zh = {
   },
   header: {
     home: '首页',
-    tarotSpreads: '牌阵',
+    aiTarot: 'AI塔罗牌',
+    answerBook: '答案之书',
+    palmReading: 'AI识掌纹',
+    tarotCards: '所有塔罗牌',
     pricing: '定价',
     howItWorks: '如何使用',
     about: '关于',

@@ -452,7 +452,7 @@ export default function Home() {
                 variant="ghost"
                 className="w-full bg-black/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/20 hover:border-purple-400/50 hover:text-white transition-all duration-200"
               >
-                {t.header.tarotSpreads}
+                {t.home.reselectSpread}
               </Button>
             </CardContent>
           </Card>

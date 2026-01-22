@@ -28,7 +28,10 @@ export const ja = {
   },
   header: {
     home: 'ホーム',
-    tarotSpreads: 'タロットスプレッド',
+    aiTarot: 'AIタロット',
+    answerBook: '答えの書',
+    palmReading: 'AI手相診断',
+    tarotCards: 'すべてのタロットカード',
     pricing: '料金',
     howItWorks: '使い方',
     about: 'について',

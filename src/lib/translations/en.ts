@@ -28,10 +28,13 @@ export const en = {
   },
   header: {
     home: 'Home',
-    tarotSpreads: 'Tarot Spreads',
+    aiTarot: 'AI Tarot',
+    answerBook: 'Answer Book',
+    palmReading: 'Palm Reading',
+    tarotCards: 'All Tarot Cards',
+    pricing: 'Pricing',
     howItWorks: 'How It Works',
     about: 'About',
-    pricing: 'Pricing',
   },
   sidebar: {
     quickActions: 'Quick Actions',

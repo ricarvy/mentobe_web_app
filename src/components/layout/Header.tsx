@@ -36,9 +36,9 @@ export function Header() {
 
   const navItems = [
     { name: t.header.home, href: '/' },
-    { name: 'AI Tarot', href: '/ai-tarot' },
-    { name: 'Answer Book', href: '/answer-book' },
-    { name: 'Palm Reading', href: '/palm-reading' },
+    { name: t.header.aiTarot, href: '/ai-tarot' },
+    { name: t.header.answerBook, href: '/answer-book' },
+    { name: t.header.palmReading, href: '/palm-reading' },
     { name: t.tarotCards?.title || 'All Tarot Cards', href: '/tarot-cards' },
     { name: t.header.pricing, href: '/pricing' },
   ];
@@ -87,8 +87,9 @@ export function Header() {
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-purple-200 hover:text-white hover:bg-purple-500/10">
-                  <Globe className="h-5 w-5" />
+                <Button variant="ghost" size="sm" className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-2">
+                  <span className="text-lg">{languages.find(l => l.code === language)?.flag || '🌐'}</span>
+                  <span className="text-sm font-medium hidden sm:inline">{languages.find(l => l.code === language)?.name || 'Language'}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-black/90 border-purple-500/20">
@@ -102,6 +103,7 @@ export function Header() {
                   >
                     <span className="text-lg">{lang.flag}</span>
                     <span>{lang.name}</span>
+                    {language === lang.code && <span className="ml-auto text-purple-400">✓</span>}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -130,7 +132,7 @@ export function Header() {
                     <div className="px-2 py-2 border-b border-purple-500/20">
                       <div className="flex items-center gap-2 px-2 py-1">
                         <Zap className="h-3 w-3 text-purple-400" />
-                        <span className="text-xs text-purple-300">Daily Quota:</span>
+                        <span className="text-xs text-purple-300">{t.common.dailyQuota}:</span>
                       </div>
                       <div className="px-2 py-1">
                         {quota.isDemo ? (
@@ -225,6 +227,7 @@ export function Header() {
                       >
                         <span className="text-lg">{lang.flag}</span>
                         <span>{lang.name}</span>
+                        {language === lang.code && <span className="ml-auto text-purple-400">✓</span>}
                       </button>
                     ))}
                   </div>
@@ -238,7 +241,7 @@ export function Header() {
                         <div className="px-2 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
                           <div className="flex items-center gap-2 mb-1">
                             <Zap className="h-3 w-3 text-purple-400" />
-                            <span className="text-xs text-purple-300">Daily Quota:</span>
+                            <span className="text-xs text-purple-300">{t.common.dailyQuota}:</span>
                           </div>
                           <div>
                             {quota.isDemo ? (
