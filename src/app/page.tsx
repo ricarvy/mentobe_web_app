@@ -129,7 +129,7 @@ export default function Home() {
             </div>
 
             {/* Main Title */}
-            <h1 className="text-4xl md:text-6xl font-bold mb-5 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
+            <h1 className="text-4xl md:text-6xl font-bold mb-5 text-white animate-glow">
               {t.landingPage.heroTitle}
             </h1>
 

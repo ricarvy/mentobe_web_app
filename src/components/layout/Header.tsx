@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Menu, Sparkles, Globe, User, LogOut, Zap } from 'lucide-react';
+import { Menu, Sparkles, Globe, User, LogOut, Zap, ChevronDown } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { languages } from '@/lib/translations';
 import { useUser } from '@/lib/userContext';
@@ -36,11 +36,14 @@ export function Header() {
 
   const navItems = [
     { name: t.header.home, href: '/' },
-    { name: t.header.aiTarot, href: '/ai-tarot' },
     { name: t.header.answerBook, href: '/answer-book' },
     { name: t.header.palmReading, href: '/palm-reading' },
-    { name: t.tarotCards?.title || 'All Tarot Cards', href: '/tarot-cards' },
     { name: t.header.pricing, href: '/pricing' },
+  ];
+
+  const tarotDropdownItems = [
+    { name: t.home.selectSpread || 'Start Reading', href: '/ai-tarot' },
+    { name: t.tarotCards?.title || 'All Tarot Cards', href: '/tarot-cards' },
   ];
 
   // 处理Home点击：如果在流程中，重置流程；否则正常跳转
@@ -80,6 +83,28 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
+
+            {/* AI Tarot Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-1 px-3 py-2 h-auto text-sm font-medium">
+                  {t.header.aiTarot}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-black/90 border-purple-500/20">
+                {tarotDropdownItems.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    <Link
+                      href={item.href}
+                      className="text-purple-200 hover:text-white hover:bg-purple-500/10 cursor-pointer"
+                    >
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           {/* CTA Button and Language Selector */}
@@ -207,6 +232,24 @@ export function Header() {
                     {item.name}
                   </Link>
                 ))}
+
+                {/* AI Tarot Section */}
+                <div className="pt-2">
+                  <p className="text-sm font-semibold text-purple-300 mb-2">{t.header.aiTarot}</p>
+                  <div className="flex flex-col gap-1 pl-3">
+                    {tarotDropdownItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="text-base font-medium text-purple-200/80 hover:text-white transition-colors py-2"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
                 
                 {/* Mobile Language Selector */}
                 <div className="py-4 border-t border-purple-500/20 mt-4">
