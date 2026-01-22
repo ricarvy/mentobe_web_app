@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useUser } from '@/lib/userContext';
 import { useI18n } from '@/lib/i18n';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
-import { Calendar, Clock, ChevronRight, ChevronDown, Sparkles, History, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, ChevronRight, ChevronDown, Sparkles, History, ArrowLeft, RefreshCw, Share2, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { allTarotCards } from '@/lib/tarot-cards';
@@ -45,6 +45,9 @@ export default function HistoryPage() {
   // 流式显示状态
   const [streamingText, setStreamingText] = useState<Record<string, string>>({});
   const [isStreaming, setIsStreaming] = useState<Record<string, boolean>>({});
+
+  // 分享相关状态
+  const [copiedLinks, setCopiedLinks] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (user) {
@@ -117,6 +120,19 @@ export default function HistoryPage() {
 
   const handleRefresh = () => {
     fetchHistory();
+  };
+
+  const handleShare = async (itemId: string) => {
+    const shareUrl = `${window.location.origin}/share/${itemId}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedLinks(prev => ({ ...prev, [itemId]: true }));
+      setTimeout(() => {
+        setCopiedLinks(prev => ({ ...prev, [itemId]: false }));
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+    }
   };
 
   const parseCards = (cardsJson: string): TarotCard[] => {
@@ -375,6 +391,27 @@ export default function HistoryPage() {
                             </p>
                           </div>
                         )}
+
+                        {/* 分享按钮 */}
+                        <div className="mt-4 pt-4 border-t border-purple-500/20">
+                          <Button
+                            onClick={() => handleShare(item.id)}
+                            variant="outline"
+                            className="w-full border-purple-500/30 text-purple-200 hover:bg-purple-500/10 transition-all"
+                          >
+                            {copiedLinks[item.id] ? (
+                              <>
+                                <Check className="w-4 h-4 mr-2" />
+                                Link Copied!
+                              </>
+                            ) : (
+                              <>
+                                <Share2 className="w-4 h-4 mr-2" />
+                                Share This Reading
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
