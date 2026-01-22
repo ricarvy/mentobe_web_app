@@ -73,38 +73,42 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={item.href === '/' ? handleHomeClick : undefined}
-                className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item, index) => (
+              <>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={item.href === '/' ? handleHomeClick : undefined}
+                  className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
+                >
+                  {item.name}
+                </Link>
 
-            {/* AI Tarot Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-1 px-3 py-2 h-auto text-sm font-medium">
-                  {t.header.aiTarot}
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="bg-black/90 border-purple-500/20">
-                {tarotDropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.name} asChild>
-                    <Link
-                      href={item.href}
-                      className="text-purple-200 hover:text-white hover:bg-purple-500/10 cursor-pointer"
-                    >
-                      {item.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                {/* AI Tarot Dropdown - Inserted after Home (index 0) */}
+                {index === 0 && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="text-purple-200 hover:text-white hover:bg-purple-500/10 gap-1 px-3 py-2 h-auto text-sm font-medium">
+                        {t.header.aiTarot}
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="bg-black/90 border-purple-500/20">
+                      {tarotDropdownItems.map((dropdownItem) => (
+                        <DropdownMenuItem key={dropdownItem.name} asChild>
+                          <Link
+                            href={dropdownItem.href}
+                            className="text-purple-200 hover:text-white hover:bg-purple-500/10 cursor-pointer"
+                          >
+                            {dropdownItem.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </>
+            ))}
           </nav>
 
           {/* CTA Button and Language Selector */}
@@ -216,39 +220,43 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] bg-black/90 border-purple-500/20">
               <nav className="flex flex-col gap-4 mt-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={(e) => {
-                      if (item.href === '/') {
-                        handleHomeClick(e);
-                      } else {
-                        setIsOpen(false);
-                      }
-                    }}
-                    className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                {navItems.map((item, index) => (
+                  <>
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={(e) => {
+                        if (item.href === '/') {
+                          handleHomeClick(e);
+                        } else {
+                          setIsOpen(false);
+                        }
+                      }}
+                      className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
+                    >
+                      {item.name}
+                    </Link>
 
-                {/* AI Tarot Section */}
-                <div className="pt-2">
-                  <p className="text-sm font-semibold text-purple-300 mb-2">{t.header.aiTarot}</p>
-                  <div className="flex flex-col gap-1 pl-3">
-                    {tarotDropdownItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="text-base font-medium text-purple-200/80 hover:text-white transition-colors py-2"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+                    {/* AI Tarot Section - Inserted after Home (index 0) */}
+                    {index === 0 && (
+                      <div className="pt-1">
+                        <p className="text-sm font-semibold text-purple-300 mb-2">{t.header.aiTarot}</p>
+                        <div className="flex flex-col gap-1 pl-3">
+                          {tarotDropdownItems.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.name}
+                              href={dropdownItem.href}
+                              onClick={() => setIsOpen(false)}
+                              className="text-base font-medium text-purple-200/80 hover:text-white transition-colors py-2"
+                            >
+                              {dropdownItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ))}
 
                 
                 {/* Mobile Language Selector */}
