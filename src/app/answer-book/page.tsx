@@ -173,7 +173,7 @@ export default function AnswerBookPage() {
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-purple-300/80 hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm">{t('answerBook.backToHome')}</span>
+          <span className="text-sm">{t.answerBook.backToHome}</span>
         </Link>
 
         {/* Header */}
@@ -181,17 +181,17 @@ export default function AnswerBookPage() {
           {/* Decorative Badge */}
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
             <BookOpen className="w-5 h-5 text-purple-400" />
-            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t('answerBook.badge')}</span>
+            <span className="text-sm font-semibold text-purple-200 tracking-wide">{t.answerBook.badge}</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-text-glow">
-            {t('answerBook.title')}
+            {t.answerBook.title}
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg text-purple-200/70 max-w-2xl mx-auto leading-relaxed">
-            {t('answerBook.subtitle')}
+            {t.answerBook.subtitle}
           </p>
         </div>
 
@@ -210,7 +210,7 @@ export default function AnswerBookPage() {
                       {/* Glowing Halo */}
                       <div className="absolute -inset-4 bg-purple-500/20 blur-3xl rounded-full animate-pulse-glow" />
                       <h2 className="relative text-3xl md:text-4xl font-bold text-white animate-text-glow leading-relaxed animate-breathe">
-                        {t('answerBook.promptTitle')}
+                        {t.answerBook.promptTitle}
                       </h2>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ export default function AnswerBookPage() {
                   {/* Sub Prompt */}
                   <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                     <p className="text-lg text-purple-200/80 mb-8">
-                      {t('answerBook.promptSubtitle')}
+                      {t.answerBook.promptSubtitle}
                     </p>
                   </div>
 
@@ -231,7 +231,7 @@ export default function AnswerBookPage() {
                       className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 hover:from-purple-700 hover:via-pink-700 hover:to-purple-700 px-12 py-6 text-xl font-semibold gradient-animate animate-pulse-glow transition-all hover:scale-105"
                     >
                       <Sparkles className="mr-3 w-6 h-6" />
-                      {t('answerBook.revealButton')}
+                      {t.answerBook.revealButton}
                       <Sparkles className="ml-3 w-6 h-6" />
                     </Button>
                   </div>
@@ -262,7 +262,7 @@ export default function AnswerBookPage() {
                   {/* Loading Text */}
                   <div className="animate-fade-in-up">
                     <p className="text-xl text-purple-200/90 animate-text-glow">
-                      {t('answerBook.revealingTitle')}
+                      {t.answerBook.revealingTitle}
                     </p>
                     <div className="mt-4 flex justify-center gap-2">
                       {[...Array(3)].map((_, i) => (
@@ -307,7 +307,7 @@ export default function AnswerBookPage() {
                       className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-8 py-3 gradient-animate animate-pulse-glow transition-all hover:scale-105"
                     >
                       <RefreshCw className="mr-2 w-5 h-5" />
-                      {t('answerBook.askAgainButton')}
+                      {t.answerBook.askAgainButton}
                     </Button>
                   </div>
 
@@ -315,7 +315,7 @@ export default function AnswerBookPage() {
                   <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '1s' }}>
                     <p className="text-sm text-purple-300/60 flex items-center justify-center gap-2">
                       <Heart className="w-4 h-4 text-pink-400" />
-                      {t('answerBook.footerText')}
+                      {t.answerBook.footerText}
                       <Heart className="w-4 h-4 text-pink-400" />
                     </p>
                   </div>
@@ -328,7 +328,7 @@ export default function AnswerBookPage() {
         {/* Footer Tips */}
         <div className="text-center mt-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <p className="text-sm text-purple-300/50 max-w-2xl mx-auto leading-relaxed">
-            {t('answerBook.tips')}
+            {t.answerBook.tips}
           </p>
         </div>
       </div>
