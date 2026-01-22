@@ -116,39 +116,55 @@ export default function Home() {
           .rotate-glow { animation: rotate-glow 8s linear infinite; }
         `}</style>
 
-        <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
+        <div className="relative z-10 container mx-auto px-4 py-6 max-w-7xl">
           {/* Hero Section */}
-          <div className="text-center mb-16 animate-fade-in-up">
+          <div className="text-center mb-12 animate-fade-in-up">
             {/* Decorative Badge */}
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-8 backdrop-blur-sm animate-glow">
-              <Crown className="w-5 h-5 text-yellow-400" />
-              <span className="text-sm font-semibold text-purple-200 tracking-wide">AI-POWERED MYSTICAL WISDOM</span>
+            <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-500/30 rounded-full mb-6 backdrop-blur-sm animate-glow">
+              <Crown className="w-4 h-4 text-yellow-400" />
+              <span className="text-xs font-semibold text-purple-200 tracking-wide">AI-POWERED MYSTICAL WISDOM</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
+            <h1 className="text-4xl md:text-6xl font-bold mb-5 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-glow">
               Discover Your Destiny
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-purple-200/80 max-w-4xl mx-auto mb-12 leading-relaxed">
+            <p className="text-lg md:text-xl text-purple-200/80 max-w-4xl mx-auto mb-10 leading-relaxed">
               Unlock profound insights from ancient wisdom amplified by cutting-edge artificial intelligence.
               Let the mystic arts guide you on your journey of self-discovery.
             </p>
 
             {/* Feature Highlights */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <Sparkles className="w-5 h-5 text-purple-400" />
-                <span className="text-sm font-medium text-purple-200">AI Tarot Reading</span>
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span className="text-xs font-medium text-purple-200">AI Tarot Reading</span>
               </div>
-              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <BookOpen className="w-5 h-5 text-pink-400" />
-                <span className="text-sm font-medium text-purple-200">Mystic Answer Book</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
+                <BookOpen className="w-4 h-4 text-pink-400" />
+                <span className="text-xs font-medium text-purple-200">Mystic Answer Book</span>
               </div>
-              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <Hand className="w-5 h-5 text-purple-400" />
-                <span className="text-sm font-medium text-purple-200">AI Palm Reading</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
+                <Hand className="w-4 h-4 text-purple-400" />
+                <span className="text-xs font-medium text-purple-200">AI Palm Reading</span>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="flex flex-wrap justify-center gap-6 text-xs text-purple-300/70 mb-10">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-400" />
+                <span className="font-medium">10k+ Readings</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-pink-400" />
+                <span className="font-medium">4.9 Rating</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-purple-400" />
+                <span className="font-medium">Global Seekers</span>
               </div>
             </div>
 
@@ -170,7 +186,7 @@ export default function Home() {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
             {/* AI Tarot Card */}
             <Link href="/ai-tarot" className="group animate-fade-in-scale animate-float animate-glow" style={{ animationDelay: '0.2s', animationDuration: '6s' }}>
               <Card className="relative h-full bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-md border-2 border-purple-500/50 rounded-3xl overflow-hidden hover:border-purple-400/70 transition-all duration-500 group-hover:scale-105">
@@ -180,29 +196,29 @@ export default function Home() {
                 {/* Glowing Ring */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <CardContent className="relative pt-10 pb-10 px-6">
+                <CardContent className="relative pt-8 pb-8 px-5">
                   {/* Icon */}
-                  <div className="w-20 h-20 mx-auto mb-6 relative">
+                  <div className="w-16 h-16 mx-auto mb-5 relative">
                     {/* Rotating Glow Ring */}
                     <div className="absolute inset-0 rounded-full border-2 border-purple-500/30 rotate-glow" />
                     {/* Inner Gradient */}
                     <div className="absolute inset-2 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-pulse">
-                      <Sparkles className="w-10 h-10 text-white" />
+                      <Sparkles className="w-8 h-8 text-white" />
                     </div>
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-2xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
+                  <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
                     AI Tarot Reading
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-6 text-sm leading-relaxed">
+                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
                     Discover your destiny with AI-powered tarot readings using 78 sacred cards and 20+ spreads
                   </p>
 
                   {/* Features */}
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>78 Tarot Cards</span>
@@ -219,6 +235,7 @@ export default function Home() {
 
                   {/* CTA Button */}
                   <Button
+                    size="sm"
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all group-hover:scale-105"
                   >
                     Start Reading
@@ -237,29 +254,29 @@ export default function Home() {
                 {/* Glowing Ring */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-pink-600/20 to-purple-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <CardContent className="relative pt-10 pb-10 px-6">
+                <CardContent className="relative pt-8 pb-8 px-5">
                   {/* Icon */}
-                  <div className="w-20 h-20 mx-auto mb-6 relative">
+                  <div className="w-16 h-16 mx-auto mb-5 relative">
                     {/* Rotating Glow Ring */}
                     <div className="absolute inset-0 rounded-full border-2 border-pink-500/30 rotate-glow" />
                     {/* Inner Gradient */}
                     <div className="absolute inset-2 rounded-full bg-gradient-to-br from-pink-600 to-purple-600 flex items-center justify-center animate-pulse">
-                      <BookOpen className="w-10 h-10 text-white" />
+                      <BookOpen className="w-8 h-8 text-white" />
                     </div>
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-2xl font-bold text-white text-center mb-3 group-hover:text-pink-300 transition-colors">
+                  <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-pink-300 transition-colors">
                     Mystic Answer Book
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-6 text-sm leading-relaxed">
+                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
                     Ask any question and receive instant guidance from the mystical wisdom of the Answer Book
                   </p>
 
                   {/* Features */}
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>Instant Answers</span>
@@ -276,6 +293,7 @@ export default function Home() {
 
                   {/* CTA Button */}
                   <Button
+                    size="sm"
                     className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 gradient-animate transition-all group-hover:scale-105"
                   >
                     Ask Question
@@ -294,29 +312,29 @@ export default function Home() {
                 {/* Glowing Ring */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <CardContent className="relative pt-10 pb-10 px-6">
+                <CardContent className="relative pt-8 pb-8 px-5">
                   {/* Icon */}
-                  <div className="w-20 h-20 mx-auto mb-6 relative">
+                  <div className="w-16 h-16 mx-auto mb-5 relative">
                     {/* Rotating Glow Ring */}
                     <div className="absolute inset-0 rounded-full border-2 border-purple-500/30 rotate-glow" />
                     {/* Inner Gradient */}
                     <div className="absolute inset-2 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-pulse">
-                      <Hand className="w-10 h-10 text-white" />
+                      <Hand className="w-8 h-8 text-white" />
                     </div>
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-2xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
+                  <h2 className="text-xl font-bold text-white text-center mb-3 group-hover:text-purple-300 transition-colors">
                     AI Palm Reading
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-6 text-sm leading-relaxed">
+                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
                     Unlock the secrets of your future through advanced AI-powered palmistry analysis
                   </p>
 
                   {/* Features */}
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2 mb-5">
                     <div className="flex items-center gap-2 text-xs text-purple-300">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>AI Analysis</span>
@@ -333,6 +351,7 @@ export default function Home() {
 
                   {/* CTA Button */}
                   <Button
+                    size="sm"
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 gradient-animate transition-all group-hover:scale-105"
                   >
                     Analyze Palm
@@ -345,21 +364,21 @@ export default function Home() {
 
           {/* Bottom CTA Section */}
           <Card className="bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 backdrop-blur-md border-2 border-purple-500/30 mb-8 animate-fade-in-up animate-glow" style={{ animationDelay: '1s' }}>
-            <CardContent className="pt-12 pb-12">
+            <CardContent className="pt-10 pb-10">
               <div className="text-center">
                 {/* Icon */}
-                <div className="relative w-24 h-24 mx-auto mb-8">
+                <div className="relative w-16 h-16 mx-auto mb-6">
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-purple-500/20 rounded-full animate-pulse" />
-                  <Crown className="absolute inset-0 flex items-center justify-center h-12 w-12 text-yellow-400" />
+                  <Crown className="absolute inset-0 flex items-center justify-center h-8 w-8 text-yellow-400" />
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                   Begin Your Journey Today
                 </h2>
 
                 {/* Description */}
-                <p className="text-lg text-purple-200/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-base text-purple-200/80 mb-8 max-w-2xl mx-auto leading-relaxed">
                   Join thousands of seekers who have unlocked profound insights with our AI-powered mystical tools.
                   Discover your destiny and navigate life's challenges with ancient wisdom.
                 </p>
@@ -368,7 +387,7 @@ export default function Home() {
                 <div className="flex flex-wrap justify-center gap-4">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-12 py-5 text-lg font-semibold gradient-animate transition-all hover:scale-105"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-10 py-4 text-lg font-semibold gradient-animate transition-all hover:scale-105"
                   >
                     <Zap className="mr-2 w-5 h-5" />
                     Start Free Reading
@@ -378,7 +397,7 @@ export default function Home() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-12 py-5 text-lg transition-all hover:scale-105"
+                      className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-10 py-4 text-lg transition-all hover:scale-105"
                     >
                       <Star className="mr-2 w-5 h-5 text-yellow-400" />
                       View Premium Plans
