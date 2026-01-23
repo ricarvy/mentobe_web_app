@@ -1,0 +1,60 @@
+# 依赖
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# 构建产物
+.next
+out
+dist
+build
+
+# 环境变量（使用 .env.prod）
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 文档
+README.md
+*.md
+!DOCKER_DEPLOYMENT.md
+
+# 测试
+coverage
+.nyc_output
+
+# 临时文件
+*.log
+*.tmp
+*.temp
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# 缓存
+.cache
+.parcel-cache
+.next/cache
+
+# 其他
+.coze
+.cozeproj
+tmp
