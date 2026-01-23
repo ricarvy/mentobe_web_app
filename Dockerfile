@@ -27,7 +27,9 @@ RUN pnpm install --frozen-lockfile --prefer-offline
 COPY . .
 
 # 复制环境变量文件
-COPY .env.prod .env.local
+# 如果存在 .env.oversea.prod，则复制为 .env.production 以供构建使用
+# 注意：Next.js 在构建时会将 NEXT_PUBLIC_ 变量打包到静态文件中
+COPY .env.oversea.prod .env.production
 
 # 构建应用
 RUN npx next build
@@ -54,7 +56,11 @@ RUN adduser --system --uid 1001 nextjs
 
 # 从构建阶段复制必要的文件
 # 注意：由于 outputFileTracingRoot 配置，standalone 输出在 .next/standalone/workspace/projects/
+# 根据实际输出路径调整，这里假设 next.config.ts 配置了 outputFileTracingRoot
+# 如果没有配置 outputFileTracingRoot，路径通常是 .next/standalone
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/workspace/projects/ ./
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # 设置正确的权限
 RUN chown -R nextjs:nodejs /app

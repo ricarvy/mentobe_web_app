@@ -9,6 +9,10 @@
 
 set -e
 
+# 拉取最新代码
+echo "正在拉取最新代码..."
+git pull
+
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -133,6 +137,11 @@ show_config() {
 
 # 确认部署
 confirm_deploy() {
+    # 自动确认模式（如果不需要交互）
+    if [ "$1" == "--yes" ]; then
+        return
+    fi
+    
     read -p "$(echo -e ${YELLOW}确认开始海外部署？[y/N]: ${NC})" -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -162,6 +171,7 @@ build_image() {
     # 使用 BuildKit 加速构建
     export DOCKER_BUILDKIT=1
 
+    # 注意：.env.oversea.prod 将在 Dockerfile 中被复制为 .env.production
     docker build -t "$IMAGE_NAME" . 2>&1 | tee build-oversea.log | while IFS= read -r line; do
         if [[ "$line" == *"ERROR"* ]]; then
             print_error "$line"
@@ -192,134 +202,31 @@ run_container() {
         -p "$PORT:$PORT" \
         --restart unless-stopped \
         -e NODE_ENV=production \
+        --env-file "$ENV_FILE" \
         -v "$(pwd)/logs:/app/logs" \
         -v "$(pwd)/data:/app/data" \
         --memory="2g" \
         --cpus="2.0" \
         "$IMAGE_NAME"
 
-    if [ $? -eq 0 ]; then
-        print_success "海外版容器启动成功"
-    else
-        print_error "容器启动失败"
-        print_info "查看日志: docker logs $CONTAINER_NAME"
-        exit 1
-    fi
-}
-
-# 检查容器状态
-check_container_status() {
-    print_info "等待容器启动..."
-    sleep 5
-
-    if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-        print_success "容器正在运行"
-        print_info "容器状态:"
-        docker ps --filter "name=$CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-    else
-        print_error "容器未运行"
-        print_info "查看日志:"
-        docker logs --tail 50 "$CONTAINER_NAME"
-        exit 1
-    fi
-}
-
-# 健康检查
-health_check() {
-    print_info "执行健康检查..."
-    sleep 15
-
-    # 检查容器健康状态
-    health_status=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "none")
-
-    if [ "$health_status" = "healthy" ]; then
-        print_success "容器健康检查通过"
-    elif [ "$health_status" = "starting" ]; then
-        print_warning "容器正在启动中，请稍后访问"
-    else
-        print_warning "健康检查状态: $health_status"
-    fi
-
-    # 测试 HTTP 连接（海外网络可能较慢，增加重试次数）
-    local max_attempts=8
-    local attempt=1
-
-    while [ $attempt -le $max_attempts ]; do
-        if curl -f -s -o /dev/null "http://localhost:$PORT" 2>/dev/null; then
-            print_success "HTTP 服务响应正常"
-            return 0
-        fi
-
-        print_info "尝试连接... ($attempt/$max_attempts)"
-        sleep 5
-        attempt=$((attempt + 1))
-    done
-
-    print_warning "HTTP 服务暂未响应，请稍后检查"
-    print_oversea "海外网络可能较慢，建议稍后重试"
-}
-
-# 显示访问信息
-show_access_info() {
-    echo ""
-    echo "=================================="
-    print_success "海外部署完成！"
-    echo "=================================="
-    echo ""
-    print_oversea "访问信息:"
-    echo "  - 本地: http://localhost:$PORT"
-    echo "  - 局域网: http://$(hostname -I 2>/dev/null | awk '{print $1}'):$PORT"
-    echo "  - 域名: 请在 $ENV_FILE 中配置您的海外域名"
-    echo ""
-    print_oversea "常用命令:"
-    echo "  - 查看日志: docker logs -f $CONTAINER_NAME"
-    echo "  - 停止容器: docker stop $CONTAINER_NAME"
-    echo "  - 重启容器: docker restart $CONTAINER_NAME"
-    echo "  - 删除容器: docker rm -f $CONTAINER_NAME"
-    echo ""
-    print_oversea "更新应用:"
-    echo "  1. git pull origin main"
-    echo "  2. docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME"
-    echo "  3. docker build -t $IMAGE_NAME ."
-    echo "  4. ./deploy_oversea.sh"
-    echo ""
-    print_info "详细文档:"
-    echo "  - 部署指南: DOCKER_DEPLOYMENT.md"
-    echo "  - 快速指南: DOCKER_README.md"
-    echo "  - 故障排除: DOCKER_TROUBLESHOOTING.md"
-    echo ""
-    print_warning "如果遇到问题，请查看:"
-    echo "  - 构建日志: build-oversea.log"
-    echo "  - 容器日志: docker logs $CONTAINER_NAME"
-    echo "  - 故障排除文档: DOCKER_TROUBLESHOOTING.md"
-    echo ""
-    print_oversea "海外部署注意事项:"
-    echo "  - 请确保已配置海外 Stripe 支付密钥"
-    echo "  - 请确保后端 API 地址可访问"
-    echo "  - 建议配置 HTTPS 证书"
-    echo "  - 海外网络可能较慢，已增加超时配置"
-    echo ""
+    print_success "容器启动成功！"
+    print_info "访问地址: http://localhost:$PORT"
+    print_info "日志查看: docker logs -f $CONTAINER_NAME"
 }
 
 # 主流程
 main() {
-    echo "=================================="
-    print_oversea "Mentob AI - 海外部署脚本"
-    echo "=================================="
-    echo ""
-
+    print_oversea "Mentob AI 海外部署工具 v1.0"
+    
     check_docker
     check_env_file
     check_disk_space
     show_config
-    confirm_deploy
+    confirm_deploy "$@"
+    
     stop_old_container
     build_image
     run_container
-    check_container_status
-    health_check
-    show_access_info
 }
 
-# 执行主流程
-main
+main "$@"
