@@ -55,10 +55,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # 从构建阶段复制必要的文件
-# 注意：由于 outputFileTracingRoot 配置，standalone 输出在 .next/standalone/workspace/projects/
-# 根据实际输出路径调整，这里假设 next.config.ts 配置了 outputFileTracingRoot
-# 如果没有配置 outputFileTracingRoot，路径通常是 .next/standalone
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/workspace/projects/ ./
+# 复制 standalone 构建产物
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
