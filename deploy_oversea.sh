@@ -152,11 +152,16 @@ confirm_deploy() {
 
 # 停止并删除旧容器
 stop_old_container() {
+    print_info "检查端口占用..."
+    if [ "$(docker ps -q --filter "publish=$PORT")" ]; then
+        print_info "端口 $PORT 被占用，正在清理..."
+        docker rm -f $(docker ps -q --filter "publish=$PORT")
+    fi
+
     print_info "检查旧容器..."
     if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         print_info "停止旧容器..."
-        docker stop "$CONTAINER_NAME" 2>/dev/null || true
-        docker rm "$CONTAINER_NAME" 2>/dev/null || true
+        docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
         print_success "旧容器已删除"
     else
         print_info "未找到旧容器，跳过"
