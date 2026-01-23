@@ -38,31 +38,77 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# 错误处理
+error_handler() {
+    print_error "部署失败！"
+    print_info "请查看详细日志或运行以下命令获取更多信息："
+    echo "  docker logs $CONTAINER_NAME"
+    echo "  或参考故障排除文档: DOCKER_TROUBLESHOOTING.md"
+    exit 1
+}
+
+trap error_handler ERR
+
 # 检查 Docker 是否安装
 check_docker() {
     if ! command -v docker &> /dev/null; then
         print_error "Docker 未安装，请先安装 Docker"
+        print_info "安装指南: https://docs.docker.com/get-docker/"
         exit 1
     fi
     print_success "Docker 已安装: $(docker --version)"
+
+    # 检查 Docker 是否运行
+    if ! docker info &> /dev/null; then
+        print_error "Docker 未运行，请启动 Docker 服务"
+        exit 1
+    fi
+    print_success "Docker 服务运行正常"
 }
 
 # 检查环境变量文件
 check_env_file() {
     if [ ! -f "$ENV_FILE" ]; then
         print_error "环境变量文件 $ENV_FILE 不存在"
-        print_info "正在从 .env.example 创建环境变量文件..."
+        print_info "正在创建环境变量文件..."
+
         if [ -f ".env.example" ]; then
             cp .env.example "$ENV_FILE"
-            print_warning "请编辑 $ENV_FILE 文件并配置必要的环境变量"
-            print_info "完成后重新运行此脚本"
-            exit 1
+        elif [ -f ".env.prod.example" ]; then
+            cp .env.prod.example "$ENV_FILE"
         else
-            print_error "找不到 .env.example 文件"
+            print_error "找不到环境变量模板文件"
             exit 1
         fi
+
+        print_warning "已创建 $ENV_FILE 文件"
+        print_warning "请编辑该文件并配置必要的环境变量"
+        print_info "必须配置的变量:"
+        echo "  - APP_URL: 应用访问地址"
+        echo "  - NEXT_PUBLIC_BACKEND_URL: 后端 API 地址"
+        echo "  - Stripe 支付配置（如需要）"
+        echo ""
+        print_info "编辑完成后重新运行此脚本"
+        exit 1
     fi
     print_success "环境变量文件存在: $ENV_FILE"
+}
+
+# 检查磁盘空间
+check_disk_space() {
+    local required_space=5  # 需要至少 5GB
+    local available_space=$(df -BG . | tail -1 | awk '{print $4}' | sed 's/G//')
+
+    if [ "$available_space" -lt "$required_space" ]; then
+        print_warning "磁盘空间不足（可用: ${available_space}GB，需要: ${required_space}GB）"
+        print_info "建议清理磁盘空间后再部署"
+        read -p "$(echo -e ${YELLOW}是否继续部署？[y/N]: ${NC})" -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 0
+        fi
+    fi
+    print_success "磁盘空间充足（可用: ${available_space}GB）"
 }
 
 # 显示配置信息
@@ -75,6 +121,7 @@ show_config() {
     echo "镜像名称: $IMAGE_NAME"
     echo "部署端口: $PORT"
     echo "环境变量文件: $ENV_FILE"
+    echo "部署类型: 国内部署"
     echo "=================================="
     echo ""
 }
@@ -107,15 +154,26 @@ build_image() {
     print_info "开始构建 Docker 镜像..."
     print_info "这可能需要 5-10 分钟，请耐心等待..."
 
-    docker build -t "$IMAGE_NAME:latest" .
+    # 使用 BuildKit 加速构建
+    export DOCKER_BUILDKIT=1
 
-    if [ $? -eq 0 ]; then
+    docker build -t "$IMAGE_NAME:latest" . 2>&1 | tee build.log | while IFS= read -r line; do
+        if [[ "$line" == *"ERROR"* ]]; then
+            print_error "$line"
+        elif [[ "$line" == *"Step"* ]]; then
+            print_info "$line"
+        fi
+    done
+
+    if [ ${PIPESTATUS[0]} -eq 0 ]; then
         print_success "镜像构建成功"
     else
         print_error "镜像构建失败"
-        print_info "尝试清理缓存后重新构建..."
-        docker builder prune -f
-        print_info "请重新运行此脚本"
+        print_info "构建日志已保存到 build.log"
+        print_info "尝试清理缓存后重新构建:"
+        echo "  docker builder prune -a"
+        echo "  docker build --no-cache -t $IMAGE_NAME:latest ."
+        print_info "或参考故障排除文档: DOCKER_TROUBLESHOOTING.md"
         exit 1
     fi
 }
@@ -156,7 +214,7 @@ check_container_status() {
     else
         print_error "容器未运行"
         print_info "查看日志:"
-        docker logs "$CONTAINER_NAME"
+        docker logs --tail 50 "$CONTAINER_NAME"
         exit 1
     fi
 }
@@ -164,7 +222,7 @@ check_container_status() {
 # 健康检查
 health_check() {
     print_info "执行健康检查..."
-    sleep 10
+    sleep 15
 
     # 检查容器健康状态
     health_status=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "none")
@@ -178,11 +236,21 @@ health_check() {
     fi
 
     # 测试 HTTP 连接
-    if curl -f -s -o /dev/null "http://localhost:$PORT" 2>/dev/null; then
-        print_success "HTTP 服务响应正常"
-    else
-        print_warning "HTTP 服务暂未响应，请稍后检查"
-    fi
+    local max_attempts=5
+    local attempt=1
+
+    while [ $attempt -le $max_attempts ]; do
+        if curl -f -s -o /dev/null "http://localhost:$PORT" 2>/dev/null; then
+            print_success "HTTP 服务响应正常"
+            return 0
+        fi
+
+        print_info "尝试连接... ($attempt/$max_attempts)"
+        sleep 5
+        attempt=$((attempt + 1))
+    done
+
+    print_warning "HTTP 服务暂未响应，请稍后检查"
 }
 
 # 显示访问信息
@@ -208,7 +276,15 @@ show_access_info() {
     echo "  3. docker build -t $IMAGE_NAME:latest ."
     echo "  4. ./deploy.sh"
     echo ""
-    print_info "如需查看详细文档，请参考: DOCKER_DEPLOYMENT.md"
+    print_info "详细文档:"
+    echo "  - 部署指南: DOCKER_DEPLOYMENT.md"
+    echo "  - 快速指南: DOCKER_README.md"
+    echo "  - 故障排除: DOCKER_TROUBLESHOOTING.md"
+    echo ""
+    print_warning "如果遇到问题，请查看:"
+    echo "  - 构建日志: build.log"
+    echo "  - 容器日志: docker logs $CONTAINER_NAME"
+    echo "  - 故障排除文档: DOCKER_TROUBLESHOOTING.md"
     echo ""
 }
 
@@ -221,6 +297,7 @@ main() {
 
     check_docker
     check_env_file
+    check_disk_space
     show_config
     confirm_deploy
     stop_old_container

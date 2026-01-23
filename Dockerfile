@@ -17,9 +17,11 @@ COPY package.json pnpm-lock.yaml* ./
 # 设置环境变量
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # 安装依赖
-RUN pnpm install --frozen-lockfile --prefer-offline
+RUN pnpm install --frozen-lockfile --prefer-offine
 
 # 复制项目文件
 COPY . .
@@ -28,7 +30,7 @@ COPY . .
 COPY .env.prod .env.local
 
 # 构建应用
-RUN pnpm run build
+RUN npx next build
 
 # 生产阶段
 FROM node:24-alpine AS runner
@@ -44,18 +46,15 @@ ENV NODE_ENV=production
 ENV PORT=8899
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # 创建非 root 用户
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # 从构建阶段复制必要的文件
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.env.prod .env.local
+# 注意：由于 outputFileTracingRoot 设置，standalone 输出在 .next/standalone/workspace/projects/
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/workspace/projects/ ./
 
 # 设置正确的权限
 RUN chown -R nextjs:nodejs /app
