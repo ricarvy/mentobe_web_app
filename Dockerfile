@@ -53,7 +53,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # 从构建阶段复制必要的文件
-# 注意：由于 outputFileTracingRoot 设置，standalone 输出在 .next/standalone/workspace/projects/
+# 注意：由于 outputFileTracingRoot 配置，standalone 输出在 .next/standalone/workspace/projects/
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/workspace/projects/ ./
 
 # 设置正确的权限
