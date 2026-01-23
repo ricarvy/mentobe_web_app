@@ -21,7 +21,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # 安装依赖
-RUN pnpm install --frozen-lockfile --prefer-offine
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 # 复制项目文件
 COPY . .
