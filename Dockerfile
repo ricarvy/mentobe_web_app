@@ -2,17 +2,21 @@
 # Mentob AI - Docker 部署配置
 # ============================================
 
-# 构建阶段
-FROM node:24-alpine AS builder
+ARG BASE_IMAGE=node:24-alpine
 
-# 安装 pnpm
-RUN npm install -g pnpm@9.0.0
+# 构建阶段
+FROM ${BASE_IMAGE} AS builder
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制 package.json 和 pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml* ./
+# 复制依赖文件
+COPY .npmrc* package.json pnpm-lock.yaml* ./
+
+ARG NPM_REGISTRY=https://registry.npmjs.org/
+
+# 安装 pnpm
+RUN npm install -g pnpm@9.0.0 --registry=${NPM_REGISTRY}
 
 # 设置环境变量
 ENV PNPM_HOME="/pnpm"
@@ -35,10 +39,12 @@ COPY .env.oversea.prod .env.production
 RUN npx next build
 
 # 生产阶段
-FROM node:24-alpine AS runner
+FROM ${BASE_IMAGE} AS runner
+
+ARG NPM_REGISTRY=https://registry.npmjs.org/
 
 # 安装 pnpm
-RUN npm install -g pnpm@9.0.0
+RUN npm install -g pnpm@9.0.0 --registry=${NPM_REGISTRY}
 
 # 设置工作目录
 WORKDIR /app

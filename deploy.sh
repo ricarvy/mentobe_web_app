@@ -165,8 +165,17 @@ build_image() {
 
     # 使用 BuildKit 加速构建
     export DOCKER_BUILDKIT=1
+    
+    # 使用国内镜像源加速
+    BASE_IMAGE="swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:24-alpine"
+    NPM_REGISTRY="https://registry.npmmirror.com/"
+    print_info "使用国内基础镜像: $BASE_IMAGE"
+    print_info "使用国内 NPM 镜像: $NPM_REGISTRY"
 
-    docker build -t "$IMAGE_NAME:latest" . 2>&1 | tee build.log | while IFS= read -r line; do
+    docker build \
+        --build-arg BASE_IMAGE="$BASE_IMAGE" \
+        --build-arg NPM_REGISTRY="$NPM_REGISTRY" \
+        -t "$IMAGE_NAME:latest" . 2>&1 | tee build.log | while IFS= read -r line; do
         if [[ "$line" == *"ERROR"* ]]; then
             print_error "$line"
         elif [[ "$line" == *"Step"* ]]; then
