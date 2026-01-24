@@ -167,7 +167,14 @@ build_image() {
     export DOCKER_BUILDKIT=1
     
     # 使用国内镜像源加速
-    BASE_IMAGE="swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:24-alpine"
+    # 阿里云容器镜像服务 (公共镜像)
+    # 注意: 阿里云公共镜像中 node 的更新可能不如 docker hub 及时，如果遇到版本问题，可以回退到 dockerproxy.net
+    BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
+    # 如果上面的地址不可用，可以尝试：
+    # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/google_containers/node:24-alpine" 
+    # 或者回退到 dockerproxy:
+    # BASE_IMAGE="dockerproxy.net/library/node:24-alpine"
+    
     NPM_REGISTRY="https://registry.npmmirror.com/"
     print_info "使用国内基础镜像: $BASE_IMAGE"
     print_info "使用国内 NPM 镜像: $NPM_REGISTRY"
