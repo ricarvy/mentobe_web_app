@@ -32,8 +32,17 @@ COPY . .
 
 # 复制环境变量文件
 # 通过构建参数传入环境变量文件名，默认为 .env.production
+# 使用 RUN cp 而不是 COPY，以避免在文件不存在时构建失败（容错处理）
 ARG ENV_FILE=.env.production
-COPY ${ENV_FILE} .env.production
+RUN if [ -f "${ENV_FILE}" ]; then \
+        cp "${ENV_FILE}" .env.production; \
+    elif [ -f ".env.prod" ]; then \
+        cp .env.prod .env.production; \
+    elif [ -f ".env.example" ]; then \
+        cp .env.example .env.production; \
+    else \
+        echo "Warning: No env file found. Build might fail if env vars are required."; \
+    fi
 
 # 构建应用
 RUN npx next build
