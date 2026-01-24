@@ -9,20 +9,34 @@ DEPLOY_RUN_PORT=5000
 cd "${COZE_WORKSPACE_PATH}"
 
 kill_port_if_listening() {
-    local pids
-    pids=$(ss -H -lntp 2>/dev/null | awk -v port="${DEPLOY_RUN_PORT}" '$4 ~ ":"port"$"' | grep -o 'pid=[0-9]*' | cut -d= -f2 | paste -sd' ' - || true)
-    if [[ -z "${pids}" ]]; then
-      echo "Port ${DEPLOY_RUN_PORT} is free."
-      return
-    fi
-    echo "Port ${DEPLOY_RUN_PORT} in use by PIDs: ${pids} (SIGKILL)"
-    echo "${pids}" | xargs -I {} kill -9 {}
-    sleep 1
-    pids=$(ss -H -lntp 2>/dev/null | awk -v port="${DEPLOY_RUN_PORT}" '$4 ~ ":"port"$"' | grep -o 'pid=[0-9]*' | cut -d= -f2 | paste -sd' ' - || true)
-    if [[ -n "${pids}" ]]; then
-      echo "Warning: port ${DEPLOY_RUN_PORT} still busy after SIGKILL, PIDs: ${pids}"
+    if command -v lsof >/dev/null 2>&1; then
+        # macOS / generic unix with lsof
+        local pids=$(lsof -t -i:"${DEPLOY_RUN_PORT}")
+        if [[ -n "${pids}" ]]; then
+            echo "Port ${DEPLOY_RUN_PORT} in use by PIDs: ${pids} (SIGKILL)"
+            echo "${pids}" | xargs kill -9
+            echo "Port ${DEPLOY_RUN_PORT} cleared."
+        else
+            echo "Port ${DEPLOY_RUN_PORT} is free."
+        fi
+    elif command -v ss >/dev/null 2>&1; then
+        local pids
+        pids=$(ss -H -lntp 2>/dev/null | awk -v port="${DEPLOY_RUN_PORT}" '$4 ~ ":"port"$"' | grep -o 'pid=[0-9]*' | cut -d= -f2 | paste -sd' ' - || true)
+        if [[ -z "${pids}" ]]; then
+          echo "Port ${DEPLOY_RUN_PORT} is free."
+          return
+        fi
+        echo "Port ${DEPLOY_RUN_PORT} in use by PIDs: ${pids} (SIGKILL)"
+        echo "${pids}" | xargs -I {} kill -9 {}
+        sleep 1
+        pids=$(ss -H -lntp 2>/dev/null | awk -v port="${DEPLOY_RUN_PORT}" '$4 ~ ":"port"$"' | grep -o 'pid=[0-9]*' | cut -d= -f2 | paste -sd' ' - || true)
+        if [[ -n "${pids}" ]]; then
+          echo "Warning: port ${DEPLOY_RUN_PORT} still busy after SIGKILL, PIDs: ${pids}"
+        else
+          echo "Port ${DEPLOY_RUN_PORT} cleared."
+        fi
     else
-      echo "Port ${DEPLOY_RUN_PORT} cleared."
+        echo "Neither lsof nor ss found. Cannot check/kill port."
     fi
 }
 

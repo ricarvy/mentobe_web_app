@@ -175,6 +175,7 @@ build_image() {
     docker build \
         --build-arg BASE_IMAGE="$BASE_IMAGE" \
         --build-arg NPM_REGISTRY="$NPM_REGISTRY" \
+        --build-arg ENV_FILE="$ENV_FILE" \
         -t "$IMAGE_NAME:latest" . 2>&1 | tee build.log | while IFS= read -r line; do
         if [[ "$line" == *"ERROR"* ]]; then
             print_error "$line"

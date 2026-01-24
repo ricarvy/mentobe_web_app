@@ -31,9 +31,9 @@ RUN pnpm install --frozen-lockfile --prefer-offline
 COPY . .
 
 # 复制环境变量文件
-# 如果存在 .env.oversea.prod，则复制为 .env.production 以供构建使用
-# 注意：Next.js 在构建时会将 NEXT_PUBLIC_ 变量打包到静态文件中
-COPY .env.oversea.prod .env.production
+# 通过构建参数传入环境变量文件名，默认为 .env.production
+ARG ENV_FILE=.env.production
+COPY ${ENV_FILE} .env.production
 
 # 构建应用
 RUN npx next build
