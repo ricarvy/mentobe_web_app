@@ -168,8 +168,9 @@ build_image() {
     
     # 使用国内镜像源加速
     # 阿里云容器镜像服务 (公共镜像)
-    # 注意: 阿里云公共镜像中 node 的更新可能不如 docker hub 及时，如果遇到版本问题，可以回退到 dockerproxy.net
-    BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
+    # 如果遇到版本问题，可以回退到 dockerproxy.net 或直接使用官方镜像
+    # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
+    BASE_IMAGE="node:24-alpine"
     # 如果上面的地址不可用，可以尝试：
     # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/google_containers/node:24-alpine" 
     # 或者回退到 dockerproxy:
