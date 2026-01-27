@@ -1,18 +1,51 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, Home } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { useUser } from '@/lib/userContext';
+import { useSearchParams } from 'next/navigation';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function SuccessPage() {
   const { t } = useI18n();
   const { refreshUser } = useUser();
+  const searchParams = useSearchParams();
+  const { trackEvent } = useAnalytics();
+  const processedRef = useRef(false);
 
   useEffect(() => {
+    // Prevent duplicate processing in React Strict Mode
+    if (processedRef.current) return;
+    
+    const sessionId = searchParams.get('session_id');
+    const price = localStorage.getItem('pending_checkout_price');
+    const currency = localStorage.getItem('pending_checkout_currency');
+    const plan = localStorage.getItem('pending_checkout_plan');
+
+    if (sessionId && price && currency) {
+      trackEvent('purchase', {
+        transaction_id: sessionId,
+        value: parseFloat(price),
+        currency: currency,
+        items: [{
+          item_name: plan || 'Subscription',
+          price: parseFloat(price),
+          quantity: 1
+        }]
+      });
+
+      // Clear localStorage
+      localStorage.removeItem('pending_checkout_price');
+      localStorage.removeItem('pending_checkout_currency');
+      localStorage.removeItem('pending_checkout_plan');
+      
+      processedRef.current = true;
+    }
+
     // 刷新用户信息，获取最新的VIP等级和到期时间
     const refreshUserInfo = async () => {
       try {

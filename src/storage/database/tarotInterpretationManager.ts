@@ -10,6 +10,14 @@ export class TarotInterpretationManager {
     return interpretation;
   }
 
+  async updateInterpretation(id: string, interpretation: string): Promise<void> {
+    const db = await getDb();
+    await db
+      .update(tarotInterpretations)
+      .set({ interpretation })
+      .where(eq(tarotInterpretations.id, id));
+  }
+
   async getInterpretationsByUserId(userId: string, limit: number = 10): Promise<TarotInterpretation[]> {
     const db = await getDb();
     return db

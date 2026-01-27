@@ -12,9 +12,11 @@ import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
 import { convertApiUserToUser } from '@/lib/userContext';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function LoginPage() {
   const { t } = useI18n();
+  const { trackEvent } = useAnalytics();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -117,6 +119,9 @@ export default function LoginPage() {
 
         // Store user info and auth credentials in localStorage
         saveAuthCredentials(userData, formData.email, formData.password);
+        
+        trackEvent('login', { method: 'email' });
+        
         // Redirect to home page
         window.location.href = '/';
       } else {
@@ -136,6 +141,7 @@ export default function LoginPage() {
 
         // Auto login after registration
         saveAuthCredentials(data, formData.email, formData.password);
+        trackEvent('sign_up', { method: 'email' });
         window.location.href = '/';
       }
     } catch (error) {

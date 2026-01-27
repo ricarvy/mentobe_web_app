@@ -10,9 +10,10 @@ interface TarotCardDisplayProps {
   positions: SpreadPosition[];
   isDrawing: boolean;
   spread: Spread;
+  cardStyle?: 'classic' | 'modern' | 'fantasy';
 }
 
-export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotCardDisplayProps) {
+export function TarotCardDisplay({ cards, positions, isDrawing, spread, cardStyle = 'classic' }: TarotCardDisplayProps) {
   const { t } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
@@ -20,7 +21,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
   const translatedSpread = getTranslatedSpread(spread);
 
   useEffect(() => {
-    if (isDrawing) {
+  if (isDrawing) {
       setFlippedCards(new Set());
       setShowAll(false);
     }
@@ -40,6 +41,30 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
     }
   }, [cards.length, isDrawing]);
 
+  const getCardFrontStyle = () => {
+    switch (cardStyle) {
+      case 'modern':
+        return 'bg-slate-900 border-slate-700';
+      case 'fantasy':
+        return 'bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 border-yellow-500/50';
+      case 'classic':
+      default:
+        return 'bg-gradient-to-br from-purple-800 via-pink-800 to-purple-900 border-purple-400/50';
+    }
+  };
+
+  const getCardBackStyle = () => {
+    switch (cardStyle) {
+      case 'modern':
+        return 'bg-slate-900 border-2 border-slate-700 shadow-slate-500/20';
+      case 'fantasy':
+        return 'bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 border-2 border-yellow-500/50 shadow-yellow-500/20';
+      case 'classic':
+      default:
+        return 'bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 border-2 border-purple-500/50 shadow-purple-500/40';
+    }
+  };
+
   if (isDrawing) {
     return (
       <div className="fixed inset-0 z-50 flex justify-center items-center" style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
@@ -47,7 +72,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
           {Array.from({ length: positions.length }).map((_, i) => (
             <div
               key={i}
-              className="w-24 h-36 sm:w-32 sm:h-48 bg-gradient-to-br from-purple-900 to-pink-900 rounded-lg border-2 border-purple-500/50 animate-pulse shadow-lg shadow-purple-500/30"
+              className={`w-24 h-36 sm:w-32 sm:h-48 rounded-lg animate-pulse shadow-lg ${getCardBackStyle()}`}
               style={{ animationDelay: `${i * 0.3}s` }}
             />
           ))}
@@ -60,7 +85,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
     <div className="mt-8">
       <h2 className="text-2xl font-bold text-center mb-8 text-white">{t.home.interpretation}</h2>
       <div
-        className={`flex justify-center items-center gap-4 flex-wrap px-4 ${
+        className={`flex justify-center items-center gap-3 sm:gap-4 flex-wrap px-4 ${
           showAll ? 'scale-95 transition-transform duration-700' : ''
         }`}
         style={{ perspective: '1500px' }}
@@ -72,7 +97,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
           return (
             <div
               key={index}
-              className={`relative w-28 h-40 sm:w-32 sm:h-48 md:w-36 md:h-54 cursor-pointer ${
+              className={`relative w-24 h-36 sm:w-32 sm:h-48 md:w-36 md:h-56 cursor-pointer ${
                 showAll ? 'transition-transform duration-300 hover:scale-105' : ''
               } ${shouldFloat ? 'animate-float' : ''}`}
               style={{
@@ -90,7 +115,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
               >
                 {/* 牌背面 */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 rounded-lg border-2 border-purple-500/50 flex items-center justify-center backface-hidden shadow-xl shadow-purple-500/40"
+                  className={`absolute inset-0 rounded-lg flex items-center justify-center backface-hidden shadow-xl ${getCardBackStyle()}`}
                   style={{
                     backfaceVisibility: 'hidden',
                     transform: 'rotateY(0deg)',
@@ -110,7 +135,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
 
                 {/* 牌正面 */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-br from-purple-800 via-pink-800 to-purple-900 rounded-lg border-2 border-purple-400/50 overflow-hidden backface-hidden shadow-xl shadow-purple-400/30"
+                  className={`absolute inset-0 rounded-lg border-2 overflow-hidden backface-hidden shadow-xl shadow-purple-400/30 ${getCardFrontStyle()}`}
                   style={{
                     backfaceVisibility: 'hidden',
                     transform: 'rotateY(180deg)',
@@ -160,7 +185,7 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread }: TarotC
               </div>
 
               {showAll && positions[index] && (
-                <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-48 sm:w-56">
+                <div className="absolute -bottom-16 sm:-bottom-20 left-1/2 transform -translate-x-1/2 text-center w-44 sm:w-56">
                   <p className="text-xs font-semibold text-purple-200">
                     {translatedSpread.positions[index]?.name || positions[index].name}
                   </p>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -25,12 +26,14 @@ import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client';
 import { getQuota } from '@/lib/quota';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function Home() {
   const router = useRouter();
   const { t } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
   const { user, setUser } = useUser();
+  const { trackEvent } = useAnalytics();
   const {
     state: {
       selectedSpread,
@@ -60,14 +63,23 @@ export default function Home() {
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
   const [selectedCategory, setSelectedCategory] = useState<'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced'>('recommended');
+  const [tone, setTone] = useState<'mystical' | 'rational' | 'warm' | 'direct'>('mystical');
+  const [cardStyle, setCardStyle] = useState<'classic' | 'modern' | 'fantasy'>('classic');
 
   // 从localStorage加载用户信息
   useEffect(() => {
+    trackEvent('feature_start', { feature_name: 'ai_tarot' });
+    
     const savedUser = localStorage.getItem('tarot_user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       setUser(parsedUser);
       fetchQuota(parsedUser.id);
+    }
+
+    const savedStyle = localStorage.getItem('tarot_card_style') as any;
+    if (savedStyle) {
+      setCardStyle(savedStyle);
     }
   }, []);
 
@@ -163,6 +175,7 @@ export default function Home() {
     }
 
     setSelectedSpread(spread);
+    trackEvent('select_spread', { spread_id: spread.id, spread_name: spread.name });
   };
 
   const handleDraw = () => {
@@ -171,6 +184,7 @@ export default function Home() {
     setIsDrawing(true);
     const cards = drawCards(selectedSpread.positions.length);
     setDrawnCards(cards);
+    trackEvent('draw_cards', { spread_id: selectedSpread.id, card_count: cards.length });
 
     setTimeout(() => {
       setIsDrawing(false);
@@ -189,8 +203,20 @@ export default function Home() {
       return;
     }
 
+    if (!selectedSpread) {
+      alert('请先选择牌阵');
+      return;
+    }
+
     setIsGenerating(true);
     setShowAiInterpretation(true);
+    trackEvent('request_interpretation', { 
+      feature_name: 'ai_tarot',
+      question_length: question.length,
+      spread_id: selectedSpread?.id,
+      tone,
+      card_style: cardStyle,
+    });
 
     try {
       await streamApiRequest(
@@ -202,6 +228,7 @@ export default function Home() {
             question,
             spread: selectedSpread,
             cards: drawnCards,
+            tone,
           }),
         },
         (text) => {
@@ -210,6 +237,11 @@ export default function Home() {
         async (fullText) => {
           // 流式响应完成
           console.log('Interpretation completed, length:', fullText.length);
+          trackEvent('interpretation_generated', { 
+            feature_name: 'ai_tarot',
+            is_free: !user?.vipLevel,
+            word_count: fullText.length
+          });
           // 更新剩余限额
           await fetchQuota(user.id);
         },
@@ -494,6 +526,22 @@ export default function Home() {
                       <span>{t.home.dailyQuota}: {remainingQuota}/{quotaInfo.total}</span>
                     )}
                   </div>
+                  
+                  <div className="mb-4">
+                    <Label className="block text-sm font-medium mb-2 text-purple-200">{t.settings?.tone || 'Interpretation Tone'}</Label>
+                    <Select value={tone} onValueChange={(v: any) => setTone(v)}>
+                      <SelectTrigger className="bg-black/30 border-purple-500/30 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-black/90 border-purple-500/30 text-white">
+                        <SelectItem value="mystical">{t.settings?.toneMystical || 'Mystical'}</SelectItem>
+                        <SelectItem value="rational">{t.settings?.toneRational || 'Rational'}</SelectItem>
+                        <SelectItem value="warm">{t.settings?.toneWarm || 'Warm'}</SelectItem>
+                        <SelectItem value="direct">{t.settings?.toneDirect || 'Direct'}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <Button
                     onClick={handleGetAiInterpretation}
                     disabled={isGenerating || (!quotaInfo.isDemo && remainingQuota <= 0)}
@@ -523,6 +571,7 @@ export default function Home() {
               <TarotResult
                 question={question}
                 cards={drawnCards}
+                spread={selectedSpread!}
                 positions={selectedSpread!.positions}
                 interpretation={aiInterpretation}
                 isGenerating={isGenerating}

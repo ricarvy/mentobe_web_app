@@ -7,18 +7,25 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Sparkles, Star, Crown, RefreshCw, ArrowLeft, Heart, Lightbulb } from 'lucide-react';
 import { getAnswers } from '@/data/answers';
 import { useI18n } from '@/lib/i18n';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 type Stage = 'prompt' | 'revealing' | 'answer';
 
 export default function AnswerBookPage() {
   const { t, language } = useI18n();
+  const { trackEvent } = useAnalytics();
   const [stage, setStage] = useState<Stage>('prompt');
   const [answer, setAnswer] = useState('');
   const [isAnimating, setIsAnimating] = useState(false);
 
+  useEffect(() => {
+    trackEvent('feature_start', { feature_name: 'answer_book' });
+  }, [trackEvent]);
+
   const handleReveal = async () => {
     setIsAnimating(true);
     setStage('revealing');
+    trackEvent('reveal_answer', { feature_name: 'answer_book' });
 
     // 模拟神秘的延迟，让用户感受到神圣的氛围
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -34,6 +41,7 @@ export default function AnswerBookPage() {
   const handleAskAgain = () => {
     setStage('prompt');
     setAnswer('');
+    trackEvent('ask_again', { feature_name: 'answer_book' });
   };
 
   return (

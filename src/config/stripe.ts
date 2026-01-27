@@ -49,8 +49,8 @@ export const stripeConfig: StripeConfig = {
   
   // 成功和取消页面URL
   successUrl: typeof window !== 'undefined' 
-    ? `${window.location.origin}/?payment=success`
-    : 'http://localhost:5000/?payment=success',
+    ? `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`
+    : 'http://localhost:5000/success?session_id={CHECKOUT_SESSION_ID}',
   cancelUrl: typeof window !== 'undefined'
     ? `${window.location.origin}/pricing`
     : 'http://localhost:5000/pricing',

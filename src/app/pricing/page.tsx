@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,12 +10,26 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { getPriceId } from '@/config/stripe';
 import { useUser } from '@/lib/userContext';
 import { apiRequest } from '@/lib/api-client';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function PricingPage() {
   const { t, language } = useI18n();
   const { user } = useUser();
+  const { trackEvent } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+
+  // Track view_item_list when page loads
+  useEffect(() => {
+    trackEvent('view_item_list', {
+      items: [
+        { item_id: 'pro_monthly', item_name: 'Pro Monthly', item_category: 'subscription' },
+        { item_id: 'pro_yearly', item_name: 'Pro Yearly', item_category: 'subscription' },
+        { item_id: 'premium_monthly', item_name: 'Premium Monthly', item_category: 'subscription' },
+        { item_id: 'premium_yearly', item_name: 'Premium Yearly', item_category: 'subscription' },
+      ],
+    });
+  }, [trackEvent]);
 
   const handleSubscribe = async (plan: 'pro' | 'premium') => {
     if (!user) {
@@ -43,6 +57,24 @@ export default function PricingPage() {
         console.error('Invalid price ID');
         return;
       }
+
+      // Track begin_checkout
+      const priceInfo = prices[plan][billingCycle][language];
+      trackEvent('begin_checkout', {
+        currency: language === 'en' ? 'USD' : (language === 'zh' ? 'CNY' : 'JPY'),
+        value: parseFloat(priceInfo.price.replace(/[^0-9.]/g, '')),
+        items: [{
+          item_id: priceId,
+          item_name: `${plan} ${billingCycle}`,
+          price: parseFloat(priceInfo.price.replace(/[^0-9.]/g, '')),
+          quantity: 1
+        }]
+      });
+
+      // Save to localStorage for success page tracking
+      localStorage.setItem('pending_checkout_price', priceInfo.price.replace(/[^0-9.]/g, ''));
+      localStorage.setItem('pending_checkout_currency', language === 'en' ? 'USD' : (language === 'zh' ? 'CNY' : 'JPY'));
+      localStorage.setItem('pending_checkout_plan', `${plan} ${billingCycle}`);
 
       // 调用后端 API 创建 Checkout Session
       const response = await apiRequest<{

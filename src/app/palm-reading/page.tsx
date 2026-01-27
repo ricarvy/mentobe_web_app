@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,18 +8,28 @@ import { Hand, Sparkles, Star, ArrowLeft, Upload, Eye, Heart, Zap } from 'lucide
 import Image from 'next/image';
 import { useI18n } from '@/lib/i18n';
 import { getPalmistryInsights, PalmistryInsights } from '@/data/palmistry-insights';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function PalmReadingPage() {
   const { t, language } = useI18n();
+  const { trackEvent } = useAnalytics();
   const [image, setImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCaptured, setIsCaptured] = useState(false);
   const [insights, setInsights] = useState<PalmistryInsights | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    trackEvent('feature_start', { feature_name: 'palm_reading' });
+  }, [trackEvent]);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      trackEvent('upload_palm_image', { 
+        feature_name: 'palm_reading',
+        upload_method: 'file' 
+      });
       const reader = new FileReader();
       reader.onload = (e) => {
         setImage(e.target?.result as string);
@@ -31,11 +41,21 @@ export default function PalmReadingPage() {
 
   const analyzePalm = () => {
     setIsAnalyzing(true);
+    trackEvent('analyze_palm_start', { feature_name: 'palm_reading' });
 
     // Simulate AI analysis
     setTimeout(() => {
-      setInsights(getPalmistryInsights(language));
+      const result = getPalmistryInsights(language);
+      setInsights(result);
       setIsAnalyzing(false);
+      trackEvent('analyze_palm_complete', { 
+        feature_name: 'palm_reading',
+        palm_lines_detected: 3 // Mock count or derived from result
+      });
+      trackEvent('interpretation_generated', {
+        feature_name: 'palm_reading',
+        is_free: true // Assuming free for now
+      });
     }, 3000);
   };
 

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       cards: body.cards
     }));
 
-    const { userId, question, spread, cards }: { userId: string; question: string; spread: Spread; cards: TarotCard[] } = body;
+    const { userId, question, spread, cards, tone }: { userId: string; question: string; spread: Spread; cards: TarotCard[]; tone?: string } = body;
 
     console.log('[2] 验证必填字段...');
     if (!userId || !question || !spread || !cards || cards.length === 0) {
@@ -57,12 +57,27 @@ export async function POST(request: NextRequest) {
       })
       .join('\n');
 
+    const toneInstructionMap: Record<string, string> = {
+      mystical: '请以神秘且启发性的语气进行解读，适度运用意象与象征，保持积极与审慎的平衡。',
+      rational: '请以理性、结构化的语气进行解读，强调逻辑、因果与可执行建议，避免夸张与玄学化描述。',
+      warm: '请以温暖、治愈的语气进行解读，关注用户情绪支持与安抚，提供充满关怀的建议与鼓励。',
+      direct: '请以直接、简洁的语气进行解读，直指关键结论与行动建议，减少铺陈与修辞。',
+    };
+    const toneInstruction = tone ? (toneInstructionMap[tone] ?? '') : '';
+
     const userPrompt = `用户的问题：${question}
 
 牌阵：${spread.name}
 ${cardsInfo}
+${toneInstruction}
 
-请根据以上信息为用户提供专业的塔罗牌解读。`;
+请根据以上信息为用户提供专业的塔罗牌解读。
+
+解读完成后，请基于以上解读分析用户可能关心的后续问题，提供2个“追问问题”，格式如下：
+
+**相关追问**：
+1. [问题1]
+2. [问题2]`;
 
     console.log('[6] 调用 LLM 流式接口...');
     console.log('[6.1] LLM 配置:', {
@@ -111,14 +126,18 @@ ${cardsInfo}
 
           // 保存解读记录并使用限额
           console.log('[8] 保存解读记录...');
-          await tarotInterpretationManager.createInterpretation({
+          const record = await tarotInterpretationManager.createInterpretation({
             userId,
             question,
             spreadType: spread.id,
             cards: JSON.stringify(cards),
             interpretation: fullInterpretation,
           });
-          console.log('[8.1] 解读记录保存成功');
+          console.log('[8.1] 解读记录保存成功', record.id);
+
+          // Append ID metadata for client to use (hidden in markdown)
+          const metadata = `\n\n<!--ID:${record.id}-->`;
+          controller.enqueue(encoder.encode(metadata));
 
           console.log('[9] 更新限额...');
           await dailyQuotaManager.useQuota(userId);

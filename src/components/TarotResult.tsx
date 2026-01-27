@@ -2,33 +2,96 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { type TarotCard, type SpreadPosition } from '@/lib/tarot';
+import { type TarotCard, type Spread, type SpreadPosition } from '@/lib/tarot';
 import { useI18n } from '@/lib/i18n';
-import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, ChevronUp, Share2, Copy, Check, MessageCircleQuestion } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Link from 'next/link';
+import { apiRequest, ApiRequestError } from '@/lib/api-client';
+import { useTarotFlow } from '@/lib/tarotFlowContext';
 
 interface TarotResultProps {
   question: string;
   cards: TarotCard[];
+  spread: Spread;
   positions: SpreadPosition[];
   interpretation: string;
   isGenerating: boolean;
   onReset: () => void;
+  readingId?: string | null;
 }
 
 export function TarotResult({
   question,
   cards,
+  spread,
   positions,
   interpretation,
   isGenerating,
   onReset,
+  readingId,
 }: TarotResultProps) {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [followups, setFollowups] = useState<string[]>([]);
+  const [isLoadingFollowups, setIsLoadingFollowups] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingFollowup, setPendingFollowup] = useState<string | null>(null);
+  const { setQuestion, setShowResult, setAiInterpretation, setShowAiInterpretation } = useTarotFlow();
+
+  const handleCopyLink = () => {
+    if (!readingId) return;
+    const url = `${window.location.origin}/share/${readingId}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  useEffect(() => {
+    if (!interpretation || isGenerating) return;
+    (async () => {
+      try {
+        setIsLoadingFollowups(true);
+        const data = await apiRequest<{ questions?: string[]; followups?: string[]; suggestion?: string }>(
+          '/api/tarot/followup',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              question,
+              spread,
+              cards,
+              interpretation,
+              followupCount: 0,
+              lang: language
+            }),
+          }
+        );
+        const q = (data.questions || data.followups) ?? [];
+        // 如果后端返回 suggestion（单段文本），可拆分为两条问题（尽量安全处理）
+        if (q.length === 0 && typeof data.suggestion === 'string') {
+          const text: string = data.suggestion;
+          const parts = text.split(/[\n\r]+/).map(s => s.trim()).filter(Boolean);
+          setFollowups(parts);
+        } else {
+          setFollowups(q);
+        }
+      } catch (error) {
+        if (error instanceof ApiRequestError) {
+          console.warn('Followup API error:', error.message, error.code);
+        } else {
+          console.warn('Followup API unknown error:', error);
+        }
+        setFollowups([]);
+      } finally {
+        setIsLoadingFollowups(false);
+      }
+    })();
+  }, [interpretation, isGenerating, question, readingId, cards, spread, language]);
 
   return (
     <div className="mt-8 space-y-6">
@@ -121,6 +184,65 @@ export function TarotResult({
                 {interpretation}
               </ReactMarkdown>
             </div>
+            
+            {!isGenerating && (
+              <div className="mt-8 pt-6 border-t border-purple-500/30">
+                {(isLoadingFollowups || followups.length > 0) && (
+                  <div className="mt-6 mb-8 animate-float">
+                    <div className="flex items-center justify-center gap-2 mb-4 text-purple-200">
+                      <MessageCircleQuestion className="w-5 h-5" />
+                      <p className="font-medium text-lg">相关追问</p>
+                    </div>
+                    {isLoadingFollowups ? (
+                      <div className="flex justify-center items-center py-6 space-x-2 bg-purple-900/10 rounded-lg border border-purple-500/20">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {followups.map((fq, idx) => (
+                          <Button
+                            key={idx}
+                            variant="outline"
+                            className="w-full h-auto py-3 px-4 border-purple-500/40 bg-purple-900/10 text-purple-100 hover:bg-purple-500/20 hover:text-white hover:border-purple-400/60 transition-all duration-300 text-left justify-start whitespace-normal"
+                            onClick={() => {
+                              setPendingFollowup(fq);
+                              setConfirmOpen(true);
+                            }}
+                          >
+                            {fq}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {readingId && (
+                  <div className="flex justify-center mb-6">
+                    <Button 
+                      onClick={handleCopyLink}
+                      variant="outline" 
+                      className="border-purple-500/50 text-purple-200 hover:bg-purple-500/20 hover:text-white gap-2"
+                    >
+                      {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                      {copied ? (t.common?.copied || 'Copied') : (t.common?.share || 'Share Result')}
+                    </Button>
+                  </div>
+                )}
+
+                <p className="text-center text-purple-200 mb-4 font-medium">{t.header.stillHaveQuestions}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Link href="/answer-book" className="block p-4 rounded-lg bg-gradient-to-r from-purple-900/40 to-blue-900/40 border border-purple-500/30 hover:border-purple-500/60 transition-all text-center group">
+                    <span className="text-purple-100 group-hover:text-white transition-colors text-sm">{t.header.goToAnswerBook}</span>
+                  </Link>
+                  <Link href="/palm-reading" className="block p-4 rounded-lg bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/30 hover:border-purple-500/60 transition-all text-center group">
+                    <span className="text-purple-100 group-hover:text-white transition-colors text-sm">{t.header.goToPalmReading}</span>
+                  </Link>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -159,6 +281,43 @@ export function TarotResult({
           {t.header.home}
         </Button>
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="bg-black/80 border-purple-500/30">
+          <DialogHeader>
+            <DialogTitle className="text-white">是否确认继续追问？</DialogTitle>
+            <DialogDescription className="text-purple-200">
+              我们将使用相同的牌阵重新抽牌，并用所选问题进行新的解读。
+            </DialogDescription>
+          </DialogHeader>
+          <div className="text-purple-200 text-sm break-words">
+            {pendingFollowup}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setConfirmOpen(false)}
+              className="text-purple-200 border-purple-500/30"
+            >
+              取消
+            </Button>
+            <Button
+              onClick={() => {
+                if (pendingFollowup) {
+                  setQuestion(pendingFollowup);
+                  setAiInterpretation('');
+                  setShowAiInterpretation(false);
+                  setShowResult(false);
+                  setConfirmOpen(false);
+                }
+              }}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              确认
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

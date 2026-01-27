@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -10,6 +11,7 @@ import { UserProvider } from '@/lib/userContext';
 import { TarotFlowProvider } from '@/lib/tarotFlowContext';
 import { SidebarProvider } from '@/components/layout/SidebarContext';
 import { StructuredData } from '@/components/layout/StructuredData';
+import { GA4Tracker } from '@/components/GA4Tracker';
 
 export const metadata: Metadata = {
   title: {
@@ -95,13 +97,30 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const appEnv = process.env.NEXT_PUBLIC_APP_ENV ?? 'local';
+
   return (
     <html lang="en">
       <head>
-        {/* Structured Data for SEO */}
         <StructuredData />
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', { send_page_view: false });
+                gtag('set', 'user_properties', { app_env: '${appEnv}' });`}
+            </Script>
+          </>
+        )}
       </head>
       <body className="antialiased">
+        <GA4Tracker />
         <I18nProvider>
           <UserProvider>
             <TarotFlowProvider>
