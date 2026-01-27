@@ -5,7 +5,8 @@
 
 export interface AuthCredentials {
   email: string;
-  password: string;
+  password?: string;
+  accessToken?: string;
 }
 
 /**
@@ -21,6 +22,11 @@ export function getAuthCredentials(): AuthCredentials | null {
     const userData = JSON.parse(savedUser);
     const email = userData._authEmail || userData.email;
     const password = userData._authPassword;
+    const accessToken = userData.accessToken || userData._authToken;
+
+    if (accessToken) {
+      return { email, accessToken, password };
+    }
 
     if (email && password) {
       return { email, password };
@@ -41,7 +47,15 @@ export function getAuthorizationHeader(): string | null {
   const credentials = getAuthCredentials();
   if (!credentials) return null;
 
-  return `Basic ${btoa(`${credentials.email}:${credentials.password}`)}`;
+  if (credentials.accessToken) {
+    return `Bearer ${credentials.accessToken}`;
+  }
+
+  if (credentials.email && credentials.password) {
+    return `Basic ${btoa(`${credentials.email}:${credentials.password}`)}`;
+  }
+
+  return null;
 }
 
 /**
@@ -68,7 +82,7 @@ export function addAuthHeader(headers: HeadersInit = {}): HeadersInit {
 export function saveAuthCredentials(
   userData: any,
   email: string,
-  password: string
+  password?: string
 ): void {
   if (typeof window === 'undefined') return;
 

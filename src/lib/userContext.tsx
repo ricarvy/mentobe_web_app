@@ -60,10 +60,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // 优先从 auth credentials 获取用户信息
+    const credentials = getAuthCredentials();
     const savedUser = localStorage.getItem('tarot_user');
+    
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        // 如果有 credentials 且其中的 accessToken 存在，确保 user 对象是最新的
+        if (credentials && credentials.accessToken) {
+            // 这里可以添加额外的逻辑来验证 token 有效性，或者直接使用 localStorage 中的数据
+            // 目前保持简单，直接使用 localStorage 中的数据
+        }
+        setUser(parsedUser);
       } catch (error) {
         console.error('Failed to parse user from localStorage:', error);
         localStorage.removeItem('tarot_user');

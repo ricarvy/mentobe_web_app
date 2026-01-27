@@ -36,6 +36,8 @@ export const backendConfig: BackendConfig = {
   timeout: Number(process.env.NEXT_PUBLIC_BACKEND_TIMEOUT) || 30000,
 };
 
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
+
 /**
  * 获取完整的API端点URL
  * @param endpoint - API端点路径（例如：'/api/auth/login'）

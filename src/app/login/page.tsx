@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,12 +12,16 @@ import Link from 'next/link';
 import { DEMO_ACCOUNT } from '@/config/demo-account';
 import { saveAuthCredentials } from '@/lib/auth';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
-import { convertApiUserToUser } from '@/lib/userContext';
+import { convertApiUserToUser, useUser } from '@/lib/userContext';
 import { useAnalytics } from '@/components/GA4Tracker';
+import { BACKEND_URL } from '@/config/backend';
 
 export default function LoginPage() {
   const { t } = useI18n();
   const { trackEvent } = useAnalytics();
+  const router = useRouter();
+  const { setUser } = useUser();
+  const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -121,9 +126,11 @@ export default function LoginPage() {
         saveAuthCredentials(userData, formData.email, formData.password);
         
         trackEvent('login', { method: 'email' });
+        // Update global user state
+        setUser(userData);
         
         // Redirect to home page
-        window.location.href = '/';
+        router.push('/');
       } else {
         // Handle registration
         const data = await apiRequest<{
@@ -142,7 +149,11 @@ export default function LoginPage() {
         // Auto login after registration
         saveAuthCredentials(data, formData.email, formData.password);
         trackEvent('sign_up', { method: 'email' });
-        window.location.href = '/';
+        // Update global user state
+        // Note: registration API might return partial user data, convert it if needed
+        const newUser = convertApiUserToUser(data as any); 
+        setUser(newUser);
+        router.push('/');
       }
     } catch (error) {
       console.error('Auth error:', error);
@@ -162,6 +173,12 @@ export default function LoginPage() {
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
     setIsLoading(true);
     try {
+      if (provider === 'google') {
+        // 直接跳转到后端 Google 登录接口
+        window.location.href = `${BACKEND_URL}/api/auth/login/google`;
+        return;
+      }
+
       // For demo purposes, simulate OAuth flow
       // In production, redirect to OAuth provider
       console.log(`${provider} login initiated`);
