@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import { saveAuthCredentials } from '@/lib/auth';
@@ -8,7 +8,7 @@ import { convertApiUserToUser, useUser } from '@/lib/userContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
 
-export default function GoogleLoginSuccessPage() {
+function GoogleLoginContent() {
   const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -65,24 +65,32 @@ export default function GoogleLoginSuccessPage() {
   }, [searchParams, router, t, setUser]);
 
   return (
+    <div className="w-full max-w-md">
+      <Card className="border-purple-500/20 bg-black/40 backdrop-blur-sm">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-4">
+             <Sparkles className={`h-12 w-12 ${status === 'success' ? 'text-green-400' : status === 'error' ? 'text-red-400' : 'text-purple-400 animate-pulse'}`} />
+          </div>
+          <CardTitle className="text-2xl font-bold text-white">
+            {status === 'success' ? 'Welcome Back!' : status === 'error' ? 'Login Failed' : 'Verifying...'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center">
+          <p className="text-purple-200/80">
+            {message}
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function GoogleLoginSuccessPage() {
+  return (
     <main className="min-h-screen flex items-center justify-center px-4 py-12 bg-black/90">
-      <div className="w-full max-w-md">
-        <Card className="border-purple-500/20 bg-black/40 backdrop-blur-sm">
-          <CardHeader className="space-y-1 text-center">
-            <div className="flex justify-center mb-4">
-               <Sparkles className={`h-12 w-12 ${status === 'success' ? 'text-green-400' : status === 'error' ? 'text-red-400' : 'text-purple-400 animate-pulse'}`} />
-            </div>
-            <CardTitle className="text-2xl font-bold text-white">
-              {status === 'success' ? 'Welcome Back!' : status === 'error' ? 'Login Failed' : 'Verifying...'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-purple-200/80">
-              {message}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Suspense fallback={<div className="text-white text-center">Loading...</div>}>
+        <GoogleLoginContent />
+      </Suspense>
     </main>
   );
 }

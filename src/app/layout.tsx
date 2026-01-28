@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Script from 'next/script';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -120,7 +121,9 @@ export default function RootLayout({
         )}
       </head>
       <body className="antialiased">
-        <GA4Tracker />
+        <Suspense fallback={null}>
+          <GA4Tracker />
+        </Suspense>
         <I18nProvider>
           <UserProvider>
             <TarotFlowProvider>
