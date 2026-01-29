@@ -177,7 +177,7 @@ build_image() {
     export DOCKER_BUILDKIT=1
 
     # 注意：.env.oversea.prod 将在 Dockerfile 中被复制为 .env.production
-    docker build \
+    docker build --no-cache \
         --build-arg ENV_FILE="$ENV_FILE" \
         -t "$IMAGE_NAME" . 2>&1 | tee build-oversea.log | while IFS= read -r line; do
         if [[ "$line" == *"ERROR"* ]]; then
