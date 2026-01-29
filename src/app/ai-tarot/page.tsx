@@ -5,12 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageSquare, Star, Brain } from 'lucide-react';
 import { spreads, drawCards, type Spread } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
@@ -527,19 +526,57 @@ export default function Home() {
                     )}
                   </div>
                   
-                  <div className="mb-4">
-                    <Label className="block text-sm font-medium mb-2 text-purple-200">{t.settings?.tone || 'Interpretation Tone'}</Label>
-                    <Select value={tone} onValueChange={(v: any) => setTone(v)}>
-                      <SelectTrigger className="bg-black/30 border-purple-500/30 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-black/90 border-purple-500/30 text-white">
-                        <SelectItem value="mystical">{t.settings?.toneMystical || 'Mystical'}</SelectItem>
-                        <SelectItem value="rational">{t.settings?.toneRational || 'Rational'}</SelectItem>
-                        <SelectItem value="warm">{t.settings?.toneWarm || 'Warm'}</SelectItem>
-                        <SelectItem value="direct">{t.settings?.toneDirect || 'Direct'}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="mb-8">
+                    <Label className="block text-lg font-medium mb-4 text-center text-white">{t.settings?.tone || 'Interpretation Style'}</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {(
+                        [
+                          { id: 'mystical', label: t.settings?.toneMystical, desc: t.settings?.toneMysticalDesc, icon: MessageSquare },
+                          { id: 'direct', label: t.settings?.toneDirect, desc: t.settings?.toneDirectDesc, icon: Sparkles },
+                          { id: 'warm', label: t.settings?.toneWarm, desc: t.settings?.toneWarmDesc, icon: Star },
+                          { id: 'rational', label: t.settings?.toneRational, desc: t.settings?.toneRationalDesc, icon: Brain },
+                        ] as const
+                      ).map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => setTone(item.id)}
+                          className={`
+                            relative flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-300 h-full
+                            ${tone === item.id 
+                              ? 'bg-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
+                              : 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'}
+                          `}
+                        >
+                          <div className={`
+                            w-10 h-10 rounded-full flex items-center justify-center mb-3
+                            ${tone === item.id ? 'bg-white text-black' : 'bg-white/10 text-white'}
+                          `}>
+                            <item.icon className="w-5 h-5" />
+                          </div>
+                          
+                          <h3 className="font-bold text-lg mb-2 text-white">{item.label}</h3>
+                          
+                          <p className="text-sm text-gray-400 leading-relaxed mb-4 flex-grow">
+                            {item.desc}
+                          </p>
+                          
+                          <div className={`
+                            mt-auto text-sm font-medium flex items-center
+                            ${tone === item.id ? 'text-white' : 'text-gray-500'}
+                          `}>
+                            {tone === item.id ? (
+                              <span className="flex items-center gap-1">
+                                {t.settings?.currentStyle} <span className="text-xs">→</span>
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1">
+                                {t.settings?.selectStyle} <span className="text-xs">→</span>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <Button
