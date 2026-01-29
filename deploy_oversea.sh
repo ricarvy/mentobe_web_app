@@ -233,14 +233,18 @@ clear_nginx_cache() {
         print_warning "未找到 /etc/init.d/nginx，跳过停止 Nginx"
     fi
 
-    # 2. 清理缓存目录（保留目录结构，只删内容）
+    # 2. 清理缓存目录（强制删除整个目录重建）
     local cache_dir="/www/wwwroot/life.mentobe.co/proxy_cache_dir"
     if [ -d "$cache_dir" ]; then
         print_info "清理缓存目录: $cache_dir"
-        rm -rf "$cache_dir"/*
-        print_success "缓存清理完成"
+        rm -rf "$cache_dir"
+        mkdir -p "$cache_dir"
+        chmod 777 "$cache_dir" # 确保 Nginx 有权限写入
+        print_success "缓存目录已重建"
     else
-        print_warning "缓存目录不存在: $cache_dir，跳过清理"
+        print_warning "缓存目录不存在: $cache_dir，正在创建..."
+        mkdir -p "$cache_dir"
+        chmod 777 "$cache_dir"
     fi
 
     # 3. 启动 Nginx
