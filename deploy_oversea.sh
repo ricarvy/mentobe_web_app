@@ -221,6 +221,38 @@ run_container() {
     print_info "日志查看: docker logs -f $CONTAINER_NAME"
 }
 
+# 清理 Nginx 缓存
+clear_nginx_cache() {
+    print_oversea "执行 Nginx 缓存清理..."
+
+    # 1. 停止 Nginx（防止文件被占用）
+    if [ -f "/etc/init.d/nginx" ]; then
+        print_info "停止 Nginx..."
+        /etc/init.d/nginx stop
+    else
+        print_warning "未找到 /etc/init.d/nginx，跳过停止 Nginx"
+    fi
+
+    # 2. 清理缓存目录（保留目录结构，只删内容）
+    local cache_dir="/www/wwwroot/life.mentobe.co/proxy_cache_dir"
+    if [ -d "$cache_dir" ]; then
+        print_info "清理缓存目录: $cache_dir"
+        rm -rf "$cache_dir"/*
+        print_success "缓存清理完成"
+    else
+        print_warning "缓存目录不存在: $cache_dir，跳过清理"
+    fi
+
+    # 3. 启动 Nginx
+    if [ -f "/etc/init.d/nginx" ]; then
+        print_info "启动 Nginx..."
+        /etc/init.d/nginx start
+        print_success "Nginx 重启完成"
+    else
+        print_warning "未找到 /etc/init.d/nginx，跳过启动 Nginx"
+    fi
+}
+
 # 主流程
 main() {
     print_oversea "Mentob AI 海外部署工具 v1.0"
@@ -234,6 +266,7 @@ main() {
     stop_old_container
     build_image
     run_container
+    clear_nginx_cache
 }
 
 main "$@"
