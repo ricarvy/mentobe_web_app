@@ -264,9 +264,9 @@ main() {
     confirm_deploy "$@"
     
     stop_old_container
+    clear_nginx_cache
     build_image
     run_container
-    clear_nginx_cache
 }
 
 main "$@"
