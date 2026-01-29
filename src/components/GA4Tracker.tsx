@@ -36,7 +36,7 @@ export function GA4Tracker() {
 
 // Custom hook for tracking events
 export function useAnalytics() {
-  const trackEvent = useCallback((eventName: string, params?: Record<string, any>) => {
+  const trackEvent = useCallback((eventName: string, params?: Record<string, unknown>) => {
     if (typeof window === 'undefined' || !window.gtag) {
       console.warn('GA4 is not initialized');
       return;

@@ -4,8 +4,7 @@ import { llmConfig } from '@/config';
 import {
   createSuccessResponse,
   createErrorResponse,
-  ERROR_CODES,
-  ApiError
+  ERROR_CODES
 } from '@/lib/api-response';
 
 export async function POST(request: NextRequest) {

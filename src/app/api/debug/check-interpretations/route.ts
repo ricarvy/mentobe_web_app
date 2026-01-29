@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from 'coze-coding-dev-sdk';
-import { tarotInterpretations, users } from '@/storage/database/shared/schema';
-import { desc, eq } from 'drizzle-orm';
+import { tarotInterpretations } from '@/storage/database/shared/schema';
+import { desc } from 'drizzle-orm';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const db = await getDb();
 

@@ -2,7 +2,7 @@
  * 统一的 API 响应格式
  */
 
-export interface ApiSuccessResponse<T = any> {
+export interface ApiSuccessResponse<T = unknown> {
   success: true;
   data: T;
   message?: string;
@@ -13,11 +13,11 @@ export interface ApiErrorResponse {
   error: {
     code: ErrorCode;
     message: string;
-    details?: any;
+    details?: unknown;
   };
 }
 
-export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse;
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 /**
  * 创建成功响应
@@ -44,7 +44,7 @@ export function createSuccessResponse<T>(
 export function createErrorResponse(
   code: ErrorCode,
   message: string,
-  details?: any
+  details?: unknown
 ): ApiErrorResponse {
   const error: ApiErrorResponse = {
     success: false,
@@ -102,9 +102,9 @@ export type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES];
  */
 export class ApiError extends Error {
   public code: ErrorCode;
-  public details?: any;
+  public details?: unknown;
 
-  constructor(code: ErrorCode, message: string, details?: any) {
+  constructor(code: ErrorCode, message: string, details?: unknown) {
     super(message);
     this.name = 'ApiError';
     this.code = code;
@@ -127,7 +127,7 @@ export function withErrorHandler(
 
     let code: ErrorCode = ERROR_CODES.INTERNAL_ERROR;
     let message = '服务器繁忙，请稍后再试';
-    let details = error instanceof Error ? error.message : String(error);
+    let details: unknown = error instanceof Error ? error.message : String(error);
 
     // 如果是自定义 API 错误
     if (error instanceof ApiError) {

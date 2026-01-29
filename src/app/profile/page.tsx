@@ -66,28 +66,28 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold text-white mb-8 flex items-center gap-2">
-        <User className="h-8 w-8 text-purple-400" />
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
+      <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-2">
+        <User className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400" />
         {t.common.profile || 'Profile'}
       </h1>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* User Info Card */}
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
-          <CardHeader>
-            <CardTitle className="text-white">Account Information</CardTitle>
-            <CardDescription className="text-purple-200">
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-white text-lg sm:text-xl">Account Information</CardTitle>
+            <CardDescription className="text-purple-200 text-sm sm:text-base">
               Your account details and settings
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="flex items-center gap-3 text-purple-200">
                 <User className="h-5 w-5 text-purple-400 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-purple-300">{t.common.username || 'Username'}</p>
-                  <p className="font-semibold text-white truncate">{user.username}</p>
+                  <p className="font-semibold text-white truncate text-sm sm:text-base">{user.username}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 text-purple-200">
@@ -249,20 +249,20 @@ export default function ProfilePage() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl"></div>
 
-          <CardHeader className="relative z-10">
-            <CardTitle className="text-white flex items-center gap-2">
+          <CardHeader className="relative z-10 p-4 sm:p-6">
+            <CardTitle className="text-white flex items-center gap-2 text-lg sm:text-xl">
               <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-500/30 to-pink-500/30">
-                <Settings className="h-5 w-5 text-purple-300" />
+                <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-purple-300" />
               </div>
               <span className="bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
                 {t.common.quickActions}
               </span>
             </CardTitle>
-            <CardDescription className="text-purple-300/80 text-sm">
+            <CardDescription className="text-purple-300/80 text-xs sm:text-sm">
               {t.common.quickActionsDescription}
             </CardDescription>
           </CardHeader>
-          <CardContent className="relative z-10 space-y-2.5">
+          <CardContent className="relative z-10 space-y-2.5 p-4 sm:p-6 pt-0 sm:pt-0">
             <Link href="/history">
               <Button
                 variant="outline"

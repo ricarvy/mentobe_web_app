@@ -1,5 +1,5 @@
-const https = require('https');
-const fs = require('fs');
+import https from 'node:https';
+import fs from 'node:fs';
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {

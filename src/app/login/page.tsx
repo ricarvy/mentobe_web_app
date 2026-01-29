@@ -122,7 +122,7 @@ export default function LoginPage() {
         const userData = convertApiUserToUser(apiData);
 
         // Store user info and auth credentials in localStorage
-        saveAuthCredentials(userData, formData.email, formData.password);
+        saveAuthCredentials(userData as unknown as Record<string, unknown>, formData.email, formData.password);
         
         trackEvent('login', { method: 'email' });
         // Update global user state
@@ -146,11 +146,21 @@ export default function LoginPage() {
         });
 
         // Auto login after registration
-        saveAuthCredentials(data, formData.email, formData.password);
+        saveAuthCredentials(data as unknown as Record<string, unknown>, formData.email, formData.password);
         trackEvent('sign_up', { method: 'email' });
         // Update global user state
-        // Note: registration API might return partial user data, convert it if needed
-        const newUser = convertApiUserToUser(data as any); 
+        // Note: registration API might return partial user data, normalize to expected shape
+        const normalized = {
+          id: data.id,
+          username: data.username,
+          email: data.email,
+          isActive: true,
+          isDemo: false,
+          unlimitedQuota: false,
+          vipLevel: 0,
+          vipExpireAt: null,
+        };
+        const newUser = convertApiUserToUser(normalized); 
         setUser(newUser);
         router.push('/');
       }
@@ -190,37 +200,37 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12">
+    <main className="min-h-screen flex items-center justify-center px-4 py-12 sm:py-24">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 sm:mb-12">
           <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Sparkles className="h-10 w-10 text-purple-400" />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <Sparkles className="h-10 w-10 sm:h-12 sm:w-12 text-purple-400" />
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Mentob AI
             </h1>
           </Link>
         </div>
 
-        <Card className="border-purple-500/20 bg-black/40 backdrop-blur-sm">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center text-white">
+        <Card className="border-purple-500/20 bg-black/40 backdrop-blur-sm p-4 sm:p-6 md:p-8">
+          <CardHeader className="space-y-1 px-0 pt-0">
+            <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-white">
               {isLogin ? t.auth.welcomeBack : t.auth.createYourAccount}
             </CardTitle>
-            <CardDescription className="text-center text-purple-200/80">
+            <CardDescription className="text-center text-purple-200/80 text-sm sm:text-base">
               {isLogin ? 'Sign in to your account to continue' : 'Create a new account to get started'}
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="px-0 pb-0">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-purple-200">
+                <Label htmlFor="email" className="text-purple-200 text-sm sm:text-base">
                   {t.auth.email}
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                   <Input
                     id="email"
                     name="email"
@@ -228,7 +238,7 @@ export default function LoginPage() {
                     placeholder={t.auth.emailPlaceholder}
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`pl-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 ${
+                    className={`h-10 sm:h-12 pl-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 text-sm sm:text-base ${
                       errors.email ? 'border-red-500' : ''
                     }`}
                   />
@@ -240,11 +250,11 @@ export default function LoginPage() {
 
               {/* Password */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-purple-200">
+                <Label htmlFor="password" className="text-purple-200 text-sm sm:text-base">
                   {t.auth.password}
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                   <Input
                     id="password"
                     name="password"
@@ -252,7 +262,7 @@ export default function LoginPage() {
                     placeholder={t.auth.passwordPlaceholder}
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`pl-10 pr-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 ${
+                    className={`h-10 sm:h-12 pl-10 pr-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 text-sm sm:text-base ${
                       errors.password ? 'border-red-500' : ''
                     }`}
                   />
@@ -261,7 +271,7 @@ export default function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 hover:text-purple-300"
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                   </button>
                 </div>
                 {errors.password && (
@@ -272,11 +282,11 @@ export default function LoginPage() {
               {/* Confirm Password - only for registration */}
               {!isLogin && (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-purple-200">
+                  <Label htmlFor="confirmPassword" className="text-purple-200 text-sm sm:text-base">
                     {t.auth.confirmPassword}
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     <Input
                       id="confirmPassword"
                       name="confirmPassword"
@@ -284,16 +294,16 @@ export default function LoginPage() {
                       placeholder={t.auth.pleaseConfirmPassword}
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className={`pl-10 pr-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 ${
+                      className={`h-10 sm:h-12 pl-10 pr-10 bg-black/40 border-purple-500/20 text-white placeholder:text-purple-200/50 text-sm sm:text-base ${
                         errors.confirmPassword ? 'border-red-500' : ''
                       }`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 hover:text-purple-300"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 hover:text-purple-300"
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                     </button>
                   </div>
                   {errors.confirmPassword && (
@@ -314,11 +324,11 @@ export default function LoginPage() {
                       onChange={handleInputChange}
                       className="h-4 w-4 rounded border-purple-500/30 bg-black/40 text-purple-600 focus:ring-purple-500"
                     />
-                    <label htmlFor="remember" className="text-sm text-purple-200/80 cursor-pointer">
+                    <label htmlFor="remember" className="text-sm sm:text-base text-purple-200/80 cursor-pointer">
                       {t.auth.rememberMe}
                     </label>
                   </div>
-                  <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                  <Link href="/forgot-password" className="text-sm sm:text-base text-purple-400 hover:text-purple-300 transition-colors">
                     {t.auth.forgotPassword}
                   </Link>
                 </div>
@@ -335,7 +345,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="w-full h-10 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-2 sm:py-3"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -349,23 +359,23 @@ export default function LoginPage() {
             </form>
 
             {/* Divider */}
-            <div className="relative my-6">
+            <div className="relative my-4 sm:my-6">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-purple-500/20" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
+              <div className="relative flex justify-center text-xs sm:text-sm uppercase">
                 <span className="bg-transparent px-2 text-purple-200/60">{t.auth.orContinueWith}</span>
               </div>
             </div>
 
             {/* Social Login Buttons */}
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <Button
                 type="button"
                 variant="outline"
                 disabled={isLoading}
                 onClick={() => handleSocialLogin('google')}
-                className="w-full bg-black/40 border-purple-500/20 text-white hover:bg-purple-500/10 hover:border-purple-500/40"
+                className="w-full h-10 sm:h-12 text-sm sm:text-base bg-black/40 border-purple-500/20 text-white hover:bg-purple-500/10 hover:border-purple-500/40 py-2 sm:py-3"
               >
                 <Chrome className="mr-2 h-5 w-5" />
                 {t.auth.googleLogin}
@@ -375,7 +385,7 @@ export default function LoginPage() {
                 variant="outline"
                 disabled={isLoading}
                 onClick={() => handleSocialLogin('apple')}
-                className="w-full bg-black/40 border-purple-500/20 text-white hover:bg-purple-500/10 hover:border-purple-500/40"
+                className="w-full h-10 sm:h-12 text-sm sm:text-base bg-black/40 border-purple-500/20 text-white hover:bg-purple-500/10 hover:border-purple-500/40 py-2 sm:py-3"
               >
                 <Apple className="mr-2 h-5 w-5" />
                 {t.auth.appleLogin}

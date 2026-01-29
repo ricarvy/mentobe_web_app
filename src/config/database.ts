@@ -4,6 +4,7 @@
  * 通过 coze-coding-dev-sdk 集成
  */
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface DatabaseConfig {
   // 使用 coze-coding-dev-sdk 的内置数据库
   // 不需要额外配置，SDK 会自动处理连接

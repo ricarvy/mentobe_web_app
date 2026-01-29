@@ -18,10 +18,36 @@ export default function PalmReadingPage() {
   const [isCaptured, setIsCaptured] = useState(false);
   const [insights, setInsights] = useState<PalmistryInsights | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; delay: number; duration: number; opacity: number }>>([]);
+  const [handParticles, setHandParticles] = useState<Array<{ left: number; top: number; delay: number; duration: number }>>([]);
 
   useEffect(() => {
     trackEvent('feature_start', { feature_name: 'palm_reading' });
   }, [trackEvent]);
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setStars(
+        [...Array(200)].map(() => ({
+          width: Math.random() * 4 + 1,
+          height: Math.random() * 4 + 1,
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          delay: Math.random() * 5,
+          duration: Math.random() * 4 + 2,
+          opacity: Math.random() * 0.8 + 0.2,
+        }))
+      );
+      setHandParticles(
+        [...Array(15)].map((_, i) => ({
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          delay: i * 0.4,
+          duration: 7 + i * 0.6,
+        }))
+      );
+    }, 0);
+  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -73,32 +99,32 @@ export default function PalmReadingPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
 
         {/* Twinkling Stars */}
-        {[...Array(200)].map((_, i) => (
+        {stars.map((s, i) => (
           <div
             key={`star-${i}`}
             className="absolute rounded-full bg-white animate-twinkle"
             style={{
-              width: Math.random() * 4 + 1,
-              height: Math.random() * 4 + 1,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 4 + 2}s`,
-              opacity: Math.random() * 0.8 + 0.2,
+              width: s.width,
+              height: s.height,
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+              opacity: s.opacity,
             }}
           />
         ))}
 
         {/* Floating Hand Particles */}
-        {[...Array(15)].map((_, i) => (
+        {handParticles.map((p, i) => (
           <div
             key={`hand-${i}`}
             className="absolute animate-float opacity-10"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.4}s`,
-              animationDuration: `${7 + i * 0.6}s`,
+              left: `${p.left}%`,
+              top: `${p.top}%`,
+              animationDelay: `${p.delay}s`,
+              animationDuration: `${p.duration}s`,
             }}
           >
             <Hand className="w-8 h-8 text-pink-400" />

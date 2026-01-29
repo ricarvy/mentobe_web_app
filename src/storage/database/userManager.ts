@@ -1,4 +1,4 @@
-import { eq, and, sql, desc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { getDb } from 'coze-coding-dev-sdk';
 import bcrypt from 'bcryptjs';
 import { users, insertUserSchema, type User, type InsertUser } from './shared/schema';
@@ -38,7 +38,7 @@ export class UserManager {
 
   async updateUser(id: string, data: Partial<InsertUser>): Promise<User | null> {
     const db = await getDb();
-    const updateData: any = { ...data, updatedAt: new Date() };
+    const updateData: Partial<InsertUser> & { updatedAt: Date; password?: string } = { ...data, updatedAt: new Date() };
     
     // Hash password if it's being updated
     if (data.password) {

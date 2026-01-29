@@ -17,9 +17,38 @@ export default function AnswerBookPage() {
   const [stage, setStage] = useState<Stage>('prompt');
   const [answer, setAnswer] = useState('');
   const [isAnimating, setIsAnimating] = useState(false);
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; delay: number; duration: number; opacity: number }>>([]);
+  const [particles, setParticles] = useState<Array<{ left: number; top: number }>>([]);
+  const [shootingStars, setShootingStars] = useState<Array<{ width: number; left: number; top: number; delay: number; duration: number }>>([]);
 
   useEffect(() => {
     trackEvent('feature_start', { feature_name: 'answer_book' });
+    
+    // Initialize random visual elements
+    setTimeout(() => {
+      setStars([...Array(300)].map(() => ({
+        width: Math.random() * 3 + 1,
+        height: Math.random() * 3 + 1,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: Math.random() * 4 + 2,
+        opacity: Math.random() * 0.8 + 0.2,
+      })));
+  
+      setParticles([...Array(30)].map(() => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+      })));
+  
+      setShootingStars([...Array(5)].map(() => ({
+        width: Math.random() * 100 + 50,
+        left: Math.random() * 100,
+        top: Math.random() * 50,
+        delay: Math.random() * 4,
+        duration: Math.random() * 2 + 1,
+      })));
+    }, 0);
   }, [trackEvent]);
 
   const handleReveal = async () => {
@@ -52,30 +81,30 @@ export default function AnswerBookPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
 
         {/* Twinkling Stars */}
-        {[...Array(300)].map((_, i) => (
+        {stars.map((star, i) => (
           <div
             key={`star-${i}`}
             className="absolute rounded-full bg-white animate-twinkle"
             style={{
-              width: Math.random() * 3 + 1,
-              height: Math.random() * 3 + 1,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 4 + 2}s`,
-              opacity: Math.random() * 0.8 + 0.2,
+              width: star.width,
+              height: star.height,
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              animationDelay: `${star.delay}s`,
+              animationDuration: `${star.duration}s`,
+              opacity: star.opacity,
             }}
           />
         ))}
 
         {/* Floating Mystic Particles */}
-        {[...Array(30)].map((_, i) => (
+        {particles.map((particle, i) => (
           <div
             key={`particle-${i}`}
             className="absolute animate-float opacity-20"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
               animationDelay: `${i * 0.3}s`,
               animationDuration: `${8 + i * 0.5}s`,
             }}
@@ -87,16 +116,16 @@ export default function AnswerBookPage() {
         ))}
 
         {/* Shooting Stars */}
-        {[...Array(5)].map((_, i) => (
+        {shootingStars.map((star, i) => (
           <div
             key={`shooting-${i}`}
             className="absolute bg-gradient-to-r from-purple-400 to-transparent h-0.5 animate-shooting-star opacity-60"
             style={{
-              width: Math.random() * 100 + 50,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 50}%`,
-              animationDelay: `${i * 8 + Math.random() * 4}s`,
-              animationDuration: `${Math.random() * 2 + 1}s`,
+              width: star.width,
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              animationDelay: `${i * 8 + star.delay}s`,
+              animationDuration: `${star.duration}s`,
             }}
           />
         ))}

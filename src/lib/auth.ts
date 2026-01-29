@@ -80,7 +80,7 @@ export function addAuthHeader(headers: HeadersInit = {}): HeadersInit {
  * 保存认证凭证到 localStorage
  */
 export function saveAuthCredentials(
-  userData: any,
+  userData: Record<string, unknown>,
   email: string,
   password?: string
 ): void {

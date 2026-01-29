@@ -1,5 +1,5 @@
 // 塔罗牌定义
-import { allTarotCards, type TarotCardData } from './tarot-cards';
+import { allTarotCards } from './tarot-cards';
 
 export interface TarotCard {
   id: number | string;

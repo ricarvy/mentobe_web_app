@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Lightbulb, Sparkles } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { useEffect, useState } from 'react';
 
 interface SuggestedQuestionsProps {
   onSelectQuestion: (question: string) => void;
@@ -11,6 +12,7 @@ interface SuggestedQuestionsProps {
 
 export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps) {
   const { t } = useI18n();
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; duration: number; delay: number }>>([]);
 
   const questions = [
     t.home.suggestedQuestion1,
@@ -20,6 +22,21 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
     t.home.suggestedQuestion5,
     t.home.suggestedQuestion6,
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStars(
+        [...Array(15)].map(() => ({
+          width: Math.random() * 2 + 1,
+          height: Math.random() * 2 + 1,
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          duration: Math.random() * 3 + 2,
+          delay: Math.random() * 2,
+        }))
+      );
+    }, 0);
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto mb-6">
@@ -134,17 +151,17 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
         <div className="absolute -bottom-24 -left-32 w-56 h-56 bg-violet-600/15 rounded-full blur-3xl"></div>
 
         {/* 星星粒子 */}
-        {[...Array(15)].map((_, i) => (
+        {stars.map((s, i) => (
           <div
             key={i}
             className="absolute rounded-full bg-white"
             style={{
-              width: Math.random() * 2 + 1,
-              height: Math.random() * 2 + 1,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`,
+              width: s.width,
+              height: s.height,
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              animation: `twinkle ${s.duration}s ease-in-out infinite`,
+              animationDelay: `${s.delay}s`,
             }}
           />
         ))}

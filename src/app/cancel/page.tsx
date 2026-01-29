@@ -11,12 +11,27 @@ import { useI18n } from '@/lib/i18n';
 function CancelContent() {
   const { t } = useI18n();
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; delay: number; duration: number }>>([]);
 
   useEffect(() => {
     // 在客户端动态获取 searchParams
     const params = new URLSearchParams(window.location.search);
-    setSessionId(params.get('session_id'));
-    console.log('Payment cancel page accessed', { sessionId: params.get('session_id') });
+    setTimeout(() => {
+      setSessionId(params.get('session_id'));
+      console.log('Payment cancel page accessed', { sessionId: params.get('session_id') });
+    }, 0);
+
+    // Initialize random stars
+    setTimeout(() => {
+      setStars([...Array(100)].map(() => ({
+        width: Math.random() * 3 + 1,
+        height: Math.random() * 3 + 1,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        delay: Math.random() * 3,
+        duration: Math.random() * 3 + 2,
+      })));
+    }, 0);
   }, []);
 
   return (
@@ -26,17 +41,17 @@ function CancelContent() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
         {/* 星星层 */}
         <div className="absolute inset-0">
-          {[...Array(100)].map((_, i) => (
+          {stars.map((star, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-white animate-twinkle"
               style={{
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
+                width: star.width,
+                height: star.height,
+                left: `${star.left}%`,
+                top: `${star.top}%`,
+                animationDelay: `${star.delay}s`,
+                animationDuration: `${star.duration}s`,
               }}
             />
           ))}
@@ -106,7 +121,7 @@ function CancelContent() {
                 </div>
                 <div className="text-gray-400 text-xs mt-4 pt-4 border-t border-purple-500/20">
                   💡 Configure these URLs in your Stripe Dashboard:
-                  Products → Pricing → Select your price → Edit → Click "More options" → Edit payment link settings
+                  Products → Pricing → Select your price → Edit → Click &quot;More options&quot; → Edit payment link settings
                 </div>
               </div>
             </div>

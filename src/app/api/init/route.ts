@@ -12,7 +12,7 @@ const DEFAULT_ADMIN = {
   password: 'Admin123!', // 生产环境应该使用环境变量
 };
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   return withErrorHandler(async () => {
     // 检查是否已经存在管理员账号
     const existingAdmin = await userManager.getUserByEmail(DEFAULT_ADMIN.email);

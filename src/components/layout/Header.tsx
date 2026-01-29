@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Menu, Sparkles, Globe, User, LogOut, Zap, ChevronDown } from 'lucide-react';
+import { Menu, Sparkles, User, LogOut, Zap, ChevronDown } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { languages } from '@/lib/translations';
 import { useUser } from '@/lib/userContext';
@@ -20,7 +20,6 @@ export function Header() {
   const { user, logout } = useUser();
   const { isInFlow, resetFlow } = useTarotFlow();
   const [quota, setQuota] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
-  const router = useRouter();
   const pathname = usePathname();
 
   // Fetch quota when user changes
@@ -29,8 +28,6 @@ export function Header() {
       getQuota(user.id)
         .then(setQuota)
         .catch(err => console.error('Error fetching quota in header:', err));
-    } else {
-      setQuota(null);
     }
   }, [user]);
 
@@ -74,9 +71,8 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item, index) => (
-              <>
+              <Fragment key={item.href}>
                 <Link
-                  key={item.name}
                   href={item.href}
                   onClick={item.href === '/' ? handleHomeClick : undefined}
                   className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
@@ -107,7 +103,7 @@ export function Header() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-              </>
+              </Fragment>
             ))}
           </nav>
 
@@ -218,96 +214,91 @@ export function Header() {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] bg-black/90 border-purple-500/20">
-              <nav className="flex flex-col gap-4 mt-8">
-                {navItems.map((item, index) => (
-                  <>
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={(e) => {
-                        if (item.href === '/') {
-                          handleHomeClick(e);
-                        } else {
-                          setIsOpen(false);
-                        }
-                      }}
-                      className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
-                    >
-                      {item.name}
-                    </Link>
-
-                    {/* AI Tarot Section - Inserted after Home (index 0) */}
-                    {index === 0 && (
-                      <div className="pt-1">
-                        <p className="text-sm font-semibold text-purple-300 mb-2">{t.header.aiTarot}</p>
-                        <div className="flex flex-col gap-1 pl-3">
-                          {tarotDropdownItems.map((dropdownItem) => (
-                            <Link
-                              key={dropdownItem.name}
-                              href={dropdownItem.href}
-                              onClick={() => setIsOpen(false)}
-                              className="text-base font-medium text-purple-200/80 hover:text-white transition-colors py-2"
-                            >
-                              {dropdownItem.name}
-                            </Link>
-                          ))}
+            <SheetContent side="right" className="bg-black/90 border-purple-500/20">
+              <div className="h-full flex flex-col">
+                <div className="flex-1 overflow-y-auto px-4">
+                  <nav className="flex flex-col gap-4 mt-8">
+                    {navItems.map((item, index) => (
+                      <Fragment key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={(e) => {
+                            if (item.href === '/') {
+                              handleHomeClick(e);
+                            } else {
+                              setIsOpen(false);
+                            }
+                          }}
+                          className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
+                        >
+                          {item.name}
+                        </Link>
+                        {index === 0 && (
+                          <div className="pt-1">
+                            <p className="text-sm font-semibold text-purple-300 mb-2">{t.header.aiTarot}</p>
+                            <div className="flex flex-col gap-1 pl-3">
+                              {tarotDropdownItems.map((dropdownItem) => (
+                                <Link
+                                  key={dropdownItem.name}
+                                  href={dropdownItem.href}
+                                  onClick={() => setIsOpen(false)}
+                                  className="text-base font-medium text-purple-200/80 hover:text-white transition-colors py-2"
+                                >
+                                  {dropdownItem.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </Fragment>
+                    ))}
+                    <div className="py-4 border-t border-purple-500/20 mt-4">
+                      <p className="text-sm font-semibold text-purple-300 mb-3">{t.common.language}</p>
+                      <div className="flex flex-col gap-2">
+                        {languages.map((lang) => (
+                          <button
+                            key={lang.code}
+                            onClick={() => {
+                              setLanguage(lang.code);
+                              setIsOpen(false);
+                            }}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
+                              language === lang.code
+                                ? 'bg-purple-500/20 text-white'
+                                : 'text-purple-200 hover:bg-purple-500/10 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{lang.flag}</span>
+                            <span>{lang.name}</span>
+                            {language === lang.code && <span className="ml-auto text-purple-400">✓</span>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {user && quota && (
+                      <div className="px-2 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Zap className="h-3 w-3 text-purple-400" />
+                          <span className="text-xs text-purple-300">{t.common.dailyQuota}:</span>
+                        </div>
+                        <div>
+                          {quota.isDemo ? (
+                            <Badge variant="secondary" className="bg-purple-600/20 text-purple-300 border-purple-500/30">
+                              ∞ Unlimited
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className={quota.remaining > 0 ? "bg-green-600/20 text-green-300 border-green-500/30" : "bg-red-600/20 text-red-300 border-red-500/30"}>
+                              {quota.remaining} / {quota.total}
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     )}
-                  </>
-                ))}
-
-                
-                {/* Mobile Language Selector */}
-                <div className="py-4 border-t border-purple-500/20 mt-4">
-                  <p className="text-sm font-semibold text-purple-300 mb-3">{t.common.language}</p>
-                  <div className="flex flex-col gap-2">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => {
-                          setLanguage(lang.code);
-                          setIsOpen(false);
-                        }}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
-                          language === lang.code
-                            ? 'bg-purple-500/20 text-white'
-                            : 'text-purple-200 hover:bg-purple-500/10 hover:text-white'
-                        }`}
-                      >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span>{lang.name}</span>
-                        {language === lang.code && <span className="ml-auto text-purple-400">✓</span>}
-                      </button>
-                    ))}
-                  </div>
+                  </nav>
                 </div>
-
-                <div className="flex flex-col gap-3 mt-6">
+                <div className="sticky bottom-0 px-4 py-4 bg-black/90 border-t border-purple-500/20">
                   {user ? (
-                    <>
-                      {/* Quota Display */}
-                      {quota && (
-                        <div className="px-2 py-2 bg-purple-500/10 rounded-lg border border-purple-500/20">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Zap className="h-3 w-3 text-purple-400" />
-                            <span className="text-xs text-purple-300">{t.common.dailyQuota}:</span>
-                          </div>
-                          <div>
-                            {quota.isDemo ? (
-                              <Badge variant="secondary" className="bg-purple-600/20 text-purple-300 border-purple-500/30">
-                                ∞ Unlimited
-                              </Badge>
-                            ) : (
-                              <Badge variant="secondary" className={quota.remaining > 0 ? "bg-green-600/20 text-green-300 border-green-500/30" : "bg-red-600/20 text-red-300 border-red-500/30"}>
-                                {quota.remaining} / {quota.total}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
+                    <div className="flex flex-col gap-3">
                       <Button
                         variant="ghost"
                         className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full justify-start"
@@ -329,9 +320,9 @@ export function Header() {
                         <LogOut className="h-4 w-4" />
                         <span>{t.common.logout}</span>
                       </Button>
-                    </>
+                    </div>
                   ) : (
-                    <>
+                    <div className="flex flex-col gap-3">
                       <Button
                         variant="ghost"
                         className="text-purple-200 hover:text-white hover:bg-purple-500/10 w-full"
@@ -349,10 +340,10 @@ export function Header() {
                           {t.common.getStarted}
                         </Link>
                       </Button>
-                    </>
+                    </div>
                   )}
                 </div>
-              </nav>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

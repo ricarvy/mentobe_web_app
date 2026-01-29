@@ -182,26 +182,26 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-5xl">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/profile">
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-purple-200 hover:text-white hover:bg-purple-500/10"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-                <History className="h-8 w-8 text-purple-400" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+                <History className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400" />
                 {t.home.history || 'Reading History'}
               </h1>
-              <p className="text-purple-300 mt-1">
+              <p className="text-purple-300 mt-1 text-sm sm:text-base">
                 Your past tarot readings and AI interpretations
               </p>
             </div>
@@ -367,8 +367,8 @@ export default function HistoryPage() {
 
                       {/* AI Interpretation */}
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                          <Sparkles className="h-5 w-5 text-purple-400" />
+                        <h3 className="text-base sm:text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                          <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                           AI Interpretation
                           {isStreaming[item.id] && (
                             <span className="flex items-center gap-1 text-xs text-purple-400">
@@ -379,7 +379,7 @@ export default function HistoryPage() {
                           )}
                         </h3>
                         {item.interpretation ? (
-                          <div className="bg-black rounded-lg p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20 text-white">
+                          <div className="bg-black rounded-lg p-3 sm:p-4 prose prose-invert prose-purple max-w-none border border-purple-500/20 text-white text-sm sm:text-base">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                               {streamingText[item.id] || item.interpretation}
                             </ReactMarkdown>

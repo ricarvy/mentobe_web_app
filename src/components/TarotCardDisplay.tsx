@@ -21,9 +21,11 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread, cardStyl
   const translatedSpread = getTranslatedSpread(spread);
 
   useEffect(() => {
-  if (isDrawing) {
-      setFlippedCards(new Set());
-      setShowAll(false);
+    if (isDrawing) {
+      setTimeout(() => {
+        setFlippedCards(new Set());
+        setShowAll(false);
+      }, 0);
     }
   }, [isDrawing]);
 

@@ -22,8 +22,10 @@ function GoogleLoginContent() {
     const error = searchParams.get('error');
 
     if (error) {
-      setStatus('error');
-      setMessage(t.auth.loginFailed);
+      setTimeout(() => {
+        setStatus('error');
+        setMessage(t.auth.loginFailed);
+      }, 0);
       setTimeout(() => router.replace('/login'), 3000);
       return;
     }
@@ -43,10 +45,11 @@ function GoogleLoginContent() {
         saveAuthCredentials(finalUserData, userData.email, '');
         
         // 更新全局状态
-        setUser(finalUserData);
-        
-        setStatus('success');
-        setMessage('Login successful! Redirecting...');
+        setTimeout(() => {
+          setUser(finalUserData);
+          setStatus('success');
+          setMessage('Login successful! Redirecting...');
+        }, 0);
         
         // 停留 3 秒后跳转
         setTimeout(() => {
@@ -54,8 +57,10 @@ function GoogleLoginContent() {
         }, 3000);
       } catch (e) {
         console.error('Failed to parse user data:', e);
-        setStatus('error');
-        setMessage(t.auth.loginFailed);
+        setTimeout(() => {
+          setStatus('error');
+          setMessage(t.auth.loginFailed);
+        }, 0);
         setTimeout(() => router.replace('/login'), 3000);
       }
     } else {

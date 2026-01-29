@@ -8,7 +8,7 @@ import {
   createSuccessResponse,
 } from '@/lib/api-response';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return withErrorHandler(async () => {
     const debugInfo = {
       timestamp: new Date().toISOString(),

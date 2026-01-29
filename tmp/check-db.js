@@ -1,6 +1,5 @@
-const { getDb } = require('./src/storage/database/shared/db');
-const { tarotInterpretations } = require('./src/storage/database/shared/schema');
-const { desc } = require('drizzle-orm');
+import { getDb } from './src/storage/database/shared/db.js';
+import { tarotInterpretations } from './src/storage/database/shared/schema.js';
 
 async function checkData() {
   const db = await getDb();

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { getAuthCredentials, saveAuthCredentials } from '@/lib/auth';
 import { apiRequest } from '@/lib/api-client';
 
@@ -57,28 +57,22 @@ export function convertApiUserToUser(apiUser: ApiResponseUser): User {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    // 优先从 auth credentials 获取用户信息
-    const credentials = getAuthCredentials();
-    const savedUser = localStorage.getItem('tarot_user');
-    
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        // 如果有 credentials 且其中的 accessToken 存在，确保 user 对象是最新的
-        if (credentials && credentials.accessToken) {
-            // 这里可以添加额外的逻辑来验证 token 有效性，或者直接使用 localStorage 中的数据
-            // 目前保持简单，直接使用 localStorage 中的数据
-        }
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Failed to parse user from localStorage:', error);
-        localStorage.removeItem('tarot_user');
-      }
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') {
+      return null;
     }
-  }, []);
+    try {
+      const savedUser = localStorage.getItem('tarot_user');
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser) as User;
+        return parsedUser;
+      }
+    } catch (error) {
+      console.error('Failed to parse user from localStorage:', error);
+      localStorage.removeItem('tarot_user');
+    }
+    return null;
+  });
 
   const logout = () => {
     localStorage.removeItem('tarot_user');
@@ -107,7 +101,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const userData = convertApiUserToUser(apiData);
 
       // 更新localStorage
-      saveAuthCredentials(userData, credentials.email, credentials.password);
+      saveAuthCredentials(userData as unknown as Record<string, unknown>, credentials.email, credentials.password);
       // 更新state
       setUser(userData);
 

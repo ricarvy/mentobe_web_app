@@ -58,6 +58,8 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
   const [streamingText, setStreamingText] = useState('');
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [showContent, setShowContent] = useState(false);
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; delay: number; duration: number; opacity: number }>>([]);
+  const [shooting, setShooting] = useState<Array<{ width: number; left: number; top: number; delay: number; duration: number }>>([]);
 
   useEffect(() => {
     const init = async () => {
@@ -84,6 +86,31 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
       });
     }
   }, [sharedData, showContent]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStars(
+        [...Array(200)].map(() => ({
+          width: Math.random() * 4 + 1,
+          height: Math.random() * 4 + 1,
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          delay: Math.random() * 5,
+          duration: Math.random() * 4 + 2,
+          opacity: Math.random() * 0.8 + 0.2,
+        }))
+      );
+      setShooting(
+        [...Array(5)].map((_, i) => ({
+          width: Math.random() * 100 + 50,
+          left: Math.random() * 100,
+          top: Math.random() * 50,
+          delay: i * 3 + Math.random() * 2,
+          duration: Math.random() * 2 + 1,
+        }))
+      );
+    }, 0);
+  }, []);
 
   const startStreamingText = (text: string) => {
     let index = 0;
@@ -246,33 +273,33 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
 
         {/* Twinkling Stars */}
-        {[...Array(200)].map((_, i) => (
+        {stars.map((s, i) => (
           <div
             key={`star-${i}`}
             className="absolute rounded-full bg-white animate-twinkle"
             style={{
-              width: Math.random() * 4 + 1,
-              height: Math.random() * 4 + 1,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 4 + 2}s`,
-              opacity: Math.random() * 0.8 + 0.2,
+              width: s.width,
+              height: s.height,
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+              opacity: s.opacity,
             }}
           />
         ))}
 
         {/* Shooting Stars */}
-        {[...Array(5)].map((_, i) => (
+        {shooting.map((s, i) => (
           <div
             key={`shooting-${i}`}
             className="absolute bg-gradient-to-r from-purple-400 to-transparent h-0.5 animate-shooting-star"
             style={{
-              width: Math.random() * 100 + 50,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 50}%`,
-              animationDelay: `${i * 3 + Math.random() * 2}s`,
-              animationDuration: `${Math.random() * 2 + 1}s`,
+              width: s.width,
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
             }}
           />
         ))}
@@ -460,7 +487,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                   <span className="text-sm font-medium text-purple-300">{t.share.question.badge}</span>
                 </div>
                 <p className="text-2xl md:text-3xl font-bold text-white leading-relaxed max-w-4xl mx-auto">
-                  "{sharedData.question}"
+                  &quot;{sharedData.question}&quot;
                 </p>
               </div>
             </CardContent>

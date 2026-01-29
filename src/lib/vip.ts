@@ -107,7 +107,7 @@ export function formatVipExpireDate(vipExpireAt: string | null | undefined): str
  * @param language - 语言代码
  * @returns VIP 等级显示文本
  */
-export function getVipLevelText(vipLevel: VipLevel | undefined, language: string = 'en'): string {
+export function getVipLevelText(vipLevel: VipLevel | undefined, _language: string = 'en'): string {
   switch (vipLevel) {
     case 'pro':
       return 'Pro Member';

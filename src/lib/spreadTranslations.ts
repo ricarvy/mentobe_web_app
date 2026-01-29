@@ -5,7 +5,34 @@ export function useSpreadTranslations() {
   const { t } = useI18n();
 
   const getTranslatedSpread = (spread: Spread): Spread => {
-    const translations = t.spreads as any;
+    type PositionsSingle = { position1: string; position1Desc: string };
+    type PositionsThree = { position1: string; position1Desc: string; position2: string; position2Desc: string; position3: string; position3Desc: string };
+    type PositionsCross = {
+      position1: string; position1Desc: string;
+      position2: string; position2Desc: string;
+      position3: string; position3Desc: string;
+      position4: string; position4Desc: string;
+      position5: string; position5Desc: string;
+      position6: string; position6Desc: string;
+      position7: string; position7Desc: string;
+      position8: string; position8Desc: string;
+      position9: string; position9Desc: string;
+      position10: string; position10Desc: string;
+    };
+    type SpreadTranslations = {
+      single: string;
+      singleDesc: string;
+      three: string;
+      threeDesc: string;
+      cross: string;
+      crossDesc: string;
+      positions: {
+        single: PositionsSingle;
+        three: PositionsThree;
+        cross: PositionsCross;
+      };
+    };
+    const translations = t.spreads as unknown as SpreadTranslations;
 
     let translatedName = '';
     let translatedDesc = '';
@@ -65,10 +92,6 @@ export function useSpreadTranslations() {
           translatedPosName = translations.positions.cross.position10;
           translatedPosDesc = translations.positions.cross.position10Desc;
         }
-      } else {
-        // Handle other spreads
-        translatedName = translations[spread.id] || spread.name;
-        translatedDesc = translations[spread.id + 'Desc'] || spread.description;
       }
 
       return {

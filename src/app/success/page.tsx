@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -101,6 +101,23 @@ function SuccessContent() {
 }
 
 export default function SuccessPage() {
+  const [stars, setStars] = useState<Array<{ width: number; height: number; left: number; top: number; delay: number; duration: number }>>([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStars(
+        [...Array(100)].map(() => ({
+          width: Math.random() * 3 + 1,
+          height: Math.random() * 3 + 1,
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          delay: Math.random() * 3,
+          duration: Math.random() * 3 + 2,
+        }))
+      );
+    }, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center">
       {/* 星空背景 */}
@@ -108,17 +125,17 @@ export default function SuccessPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
         {/* 星星层 */}
         <div className="absolute inset-0">
-          {[...Array(100)].map((_, i) => (
+          {stars.map((s, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-white animate-twinkle"
               style={{
-                width: Math.random() * 3 + 1,
-                height: Math.random() * 3 + 1,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
+                width: s.width,
+                height: s.height,
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.duration}s`,
               }}
             />
           ))}

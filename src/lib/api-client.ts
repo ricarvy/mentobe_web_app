@@ -61,13 +61,13 @@ export interface ApiRequestConfig extends RequestInit {
  */
 export class ApiRequestError extends Error {
   public code: string;
-  public details?: any;
+  public details?: unknown;
   public isServerError: boolean;
 
   constructor(
     message: string,
     code: string,
-    details?: any,
+    details?: unknown,
     isServerError = false
   ) {
     super(message);
@@ -85,7 +85,7 @@ export class ApiRequestError extends Error {
  * @returns Promise<T> - 返回数据
  * @throws ApiRequestError - 请求失败时抛出错误
  */
-export async function apiRequest<T = any>(
+export async function apiRequest<T = unknown>(
   url: string,
   config: ApiRequestConfig = {}
 ): Promise<T> {

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { Language, TranslationKey, translations } from '@/lib/translations';
 
 interface I18nContextType {
@@ -12,15 +12,16 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === 'undefined') {
+      return 'en';
+    }
 
-  useEffect(() => {
-    // 从localStorage加载保存的语言
-    const savedLang = localStorage.getItem('tarot_language') as Language;
+    const savedLang = localStorage.getItem('tarot_language') as Language | null;
     if (savedLang && translations[savedLang]) {
-      setLanguageState(savedLang);
-    } else if (savedLang) {
-      // 兼容旧的语言代码
+      return savedLang;
+    }
+    if (savedLang) {
       const langMap: Record<string, Language> = {
         'cn': 'zh',
         'zh-CN': 'zh',
@@ -30,17 +31,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       };
       const mappedLang = langMap[savedLang];
       if (mappedLang && translations[mappedLang]) {
-        setLanguageState(mappedLang);
         localStorage.setItem('tarot_language', mappedLang);
-      }
-    } else {
-      // 检测浏览器语言
-      const browserLang = navigator.language.split('-')[0] as Language;
-      if (translations[browserLang]) {
-        setLanguageState(browserLang);
+        return mappedLang;
       }
     }
-  }, []);
+    const browserLang = navigator.language.split('-')[0] as Language;
+    if (translations[browserLang]) {
+      return browserLang;
+    }
+    return 'en';
+  });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

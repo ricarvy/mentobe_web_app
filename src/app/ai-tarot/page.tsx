@@ -62,7 +62,6 @@ export default function Home() {
   const [password, setPassword] = useState(DEMO_ACCOUNT.password);
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
-  const [selectedCategory, setSelectedCategory] = useState<'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced'>('recommended');
   const [tone, setTone] = useState<'mystical' | 'rational' | 'warm' | 'direct'>('mystical');
   const [cardStyle, setCardStyle] = useState<'classic' | 'modern' | 'fantasy'>('classic');
 
@@ -77,11 +76,11 @@ export default function Home() {
       fetchQuota(parsedUser.id);
     }
 
-    const savedStyle = localStorage.getItem('tarot_card_style') as any;
-    if (savedStyle) {
+    const savedStyle = localStorage.getItem('tarot_card_style');
+    if (savedStyle === 'classic' || savedStyle === 'modern' || savedStyle === 'fantasy') {
       setCardStyle(savedStyle);
     }
-  }, []);
+  }, [setUser, trackEvent]);
 
   const fetchQuota = async (userId: string) => {
     try {
@@ -127,7 +126,7 @@ export default function Home() {
       const convertedUser = convertApiUserToUser(userData);
       setUser(convertedUser);
       // 存储用户信息和认证凭证
-      saveAuthCredentials(convertedUser, email, password);
+      saveAuthCredentials(convertedUser as unknown as Record<string, unknown>, email, password);
       setShowLoginModal(false);
       await fetchQuota(convertedUser.id);
     } catch (error) {
@@ -354,7 +353,7 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="recommended" className="w-full" onValueChange={(value) => setSelectedCategory(value as any)}>
+              <Tabs defaultValue="recommended" className="w-full">
                 <TabsList className="w-full justify-start bg-black/20 border-purple-500/30">
                   <TabsTrigger value="recommended" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
                     {t.home.spreadCategories.recommended}
@@ -528,8 +527,8 @@ export default function Home() {
                   </div>
                   
                   <div className="mb-8">
-                    <Label className="block text-lg font-medium mb-4 text-center text-white">{t.settings?.tone || 'Interpretation Style'}</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Label className="block text-base sm:text-lg font-medium mb-3 sm:mb-4 text-center text-white">{t.settings?.tone || 'Interpretation Style'}</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                       {(
                         [
                           { id: 'mystical', label: t.settings?.toneMystical, desc: t.settings?.toneMysticalDesc, icon: MessageSquare },
@@ -542,22 +541,22 @@ export default function Home() {
                           key={item.id}
                           onClick={() => setTone(item.id)}
                           className={`
-                            relative flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-300 h-full
+                            relative flex flex-col p-3 md:p-4 rounded-xl border cursor-pointer transition-all duration-300 h-full
                             ${tone === item.id 
                               ? 'bg-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
                               : 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'}
                           `}
                         >
                           <div className={`
-                            w-10 h-10 rounded-full flex items-center justify-center mb-3
+                            w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center mb-2 md:mb-3
                             ${tone === item.id ? 'bg-white text-black' : 'bg-white/10 text-white'}
                           `}>
-                            <item.icon className="w-5 h-5" />
+                            <item.icon className="w-4 h-4 md:w-5 md:h-5" />
                           </div>
                           
-                          <h3 className="font-bold text-lg mb-2 text-white">{item.label}</h3>
+                          <h3 className="font-bold text-base md:text-lg mb-1 md:mb-2 text-white">{item.label}</h3>
                           
-                          <p className="text-sm text-gray-400 leading-relaxed mb-4 flex-grow">
+                          <p className="text-xs md:text-sm text-gray-400 leading-relaxed mb-3 md:mb-4 flex-grow">
                             {item.desc}
                           </p>
                           

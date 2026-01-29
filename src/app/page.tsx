@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, BookOpen, Hand, Star, Crown, ArrowRight, Zap, Eye, Heart } from 'lucide-react';
@@ -8,6 +9,38 @@ import { useI18n } from '@/lib/i18n';
 
 export default function Home() {
   const { t } = useI18n();
+  const { stars, shooting } = useMemo(() => {
+    const seedFromString = (str: string) => {
+      let acc = 0;
+      for (let i = 0; i < str.length; i++) acc = (acc * 31 + str.charCodeAt(i)) >>> 0;
+      return acc >>> 0;
+    };
+    const createRng = (seedInit: number) => {
+      let s = seedInit >>> 0;
+      return () => {
+        s = (s * 1664525 + 1013904223) >>> 0;
+        return s / 0xffffffff;
+      };
+    };
+    const rng = createRng(seedFromString('mentob-home-background'));
+    const s = Array.from({ length: 200 }, () => ({
+      w: rng() * 4 + 1,
+      h: rng() * 4 + 1,
+      left: rng() * 100,
+      top: rng() * 100,
+      delay: rng() * 5,
+      dur: rng() * 4 + 2,
+      opacity: rng() * 0.8 + 0.2,
+    }));
+    const sh = Array.from({ length: 8 }, (_, i) => ({
+      w: rng() * 120 + 60,
+      left: rng() * 100,
+      top: rng() * 60,
+      delay: i * 4 + rng() * 3,
+      dur: rng() * 2 + 1,
+    }));
+    return { stars: s, shooting: sh };
+  }, []);
 
   return (
     <>
@@ -18,33 +51,33 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
 
           {/* Twinkling Stars */}
-          {[...Array(200)].map((_, i) => (
+          {stars.map((s, i) => (
             <div
               key={`star-${i}`}
               className="absolute rounded-full bg-white animate-twinkle"
               style={{
-                width: Math.random() * 4 + 1,
-                height: Math.random() * 4 + 1,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${Math.random() * 4 + 2}s`,
-                opacity: Math.random() * 0.8 + 0.2,
+                width: s.w,
+                height: s.h,
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.dur}s`,
+                opacity: s.opacity,
               }}
             />
           ))}
 
           {/* Shooting Stars */}
-          {[...Array(8)].map((_, i) => (
+          {shooting.map((s, i) => (
             <div
               key={`shooting-${i}`}
               className="absolute bg-gradient-to-r from-purple-400 to-transparent h-0.5 animate-shooting-star"
               style={{
-                width: Math.random() * 120 + 60,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 60}%`,
-                animationDelay: `${i * 4 + Math.random() * 3}s`,
-                animationDuration: `${Math.random() * 2 + 1}s`,
+                width: s.w,
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.dur}s`,
               }}
             />
           ))}

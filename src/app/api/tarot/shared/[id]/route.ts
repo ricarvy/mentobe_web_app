@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import { tarotInterpretationManager } from '@/storage/database';
 import { getDb } from 'coze-coding-dev-sdk';
 import { tarotInterpretations, users } from '@/storage/database/shared/schema';
 import { eq } from 'drizzle-orm';

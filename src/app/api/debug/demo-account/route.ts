@@ -5,7 +5,7 @@ import {
   createSuccessResponse,
 } from '@/lib/api-response';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return withErrorHandler(async () => {
     const demoAccountInfo = {
       enabled: DEMO_ACCOUNT_ENABLED,

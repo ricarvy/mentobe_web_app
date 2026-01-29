@@ -293,7 +293,7 @@ export default function PricingPage() {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <div className="container mx-auto px-4 py-20">
+        <div className="container mx-auto px-4 py-12 md:py-20">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-6">
               <Sparkles className="w-4 h-4 text-purple-400" />
@@ -301,7 +301,7 @@ export default function PricingPage() {
                 {t.pricing.subtitle}
               </span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
               {t.pricing.title}
             </h1>
             <p className="text-xl text-purple-200/80">
@@ -412,8 +412,8 @@ export default function PricingPage() {
           </div>
 
           {/* Features Section */}
-          <div className="mt-24 max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+          <div className="mt-16 md:mt-24 max-w-5xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 text-white">
               {t.pricing.features.title}
             </h2>
             <p className="text-center text-purple-200/80 mb-12">
@@ -469,11 +469,11 @@ export default function PricingPage() {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-24 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <div className="mt-16 md:mt-24 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Ready to start your journey?
             </h2>
-            <p className="text-xl text-purple-200/80 mb-8">
+            <p className="text-lg sm:text-xl text-purple-200/80 mb-8">
               Join thousands of seekers discovering insights with AI-powered tarot
             </p>
             <Button
