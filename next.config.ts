@@ -3,6 +3,7 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
   output: 'standalone', // 启用 standalone 输出模式，优化 Docker 部署
+  generateEtags: false, // 禁用 ETag 生成，防止 304 缓存
   /* config options here */
   allowedDevOrigins: ['*.dev.coze.site'],
   images: {
