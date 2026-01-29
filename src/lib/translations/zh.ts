@@ -62,7 +62,7 @@ export const zh = {
   },
   landingPage: {
     badge: 'AI驱动的神秘智慧',
-    heroTitle: '探索你的未来',
+    heroTitle: '追寻你的未来',
     heroSubtitle: '利用古老智慧结合尖端人工智能，解锁深刻的洞察。让神秘艺术引导你的自我发现之旅。',
     features: {
       aiTarot: 'AI塔罗解读',
