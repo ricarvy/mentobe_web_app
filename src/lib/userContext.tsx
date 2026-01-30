@@ -19,7 +19,7 @@ interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => void;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<User | null>;
 }
 
 // 后端API响应类型
@@ -79,12 +79,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const refreshUser = async () => {
+  const refreshUser = async (): Promise<User | null> => {
     try {
       const credentials = getAuthCredentials();
       if (!credentials) {
         console.error('[refreshUser] No credentials found');
-        return;
+        return null;
       }
 
       // 使用登录API获取最新的用户信息
@@ -109,6 +109,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         vipLevel: userData.vipLevel,
         vipExpireAt: userData.vipExpireAt,
       });
+      
+      return userData;
     } catch (error) {
       console.error('[refreshUser] Failed to refresh user info:', error);
       throw error;

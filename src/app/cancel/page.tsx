@@ -137,14 +137,14 @@ function CancelContent() {
               <Link href="/" className="flex-1 sm:flex-none">
                 <Button variant="outline" className="w-full sm:w-auto min-w-[200px] border-gray-600 text-white hover:bg-gray-800">
                   <Home className="w-4 h-4 mr-2" />
-                  {t.payment.cancel.backToHome}
+                  {t.payment.success.backToHome}
                 </Button>
               </Link>
             </div>
 
             {/* 额外提示 */}
             <div className="text-center text-sm text-gray-400 pt-4">
-              {t.payment.cancel.help}
+              {/* Help text */}
             </div>
           </CardContent>
         </Card>
