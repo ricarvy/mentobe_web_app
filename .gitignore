@@ -25,6 +25,7 @@ coverage/
 .env.production.local
 .env.prod
 .env.oversea.prod
+.env*
 
 # Logs
 logs/
