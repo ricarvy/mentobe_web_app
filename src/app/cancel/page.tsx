@@ -77,7 +77,7 @@ function CancelContent() {
             {/* 失败原因 */}
             <div className="text-center space-y-3">
               <div className="text-gray-200">
-                {t.payment.cancel.reason}
+                {t.payment.cancel.message}
               </div>
               {sessionId && (
                 <div className="text-sm text-gray-400 font-mono bg-black/30 p-3 rounded-lg">
