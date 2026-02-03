@@ -25,8 +25,11 @@ export async function GET(
     // 获取 Authorization header
     const authHeader = request.headers.get('Authorization');
     
+    // 获取查询参数
+    const queryString = request.nextUrl.search;
+    
     // 构造后端请求 URL
-    const targetUrl = `${backendUrl}/api/stripe/payment-status/${session_id}`;
+    const targetUrl = `${backendUrl}/api/stripe/payment-status/${session_id}${queryString}`;
     
     console.log(`[Payment Status] Proxying to: ${targetUrl}`);
 

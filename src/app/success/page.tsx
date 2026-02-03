@@ -10,6 +10,7 @@ import { useUser } from '@/lib/userContext';
 import { useSearchParams } from 'next/navigation';
 import { useAnalytics } from '@/components/GA4Tracker';
 import { apiRequest } from '@/lib/api-client';
+import { getAuthorizationHeader } from '@/lib/auth';
 
 function SuccessContent() {
   const { t } = useI18n();
@@ -64,10 +65,27 @@ function SuccessContent() {
       try {
         console.log('[Success Page] Checking payment status for session:', sessionId);
         
-        const response = await apiRequest<{ status: string }>(`/api/stripe/payment-status/${sessionId}`, {
+        // Direct fetch to bypass generic proxy and use specific route handler
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
+        const authHeader = getAuthorizationHeader();
+        if (authHeader) {
+          headers['Authorization'] = authHeader;
+        }
+
+        const res = await fetch(`/api/stripe/payment-status/${sessionId}`, {
           method: 'GET',
-          requireAuth: true,
+          headers,
         });
+
+        if (!res.ok) {
+           const errorData = await res.json().catch(() => ({}));
+           console.error('[Success Page] Payment status fetch failed:', res.status, errorData);
+           throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
+        }
+
+        const response = await res.json();
 
         console.log('[Success Page] Payment status response:', response);
         const paymentStatus = response.status;
