@@ -27,6 +27,10 @@ function SuccessContent() {
     if (processedRef.current) return;
     
     const sessionId = searchParams.get('session_id');
+    
+    // Debug log for session_id
+    console.log('[Success Page] Received session_id:', sessionId);
+
     const price = localStorage.getItem('pending_checkout_price');
     const currency = localStorage.getItem('pending_checkout_currency');
     const plan = localStorage.getItem('pending_checkout_plan');
