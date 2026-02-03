@@ -27,6 +27,7 @@ export const ja = {
     cards: '枚',
     share: '結果を共有',
     copied: 'コピーしました',
+    loading: '読み込み中...',
   },
   settings: {
     title: '設定',
@@ -562,6 +563,7 @@ export const ja = {
       processing: '支払いを処理中...',
       processingDesc: '取引を確認しています。しばらくお待ちください。',
       processingMessage: '支払い状況を確認しています。これには数秒かかる場合があります。',
+      autoRedirect: '{0} 秒後にホームに戻ります...',
     },
     cancel: {
       title: '支払いがキャンセルされました',
@@ -578,7 +580,12 @@ export const ja = {
       title: '支払い失敗',
       description: '支払いに失敗したか、期限切れです。',
       message: 'もう一度お試しください。問題が解決しない場合はサポートにお問い合わせください。',
+      verifyError: '支払いを検証できません',
+      noSession: '支払いセッションが見つかりません',
+      sessionNotFound: 'セッションが見つかりません。',
+      defaultError: 'エラーが発生しました。',
     },
+    returnToPricing: '料金ページに戻る',
   },
   termsOfService: {
     title: '利用規約',

@@ -580,7 +580,12 @@ export const en = {
       title: 'Payment Failed',
       description: 'Payment failed or expired.',
       message: 'Please try again or contact support if the issue persists.',
+      verifyError: 'Unable to verify payment',
+      noSession: 'No payment session found',
+      sessionNotFound: 'Session not found.',
+      defaultError: 'Something went wrong.',
     },
+    returnToPricing: 'Return to Pricing',
   },
   termsOfService: {
     title: 'Terms of Service',
