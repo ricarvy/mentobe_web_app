@@ -74,7 +74,7 @@ function SuccessContent() {
 
     if (!sessionId) {
       setStatus('failed');
-      setErrorMessage('未检测到支付会话信息');
+      setErrorMessage(t.payment.failed.noSession);
       return;
     }
 
@@ -123,11 +123,11 @@ function SuccessContent() {
         } else if (paymentStatus === 'failed') {
           // Payment failed
           setStatus('failed');
-          setErrorMessage('Payment failed or expired.');
+          setErrorMessage(t.payment.failed.description);
           await logPaymentResult('critical', 'Payment failed or expired', { sessionId, plan, status: paymentStatus });
         } else if (paymentStatus === 'not_found') {
           setStatus('failed');
-          setErrorMessage('Session not found.');
+          setErrorMessage(t.payment.failed.sessionNotFound);
         } else {
           // Unknown status, treat as processing or error? Let's continue polling for safety or fail?
           // If unknown, maybe retry a few times? For now, continue polling if it looks transient, or fail.
@@ -203,8 +203,8 @@ function SuccessContent() {
     switch (status) {
       case 'processing': return t.payment.success.processing;
       case 'success': return t.payment.success.title;
-      case 'pending': return 'Payment Pending'; // Add translation later
-      case 'failed': return errorMessage === '未检测到支付会话信息' ? '无法验证支付' : t.payment.failed.title;
+      case 'pending': return t.payment.pending.title;
+      case 'failed': return !searchParams.get('session_id') ? t.payment.failed.verifyError : t.payment.failed.title;
     }
   };
 
@@ -212,8 +212,8 @@ function SuccessContent() {
     switch (status) {
       case 'processing': return t.payment.success.processingDesc;
       case 'success': return t.payment.success.description;
-      case 'pending': return 'Please complete your payment.';
-      case 'failed': return errorMessage || 'Something went wrong.';
+      case 'pending': return t.payment.pending.description;
+      case 'failed': return errorMessage || t.payment.failed.defaultError;
     }
   };
 
@@ -269,6 +269,7 @@ function SuccessContent() {
 }
 
 export default function SuccessPage() {
+  const { t } = useI18n();
   return (
     <main className="min-h-screen bg-[#0f0a1e] relative overflow-hidden flex items-center justify-center py-20">
       {/* Background Elements */}
@@ -278,7 +279,7 @@ export default function SuccessPage() {
       </div>
 
       <Suspense fallback={
-        <div className="text-white text-center">Loading...</div>
+        <div className="text-white text-center">{t.common.loading}</div>
       }>
         <SuccessContent />
       </Suspense>
