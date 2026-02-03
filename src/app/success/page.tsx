@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CheckCircle2, Home, AlertCircle, Clock } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { useUser } from '@/lib/userContext';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useAnalytics } from '@/components/GA4Tracker';
 import { apiRequest } from '@/lib/api-client';
 import { getAuthorizationHeader } from '@/lib/auth';
@@ -16,12 +16,30 @@ function SuccessContent() {
   const { t } = useI18n();
   const { refreshUser } = useUser();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { trackEvent } = useAnalytics();
   const processedRef = useRef(false);
   
   // Status state: processing, success, failed, pending
   const [status, setStatus] = useState<'processing' | 'success' | 'failed' | 'pending'>('processing');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [countdown, setCountdown] = useState(3);
+
+  useEffect(() => {
+    if (status === 'success') {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            router.push('/');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [status, router]);
 
   useEffect(() => {
     // Prevent duplicate processing in React Strict Mode
@@ -90,7 +108,8 @@ function SuccessContent() {
         console.log('[Success Page] Payment status response:', response);
         const paymentStatus = response.status;
 
-        if (paymentStatus === 'completed') {
+        // Treat 'waiting_for_webhook' as success to avoid bad UX
+        if (paymentStatus === 'completed' || paymentStatus === 'paid' || paymentStatus === 'waiting_for_webhook') {
           // Success!
           await refreshUser();
           setStatus('success');
@@ -98,10 +117,6 @@ function SuccessContent() {
           
           // Log success
           await logPaymentResult('info', 'Payment completed successfully', { sessionId, plan, status: paymentStatus });
-        } else if (paymentStatus === 'waiting_for_webhook') {
-          // Continue polling
-          setStatus('processing');
-          setTimeout(checkPaymentStatus, 2000);
         } else if (paymentStatus === 'pending') {
           // Payment not finished
           setStatus('pending');
@@ -224,7 +239,8 @@ function SuccessContent() {
             </div>
             {status === 'success' && (
               <div className="text-sm text-gray-400">
-                {t.payment.success.note}
+                <p>{t.payment.success.note}</p>
+                <p className="mt-2 text-purple-300">Returning to home in {countdown} seconds...</p>
               </div>
             )}
           </div>
