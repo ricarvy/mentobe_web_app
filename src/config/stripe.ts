@@ -50,10 +50,10 @@ export const stripeConfig: StripeConfig = {
   // 成功和取消页面URL
   successUrl: typeof window !== 'undefined' 
     ? `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`
-    : `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:5000'}/success?session_id={CHECKOUT_SESSION_ID}`,
+    : `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://life.mentobe.co' : 'http://localhost:5000')}/success?session_id={CHECKOUT_SESSION_ID}`,
   cancelUrl: typeof window !== 'undefined'
     ? `${window.location.origin}/pricing`
-    : `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:5000'}/pricing`,
+    : `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://life.mentobe.co' : 'http://localhost:5000')}/pricing`,
 };
 
 /**

@@ -51,7 +51,7 @@ function SuccessContent() {
 
     if (!sessionId) {
       setStatus('failed');
-      setErrorMessage('Session ID missing');
+      setErrorMessage('未检测到支付会话信息');
       return;
     }
 
@@ -167,7 +167,7 @@ function SuccessContent() {
       case 'processing': return t.payment.success.processing;
       case 'success': return t.payment.success.title;
       case 'pending': return 'Payment Pending'; // Add translation later
-      case 'failed': return 'Payment Failed'; // Add translation later
+      case 'failed': return errorMessage === '未检测到支付会话信息' ? '无法验证支付' : t.payment.failed.title;
     }
   };
 

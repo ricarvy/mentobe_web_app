@@ -75,6 +75,8 @@ export async function POST(request: NextRequest) {
     const backendUrlWithLang = `${backendUrl}/api/stripe/create-checkout-session?lang=${lang}`;
 
     console.log('[Stripe Checkout] Calling backend API:', backendUrlWithLang);
+    console.log('[Stripe Checkout] Success URL:', stripeConfig.successUrl);
+    console.log('[Stripe Checkout] Cancel URL:', stripeConfig.cancelUrl);
 
     const response = await fetch(backendUrlWithLang, {
       method: 'POST',
