@@ -179,6 +179,14 @@ export function TarotResult({
             <CardTitle className="text-white">{t.home.interpretation}</CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Display Question */}
+            <div className="mb-4 p-4 bg-purple-900/20 border border-purple-500/20 rounded-lg text-center">
+              <p className="text-sm text-purple-300 font-medium mb-1">
+                {t.home.yourQuestion}:
+              </p>
+              <p className="text-white italic">"{question}"</p>
+            </div>
+
             <div className="bg-black/30 rounded-lg p-4 min-h-[200px] text-purple-100 prose prose-invert prose-purple max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {interpretation}

@@ -5,49 +5,28 @@ export function useSpreadTranslations() {
   const { t } = useI18n();
 
   const getTranslatedSpread = (spread: Spread): Spread => {
-    type PositionsSingle = { position1: string; position1Desc: string };
-    type PositionsThree = { position1: string; position1Desc: string; position2: string; position2Desc: string; position3: string; position3Desc: string };
-    type PositionsCross = {
-      position1: string; position1Desc: string;
-      position2: string; position2Desc: string;
-      position3: string; position3Desc: string;
-      position4: string; position4Desc: string;
-      position5: string; position5Desc: string;
-      position6: string; position6Desc: string;
-      position7: string; position7Desc: string;
-      position8: string; position8Desc: string;
-      position9: string; position9Desc: string;
-      position10: string; position10Desc: string;
-    };
-    type SpreadTranslations = {
-      single: string;
-      singleDesc: string;
-      three: string;
-      threeDesc: string;
-      cross: string;
-      crossDesc: string;
-      positions: {
-        single: PositionsSingle;
-        three: PositionsThree;
-        cross: PositionsCross;
-      };
-    };
-    const translations = t.spreads as unknown as SpreadTranslations;
+    const translations = t.spreads as unknown as Record<string, any>;
 
-    let translatedName = '';
-    let translatedDesc = '';
+    let translatedName = spread.name;
+    let translatedDesc = spread.description;
+
+    const nameKey = spread.id;
+    const descKey = `${spread.id}Desc`;
+    if (translations[nameKey]) {
+      translatedName = translations[nameKey];
+    }
+    if (translations[descKey]) {
+      translatedDesc = translations[descKey];
+    }
+
     const translatedPositions = spread.positions.map((pos) => {
       let translatedPosName = pos.name;
       let translatedPosDesc = pos.description;
 
       if (spread.id === 'single') {
-        translatedName = translations.single;
-        translatedDesc = translations.singleDesc;
         translatedPosName = translations.positions.single.position1;
         translatedPosDesc = translations.positions.single.position1Desc;
       } else if (spread.id === 'three') {
-        translatedName = translations.three;
-        translatedDesc = translations.threeDesc;
         if (pos.id === 'position1') {
           translatedPosName = translations.positions.three.position1;
           translatedPosDesc = translations.positions.three.position1Desc;
@@ -59,8 +38,6 @@ export function useSpreadTranslations() {
           translatedPosDesc = translations.positions.three.position3Desc;
         }
       } else if (spread.id === 'cross') {
-        translatedName = translations.cross;
-        translatedDesc = translations.crossDesc;
         if (pos.id === 'position1') {
           translatedPosName = translations.positions.cross.position1;
           translatedPosDesc = translations.positions.cross.position1Desc;

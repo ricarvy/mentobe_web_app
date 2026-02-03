@@ -152,6 +152,7 @@ export const ja = {
     getAiInterpretation: 'AI解釈を取得',
     reselectSpread: 'スプレッドを再選択',
     interpretation: '解釈結果',
+    yourQuestion: 'あなたの質問',
     questionPlaceholder: '質問を入力してください...',
     singleCard: 'シングルカード',
     threeCard: 'スリーカード',
@@ -345,6 +346,9 @@ export const ja = {
     demoCredentials: 'デモアカウント認証情報',
     demoEmail: 'メール: demo@mentobai.com',
     demoPassword: 'パスワード: Demo123!',
+    socialAccountLogin: 'このアカウントはソーシャルアカウントです。対応するソーシャルプラットフォームでログインしてください',
+    accountDisabled: 'アカウントが無効になっています。サポートにお問い合わせください',
+    authExpired: 'ログインの有効期限が切れました。もう一度ログインしてください',
   },
   privacyPolicy: {
     title: 'プライバシーポリシー',

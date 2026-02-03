@@ -167,9 +167,22 @@ export default function LoginPage() {
     } catch (error) {
       console.error('Auth error:', error);
       if (error instanceof ApiRequestError) {
-        // 友好的错误提示
+        let errorMessage = error.message;
+
+        if (error.code === 'AUTH_INVALID_CREDENTIALS') {
+          errorMessage = t.auth.invalidCredentials;
+        } else if (error.code === 'AUTH_SOCIAL_ACCOUNT') {
+          errorMessage = error.message; // 直接使用后端返回的消息
+        } else if (error.code === 'AUTH_ACCOUNT_DISABLED') {
+          errorMessage = t.auth.accountDisabled;
+        } else if (error.code === 'AUTH_EXPIRED') {
+          errorMessage = t.auth.authExpired;
+        } else if (error.isServerError) {
+          errorMessage = '服务器繁忙，请稍后再试';
+        }
+
         setErrors({
-          submit: error.isServerError ? '服务器繁忙，请稍后再试' : error.message
+          submit: errorMessage
         });
       } else {
         setErrors({ submit: isLogin ? t.auth.loginFailed : t.auth.registrationFailed });

@@ -135,20 +135,6 @@ export async function apiRequest<T = unknown>(
       headers,
     });
 
-    // 处理 403 Forbidden
-    if (response.status === 403) {
-      if (typeof window !== 'undefined') {
-        clearAuthCredentials();
-        window.location.href = '/login';
-      }
-      throw new ApiRequestError(
-        '登录已过期，请重新登录',
-        'AUTH_EXPIRED',
-        null,
-        false
-      );
-    }
-
     console.log('[API Response]', {
       url: fullUrl,
       status: response.status,
@@ -167,6 +153,20 @@ export async function apiRequest<T = unknown>(
     } else {
       // 如果不是 JSON，读取文本并包装为错误响应
       const text = await response.text();
+      // 如果是 403 且不是 JSON，那肯定是 Token 过期或者网关拦截
+      if (response.status === 403) {
+        if (typeof window !== 'undefined') {
+          clearAuthCredentials();
+          window.location.href = '/login';
+        }
+        throw new ApiRequestError(
+          '登录已过期，请重新登录',
+          'AUTH_EXPIRED',
+          null,
+          false
+        );
+      }
+
       console.error('[API Error] Non-JSON response:', text);
       responseData = {
         success: false,
@@ -183,11 +183,61 @@ export async function apiRequest<T = unknown>(
       return responseData.data;
     } else {
       // 响应包含错误信息
-      console.error('[API Error]', responseData.error);
+      console.error('[API Error]', responseData);
+
+      // Handle FastAPI style error structure { detail: { code: string, message: string } }
+      const rawResponse = responseData as any;
+      if (rawResponse.detail && rawResponse.detail.code) {
+        // 如果是 403 且是特定错误码，不要清除 token
+        if (response.status === 403) {
+           // 这些错误码不清除 token
+           const keepTokenCodes = ['AUTH_SOCIAL_ACCOUNT', 'AUTH_ACCOUNT_DISABLED'];
+           if (!keepTokenCodes.includes(rawResponse.detail.code)) {
+             // 其他 403 错误（如 AUTH_EXPIRED 或未知的 403）才清除 token
+             if (typeof window !== 'undefined') {
+                clearAuthCredentials();
+                window.location.href = '/login';
+              }
+           }
+        }
+
+        throw new ApiRequestError(
+          rawResponse.detail.message || 'Unknown error',
+          rawResponse.detail.code,
+          rawResponse.detail,
+          true
+        );
+      }
+
+      // Handle standard ApiResponse error structure
+      if (responseData.error) {
+        throw new ApiRequestError(
+          responseData.error.message,
+          responseData.error.code,
+          responseData.error.details,
+          true
+        );
+      }
+      
+      // 如果是 403 但没有特定的错误结构，按默认过期处理
+      if (response.status === 403) {
+        if (typeof window !== 'undefined') {
+          clearAuthCredentials();
+          window.location.href = '/login';
+        }
+        throw new ApiRequestError(
+          '登录已过期，请重新登录',
+          'AUTH_EXPIRED',
+          null,
+          false
+        );
+      }
+
+      // Fallback
       throw new ApiRequestError(
-        responseData.error.message,
-        responseData.error.code,
-        responseData.error.details,
+        '服务器繁忙，请稍后再试',
+        'UNKNOWN_ERROR',
+        responseData,
         true
       );
     }

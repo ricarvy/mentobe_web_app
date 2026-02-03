@@ -152,6 +152,7 @@ export const en = {
     getAiInterpretation: 'Get AI Interpretation',
     reselectSpread: 'Reselect Spread',
     interpretation: 'Interpretation Results',
+    yourQuestion: 'Your Question',
     questionPlaceholder: 'Please enter your question...',
     singleCard: 'Single Card',
     threeCard: 'Three Card',
@@ -345,6 +346,9 @@ export const en = {
     demoCredentials: 'Demo Credentials',
     demoEmail: 'Email: demo@mentobai.com',
     demoPassword: 'Password: Demo123!',
+    socialAccountLogin: 'This is a social account, please log in with the corresponding social platform',
+    accountDisabled: 'Account has been disabled, please contact support',
+    authExpired: 'Login expired, please log in again',
   },
   privacyPolicy: {
     title: 'Privacy Policy',
