@@ -7,7 +7,7 @@ import type {
   ApiErrorResponse,
   ApiResponse,
 } from './api-response';
-import { addAuthHeader } from './auth';
+import { addAuthHeader, clearAuthCredentials } from './auth';
 import { getApiUrl } from '@/config';
 
 /**
@@ -135,6 +135,20 @@ export async function apiRequest<T = unknown>(
       headers,
     });
 
+    // 处理 403 Forbidden
+    if (response.status === 403) {
+      if (typeof window !== 'undefined') {
+        clearAuthCredentials();
+        window.location.href = '/login';
+      }
+      throw new ApiRequestError(
+        '登录已过期，请重新登录',
+        'AUTH_EXPIRED',
+        null,
+        false
+      );
+    }
+
     console.log('[API Response]', {
       url: fullUrl,
       status: response.status,
@@ -253,6 +267,24 @@ export async function streamApiRequest(
       ...requestConfig,
       headers,
     });
+
+    // 处理 403 Forbidden
+    if (response.status === 403) {
+      if (typeof window !== 'undefined') {
+        clearAuthCredentials();
+        window.location.href = '/login';
+      }
+      const error = new ApiRequestError(
+        '登录已过期，请重新登录',
+        'AUTH_EXPIRED',
+        null,
+        false
+      );
+      if (onError) {
+        onError(error);
+      }
+      return;
+    }
 
     console.log('[API Response]', {
       url: fullUrl,

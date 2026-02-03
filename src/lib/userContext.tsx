@@ -87,6 +87,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         return null;
       }
 
+      // 如果存在 accessToken，说明是 Token 登录，不需要再调用后端的 login 接口
+      if (credentials.accessToken) {
+        console.log('[refreshUser] Token exists, skipping login API call');
+        return user;
+      }
+
       // 使用登录API获取最新的用户信息
       const apiData = await apiRequest<ApiResponseUser>('/api/auth/login', {
         method: 'POST',

@@ -10,11 +10,11 @@ import { useUser } from '@/lib/userContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAnalytics } from '@/components/GA4Tracker';
 import { apiRequest } from '@/lib/api-client';
-import { getAuthorizationHeader } from '@/lib/auth';
+import { getAuthorizationHeader, clearAuthCredentials } from '@/lib/auth';
 
 function SuccessContent() {
   const { t } = useI18n();
-  const { refreshUser } = useUser();
+  const { refreshUser, setUser } = useUser();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { trackEvent } = useAnalytics();
@@ -98,6 +98,11 @@ function SuccessContent() {
         });
 
         if (!res.ok) {
+           if (res.status === 403) {
+             clearAuthCredentials();
+             router.push('/login');
+             return;
+           }
            const errorData = await res.json().catch(() => ({}));
            console.error('[Success Page] Payment status fetch failed:', res.status, errorData);
            throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
@@ -111,7 +116,25 @@ function SuccessContent() {
         // Treat 'waiting_for_webhook' as success to avoid bad UX
         if (paymentStatus === 'completed' || paymentStatus === 'paid' || paymentStatus === 'waiting_for_webhook') {
           // Success!
-          await refreshUser();
+          const updatedUser = await refreshUser();
+          
+          // 如果 refreshUser 因为有 token 而跳过刷新（返回旧 user），或者更新后的用户状态仍非 VIP（延迟问题）
+          // 我们手动更新前端状态以提升体验（假设支付成功即为 PRO/PREMIUM）
+          // 注意：这是一个 Optimistic UI 更新，实际状态以 API 为准，但在跳转回首页前给用户即时反馈是好的。
+          if (updatedUser && !updatedUser.vipLevel) {
+            // 尝试从 localStorage 获取购买的计划类型，如果没有则默认为 pro
+            const plan = localStorage.getItem('pending_checkout_plan') || 'pro';
+            const vipLevel = plan.includes('premium') ? 'premium' : 'pro';
+            
+            setUser({
+              ...updatedUser,
+              vipLevel: vipLevel as 'pro' | 'premium',
+              // 这里的 vipExpireAt 无法准确得知，可以暂不设置或设为一个月后
+              vipExpireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            });
+            console.log('[Success Page] Optimistically updated user VIP status to:', vipLevel);
+          }
+
           setStatus('success');
           localStorage.removeItem('pending_checkout_plan');
           
