@@ -6,12 +6,6 @@
 export interface StripeConfig {
   publishableKey: string;
   environment: 'test' | 'production';
-  priceIds: {
-    proMonthly: string;
-    proYearly: string;
-    premiumMonthly: string;
-    premiumYearly: string;
-  };
   successUrl: string;
   cancelUrl: string;
 }
@@ -22,32 +16,15 @@ export interface StripeConfig {
  * 环境变量说明：
  * - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: Stripe Publishable Key (pk_xxx)
  * - NEXT_PUBLIC_STRIPE_ENVIRONMENT: 环境类型 (test/production)
- * - NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY: Pro月付价格ID (price_xxx)
- * - NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY: Pro年付价格ID (price_xxx)
- * - NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_MONTHLY: Premium月付价格ID (price_xxx)
- * - NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_YEARLY: Premium年付价格ID (price_xxx)
  *
- * 获取配置步骤：
- * 1. 注册 Stripe 账户: https://dashboard.stripe.com/register
- * 2. 创建产品和价格: https://dashboard.stripe.com/products
- *    - 创建4个价格：Pro Monthly, Pro Yearly, Premium Monthly, Premium Yearly
- * 3. 获取 Publishable Key 和 Price IDs
- * 4. 在 .env.local 中配置环境变量
+ * 注意：价格配置现已从后端 API (/api/stripe/config) 动态获取，不再硬编码在此处。
  */
 export const stripeConfig: StripeConfig = {
   // 从环境变量读取
   publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
   environment: (process.env.NEXT_PUBLIC_STRIPE_ENVIRONMENT as 'test' | 'production') || 'test',
   
-  // 价格ID（在Stripe后台创建产品后获取）
-  priceIds: {
-    proMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || 'price_xxx',
-    proYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY || 'price_xxx',
-    premiumMonthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_MONTHLY || 'price_xxx',
-    premiumYearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_YEARLY || 'price_xxx',
-  },
-  
-  // 成功和取消页面URL
+  // 成功和取消页面URL (作为后备默认值)
   successUrl: typeof window !== 'undefined' 
     ? `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`
     : `${process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://life.mentobe.co' : 'http://localhost:5000')}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -57,35 +34,11 @@ export const stripeConfig: StripeConfig = {
 };
 
 /**
- * 根据计划和周期获取价格ID
- */
-export function getPriceId(plan: 'pro' | 'premium', billingCycle: 'monthly' | 'yearly'): string {
-  if (plan === 'pro' && billingCycle === 'monthly') {
-    return stripeConfig.priceIds.proMonthly;
-  } else if (plan === 'pro' && billingCycle === 'yearly') {
-    return stripeConfig.priceIds.proYearly;
-  } else if (plan === 'premium' && billingCycle === 'monthly') {
-    return stripeConfig.priceIds.premiumMonthly;
-  } else if (plan === 'premium' && billingCycle === 'yearly') {
-    return stripeConfig.priceIds.premiumYearly;
-  }
-  return '';
-}
-
-/**
  * 验证 Stripe 配置是否有效
  */
 export function validateStripeConfig(): boolean {
   return !!(
     stripeConfig.publishableKey &&
-    stripeConfig.priceIds.proMonthly &&
-    stripeConfig.priceIds.proYearly &&
-    stripeConfig.priceIds.premiumMonthly &&
-    stripeConfig.priceIds.premiumYearly &&
-    !stripeConfig.publishableKey.includes('xxx') &&
-    !stripeConfig.priceIds.proMonthly.includes('xxx') &&
-    !stripeConfig.priceIds.proYearly.includes('xxx') &&
-    !stripeConfig.priceIds.premiumMonthly.includes('xxx') &&
-    !stripeConfig.priceIds.premiumYearly.includes('xxx')
+    !stripeConfig.publishableKey.includes('xxx')
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Fragment } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -62,7 +63,14 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" onClick={handleHomeClick} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Sparkles className="h-6 w-6 text-purple-400" />
+            <div className="relative h-8 w-8 rounded-full overflow-hidden">
+              <Image 
+                src="/logo.jpeg" 
+                alt="Mentob AI Logo" 
+                fill
+                className="object-cover"
+              />
+            </div>
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Mentob AI
             </span>

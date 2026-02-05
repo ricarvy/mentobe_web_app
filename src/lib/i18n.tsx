@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Language, TranslationKey, translations } from '@/lib/translations';
 
 interface I18nContextType {
@@ -12,16 +12,16 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window === 'undefined') {
-      return 'en';
-    }
+  // Initialize with 'en' to match server-side rendering and avoid hydration mismatch
+  const [language, setLanguageState] = useState<Language>('en');
 
+  useEffect(() => {
+    let targetLang: Language = 'en';
     const savedLang = localStorage.getItem('tarot_language') as Language | null;
+    
     if (savedLang && translations[savedLang]) {
-      return savedLang;
-    }
-    if (savedLang) {
+      targetLang = savedLang;
+    } else if (savedLang) {
       const langMap: Record<string, Language> = {
         'cn': 'zh',
         'zh-CN': 'zh',
@@ -32,15 +32,19 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       const mappedLang = langMap[savedLang];
       if (mappedLang && translations[mappedLang]) {
         localStorage.setItem('tarot_language', mappedLang);
-        return mappedLang;
+        targetLang = mappedLang;
+      }
+    } else {
+      const browserLang = navigator.language.split('-')[0] as Language;
+      if (translations[browserLang]) {
+        targetLang = browserLang;
       }
     }
-    const browserLang = navigator.language.split('-')[0] as Language;
-    if (translations[browserLang]) {
-      return browserLang;
+
+    if (targetLang !== language) {
+      setLanguageState(targetLang);
     }
-    return 'en';
-  });
+  }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

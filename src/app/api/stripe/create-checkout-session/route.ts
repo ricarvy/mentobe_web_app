@@ -32,6 +32,8 @@ interface CreateCheckoutSessionRequest {
   priceId: string;
   userId: string;
   userEmail: string;
+  successUrl?: string;
+  cancelUrl?: string;
 }
 
 /**
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
   try {
     // 解析请求体
     const body: CreateCheckoutSessionRequest = await request.json();
-    const { priceId, userId, userEmail } = body;
+    const { priceId, userId, userEmail, successUrl, cancelUrl } = body;
 
     // 验证必要参数
     if (!priceId || !userId || !userEmail) {
@@ -74,9 +76,12 @@ export async function POST(request: NextRequest) {
     const lang = getLanguageFromRequest(request);
     const backendUrlWithLang = `${backendUrl}/api/stripe/create-checkout-session?lang=${lang}`;
 
+    const finalSuccessUrl = successUrl || stripeConfig.successUrl;
+    const finalCancelUrl = cancelUrl || stripeConfig.cancelUrl;
+
     console.log('[Stripe Checkout] Calling backend API:', backendUrlWithLang);
-    console.log('[Stripe Checkout] Success URL:', stripeConfig.successUrl);
-    console.log('[Stripe Checkout] Cancel URL:', stripeConfig.cancelUrl);
+    console.log('[Stripe Checkout] Success URL:', finalSuccessUrl);
+    console.log('[Stripe Checkout] Cancel URL:', finalCancelUrl);
 
     const response = await fetch(backendUrlWithLang, {
       method: 'POST',
@@ -88,8 +93,8 @@ export async function POST(request: NextRequest) {
         priceId,
         userId,
         userEmail,
-        successUrl: stripeConfig.successUrl,
-        cancelUrl: stripeConfig.cancelUrl,
+        successUrl: finalSuccessUrl,
+        cancelUrl: finalCancelUrl,
       }),
     });
 

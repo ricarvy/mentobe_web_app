@@ -7,10 +7,29 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { getPriceId } from '@/config/stripe';
 import { useUser } from '@/lib/userContext';
 import { apiRequest } from '@/lib/api-client';
 import { useAnalytics } from '@/components/GA4Tracker';
+
+// API Response Types
+interface StripePrice {
+  id: string;
+  unit_amount: number;
+  amount: number;
+  currency: string;
+}
+
+interface PricingConfigResponse {
+  success: boolean;
+  data: {
+    prices: {
+      pro_monthly: StripePrice;
+      pro_yearly: StripePrice;
+      premium_monthly: StripePrice;
+      premium_yearly: StripePrice;
+    };
+  };
+}
 
 export default function PricingPage() {
   const { t, language } = useI18n();
@@ -18,6 +37,23 @@ export default function PricingPage() {
   const { trackEvent } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [pricingConfig, setPricingConfig] = useState<PricingConfigResponse['data']['prices'] | null>(null);
+
+  // Fetch pricing config from API
+  useEffect(() => {
+    const fetchPricingConfig = async () => {
+      try {
+        const response = await apiRequest<PricingConfigResponse>('/api/stripe/config');
+        if (response.success && response.data?.prices) {
+          setPricingConfig(response.data.prices);
+        }
+      } catch (error) {
+        console.error('Failed to fetch pricing config:', error);
+      }
+    };
+
+    fetchPricingConfig();
+  }, []);
 
   // Track view_item_list when page loads
   useEffect(() => {
@@ -31,67 +67,71 @@ export default function PricingPage() {
     });
   }, [trackEvent]);
 
+  // Format price helper
+  const formatPrice = (price: StripePrice) => {
+    const symbol = price.currency.toUpperCase() === 'CNY' || price.currency.toUpperCase() === 'JPY' ? '¥' : '$';
+    return `${symbol}${price.amount}`;
+  };
+
   const handleSubscribe = async (plan: 'pro' | 'premium') => {
     if (!user) {
-      // 如果用户未登录，跳转到登录页面
       window.location.href = '/login';
       return;
     }
 
-    // 检查是否允许升级：Premium用户不能降级到Pro
     if (user.vipLevel === 'premium' && plan === 'pro') {
       alert('You already have Premium membership. Downgrading to Pro is not allowed. You can continue with Premium or renew your subscription.');
       return;
     }
 
-    // Pro用户可以继续订阅Pro（续费）或升级到Premium
-    // 普通用户可以订阅Pro或Premium
+    if (!pricingConfig) {
+      return;
+    }
 
     setLoading(true);
 
     try {
-      // 获取对应的价格ID
-      const priceId = getPriceId(plan, billingCycle);
-
-      if (!priceId) {
+      const configKey = `${plan}_${billingCycle}` as keyof typeof pricingConfig;
+      const priceInfo = pricingConfig[configKey];
+      
+      if (!priceInfo || !priceInfo.id) {
         console.error('Invalid price ID');
         return;
       }
 
+      const priceId = priceInfo.id;
+
       // Track begin_checkout
-      const priceInfo = prices[plan][billingCycle][language];
       trackEvent('begin_checkout', {
-        currency: language === 'en' ? 'USD' : (language === 'zh' ? 'CNY' : 'JPY'),
-        value: parseFloat(priceInfo.price.replace(/[^0-9.]/g, '')),
+        currency: priceInfo.currency,
+        value: priceInfo.amount,
         items: [{
           item_id: priceId,
           item_name: `${plan} ${billingCycle}`,
-          price: parseFloat(priceInfo.price.replace(/[^0-9.]/g, '')),
+          price: priceInfo.amount,
           quantity: 1
         }]
       });
 
-      // Save to localStorage for success page tracking
-      localStorage.setItem('pending_checkout_price', priceInfo.price.replace(/[^0-9.]/g, ''));
-      localStorage.setItem('pending_checkout_currency', language === 'en' ? 'USD' : (language === 'zh' ? 'CNY' : 'JPY'));
+      // Save to localStorage
+      localStorage.setItem('pending_checkout_price', priceInfo.amount.toString());
+      localStorage.setItem('pending_checkout_currency', priceInfo.currency);
       localStorage.setItem('pending_checkout_plan', `${plan} ${billingCycle}`);
 
-      // 调用后端 API 创建 Checkout Session
       const response = await apiRequest<{
         url: string;
       }>('/api/stripe/create-checkout-session', {
         method: 'POST',
         requireAuth: true,
         body: JSON.stringify({
-          price_id: priceId,
-          success_url: window.location.origin + '/success',
-          cancel_url: window.location.origin + '/cancel',
-          user_id: user.id,
-          user_email: user.email,
+          priceId: priceId,
+          successUrl: window.location.origin + '/success',
+          cancelUrl: window.location.origin + '/cancel',
+          userId: user.id,
+          userEmail: user.email,
         }),
       });
 
-      // 直接重定向到 Stripe Checkout URL
       if (response.url) {
         window.location.href = response.url;
       }
@@ -114,45 +154,6 @@ export default function PricingPage() {
     planType?: 'pro' | 'premium';
   };
 
-  type PriceInfo = {
-    price: string;
-    period: string;
-  };
-
-  type LanguagePrices = {
-    en: PriceInfo;
-    zh: PriceInfo;
-    ja: PriceInfo;
-  };
-
-  // 价格配置 - 根据语言显示不同货币
-  const prices: Record<'pro' | 'premium', Record<'monthly' | 'yearly', LanguagePrices>> = {
-    pro: {
-      monthly: {
-        en: { price: '$9.9', period: '/month' },
-        zh: { price: '¥69', period: '/月' },
-        ja: { price: '¥1,480', period: '/月' },
-      },
-      yearly: {
-        en: { price: '$79', period: '/year' },
-        zh: { price: '¥559', period: '/年' },
-        ja: { price: '¥11,800', period: '/年' },
-      },
-    },
-    premium: {
-      monthly: {
-        en: { price: '$19.9', period: '/month' },
-        zh: { price: '¥139', period: '/月' },
-        ja: { price: '¥2,980', period: '/月' },
-      },
-      yearly: {
-        en: { price: '$169', period: '/year' },
-        zh: { price: '¥1,199', period: '/年' },
-        ja: { price: '¥25,300', period: '/年' },
-      },
-    },
-  };
-
   const plans: Plan[] = [
     {
       ...t.pricing.plans.free,
@@ -160,14 +161,14 @@ export default function PricingPage() {
     {
       ...t.pricing.plans.pro,
       planType: 'pro',
-      price: prices.pro[billingCycle][language].price,
-      period: prices.pro[billingCycle][language].period,
+      price: pricingConfig ? formatPrice(pricingConfig[`pro_${billingCycle}`]) : '--',
+      period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
     {
       ...t.pricing.plans.premium,
       planType: 'premium',
-      price: prices.premium[billingCycle][language].price,
-      period: prices.premium[billingCycle][language].period,
+      price: pricingConfig ? formatPrice(pricingConfig[`premium_${billingCycle}`]) : '--',
+      period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
   ];
 
