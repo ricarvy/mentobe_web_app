@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { Language, TranslationKey, translations } from '@/lib/translations';
 
 interface I18nContextType {
@@ -12,39 +12,41 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  // Initialize with 'en' to match server-side rendering and avoid hydration mismatch
-  const [language, setLanguageState] = useState<Language>('en');
-
-  useEffect(() => {
+  const [language, setLanguageState] = useState<Language>(() => {
     let targetLang: Language = 'en';
-    const savedLang = localStorage.getItem('tarot_language') as Language | null;
-    
-    if (savedLang && translations[savedLang]) {
-      targetLang = savedLang;
-    } else if (savedLang) {
-      const langMap: Record<string, Language> = {
-        'cn': 'zh',
-        'zh-CN': 'zh',
-        'zh-TW': 'zh',
-        'jp': 'ja',
-        'ja-JP': 'ja',
-      };
-      const mappedLang = langMap[savedLang];
-      if (mappedLang && translations[mappedLang]) {
-        localStorage.setItem('tarot_language', mappedLang);
-        targetLang = mappedLang;
-      }
-    } else {
-      const browserLang = navigator.language.split('-')[0] as Language;
-      if (translations[browserLang]) {
-        targetLang = browserLang;
-      }
-    }
+    try {
+      const savedLang = typeof window !== 'undefined'
+        ? (localStorage.getItem('tarot_language') as Language | null)
+        : null;
 
-    if (targetLang !== language) {
-      setLanguageState(targetLang);
+      if (savedLang && translations[savedLang]) {
+        targetLang = savedLang;
+      } else if (savedLang) {
+        const langMap: Record<string, Language> = {
+          cn: 'zh',
+          'zh-CN': 'zh',
+          'zh-TW': 'zh',
+          jp: 'ja',
+          'ja-JP': 'ja',
+        };
+        const mappedLang = langMap[savedLang];
+        if (mappedLang && translations[mappedLang]) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('tarot_language', mappedLang);
+          }
+          targetLang = mappedLang;
+        }
+      } else if (typeof navigator !== 'undefined') {
+        const browserLang = navigator.language.split('-')[0] as Language;
+        if (translations[browserLang]) {
+          targetLang = browserLang;
+        }
+      }
+    } catch {
+      targetLang = 'en';
     }
-  }, []);
+    return targetLang;
+  });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
