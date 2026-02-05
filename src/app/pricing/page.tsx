@@ -69,8 +69,7 @@ export default function PricingPage() {
 
   // Format price helper
   const formatPrice = (price: StripePrice) => {
-    const symbol = price.currency.toUpperCase() === 'CNY' || price.currency.toUpperCase() === 'JPY' ? '¥' : '$';
-    return `${symbol}${price.amount}`;
+    return `${price.amount}`;
   };
 
   const handleSubscribe = async (plan: 'pro' | 'premium') => {
@@ -148,6 +147,7 @@ export default function PricingPage() {
     description: string;
     price: string;
     period?: string;
+    currency?: string;
     features: string[];
     button: string;
     popular: boolean;
@@ -162,12 +162,14 @@ export default function PricingPage() {
       ...t.pricing.plans.pro,
       planType: 'pro',
       price: pricingConfig ? formatPrice(pricingConfig[`pro_${billingCycle}`]) : '--',
+      currency: pricingConfig ? pricingConfig[`pro_${billingCycle}`].currency.toLowerCase() : undefined,
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
     {
       ...t.pricing.plans.premium,
       planType: 'premium',
       price: pricingConfig ? formatPrice(pricingConfig[`premium_${billingCycle}`]) : '--',
+      currency: pricingConfig ? pricingConfig[`premium_${billingCycle}`].currency.toLowerCase() : undefined,
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
   ];
@@ -362,6 +364,9 @@ export default function PricingPage() {
                 <CardContent className="pt-6">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold text-white">{plan.price}</span>
+                    {plan.currency && (
+                      <span className="text-sm text-purple-300">{plan.currency}</span>
+                    )}
                     {plan.period && (
                       <span className="text-xl text-purple-300">{plan.period}</span>
                     )}
