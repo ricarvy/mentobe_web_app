@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { type TarotCard, type Spread, type SpreadPosition } from '@/lib/tarot';
 import { useI18n } from '@/lib/i18n';
 import { useState, useEffect } from 'react';
@@ -38,16 +40,23 @@ export function TarotResult({
   const { t, language } = useI18n();
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
   const [followups, setFollowups] = useState<string[]>([]);
   const [isLoadingFollowups, setIsLoadingFollowups] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingFollowup, setPendingFollowup] = useState<string | null>(null);
   const { setQuestion, setShowResult, setAiInterpretation, setShowAiInterpretation } = useTarotFlow();
 
+  useEffect(() => {
+    if (readingId) {
+      setShareUrl(`${window.location.origin}/share/${readingId}`);
+    }
+  }, [readingId]);
+
   const handleCopyLink = () => {
-    if (!readingId) return;
-    const url = `${window.location.origin}/share/${readingId}`;
-    navigator.clipboard.writeText(url);
+    if (!shareUrl) return;
+    navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -230,12 +239,12 @@ export function TarotResult({
                 {readingId && (
                   <div className="flex justify-center mb-6">
                     <Button 
-                      onClick={handleCopyLink}
+                      onClick={() => setIsShareOpen(true)}
                       variant="outline" 
                       className="border-purple-500/50 text-purple-200 hover:bg-purple-500/20 hover:text-white gap-2"
                     >
-                      {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-                      {copied ? (t.common?.copied || 'Copied') : (t.common?.share || 'Share Result')}
+                      <Share2 className="w-4 h-4" />
+                      {t.common?.share || 'Share Result'}
                     </Button>
                   </div>
                 )}
@@ -322,6 +331,44 @@ export function TarotResult({
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
               确认
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
+        <DialogContent className="bg-black/80 border-purple-500/30 sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white">{t.common?.share || 'Share Result'}</DialogTitle>
+            <DialogDescription className="text-purple-200">
+              {t.common?.shareDescription || 'Share this link with others to view your reading.'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center space-x-2">
+            <div className="grid flex-1 gap-2">
+              <Label htmlFor="link" className="sr-only">
+                Link
+              </Label>
+              <Input
+                id="link"
+                value={shareUrl}
+                readOnly
+                className="bg-purple-900/20 border-purple-500/30 text-purple-100 h-9"
+              />
+            </div>
+            <Button type="button" size="sm" className="px-3" onClick={handleCopyLink}>
+              <span className="sr-only">Copy</span>
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+          <DialogFooter className="sm:justify-start">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsShareOpen(false)}
+              className="bg-purple-900/40 text-purple-200 hover:bg-purple-900/60 hover:text-white"
+            >
+              {t.common?.close || 'Close'}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -27,7 +27,9 @@ export const zh = {
     cancel: '取消',
     cards: '张牌',
     share: '分享结果',
+    shareDescription: '分享此链接以供他人查看您的解读。',
     copied: '已复制',
+    close: '关闭',
     notLoggedIn: '未登录',
     loginToViewProfile: '请登录以查看您的个人资料',
     goToLogin: '前往登录',
@@ -151,7 +153,7 @@ export const zh = {
   home: {
     title: '探索你的未来',
     subtitle: 'AI驱动的塔罗解读',
-    welcome: '欢迎来到Mentob AI',
+    welcome: '欢迎来到Mentobe AI',
     selectSpread: '选择牌阵',
     chooseQuestion: '输入你的问题',
     drawCards: '抽牌',
@@ -359,7 +361,7 @@ export const zh = {
   privacyPolicy: {
     title: '隐私政策',
     lastUpdated: '最后更新：',
-    introduction: '在 Mentob AI（"我们"、"我们的"或"本公司"），我们致力于保护您的隐私和个人信息。本隐私政策解释了当您使用我们的塔罗解读服务时，我们如何收集、使用、披露和保护您的信息。',
+    introduction: '在 Mentobe AI（"我们"、"我们的"或"本公司"），我们致力于保护您的隐私和个人信息。本隐私政策解释了当您使用我们的塔罗解读服务时，我们如何收集、使用、披露和保护您的信息。',
     tableOfContents: '目录',
     sections: {
       information: '我们收集的信息',
@@ -614,11 +616,11 @@ export const zh = {
   termsOfService: {
     title: '服务条款',
     lastUpdated: '最后更新：2025年1月1日',
-    introduction: '欢迎使用 Mentob AI（"我们"、"我们的"或"本公司"）。通过访问或使用我们的AI塔罗解读服务，您同意遵守本服务条款。请仔细阅读。',
+    introduction: '欢迎使用 Mentobe AI（"我们"、"我们的"或"本公司"）。通过访问或使用我们的AI塔罗解读服务，您同意遵守本服务条款。请仔细阅读。',
     acceptance: '使用我们的服务即表示您承认已阅读、理解并同意受本条款约束。',
     sections: {
       services: '1. 服务',
-      servicesDesc: 'Mentob AI 通过我们的网站和移动应用程序提供 AI 驱动的塔罗解读服务。我们的服务包括：\n- 单张牌解读\n- 多张牌阵（三张牌、凯尔特十字等）\n- AI 生成的解读和洞察\n- 基于您问题的个性化塔罗解读',
+      servicesDesc: 'Mentobe AI 通过我们的网站和移动应用程序提供 AI 驱动的塔罗解读服务。我们的服务包括：\n- 单张牌解读\n- 多张牌阵（三张牌、凯尔特十字等）\n- AI 生成的解读和洞察\n- 基于您问题的个性化塔罗解读',
       userAccount: '2. 用户账户',
       userAccountDesc: '要访问我们服务的某些功能，您可能需要创建账户。您同意：\n- 提供准确、最新和完整的信息\n- 维护和更新您的账户信息\n- 保护您的密码安全和保密\n- 立即通知我们任何未经授权的使用',
       paidServices: '3. 付费服务',
@@ -628,11 +630,11 @@ export const zh = {
       userConduct: '5. 用户行为',
       userConductDesc: '您同意不使用我们的服务来：\n- 违反任何适用的法律法规\n- 侵犯他人的知识产权\n- 骚扰、虐待或伤害他人\n- 试图未经授权访问我们的系统\n- 使用自动化工具访问我们的服务',
       intellectualProperty: '6. 知识产权',
-      intellectualPropertyDesc: '我们服务的所有内容、功能和功能归 Mentob AI 所有，受版权、商标和其他知识产权法保护。未经我们的事先书面同意，您不得复制、分发或创建衍生作品。',
+      intellectualPropertyDesc: '我们服务的所有内容、功能和功能归 Mentobe AI 所有，受版权、商标和其他知识产权法保护。未经我们的事先书面同意，您不得复制、分发或创建衍生作品。',
       disclaimers: '7. 免责声明',
       disclaimersDesc: '我们的塔罗解读仅供娱乐和信息目的。我们的 AI 提供的洞察不应被视为任何领域的专业建议，包括医疗、法律、财务或心理建议。我们不保证我们解读的准确性或可靠性。',
       limitation: '8. 责任限制',
-      limitationDesc: '在法律允许的最大范围内，Mentob AI 不对因使用我们的服务而产生的任何间接、偶然、特殊或后果性损害承担责任。我们的总责任不应超过您在索赔前十二个月内为我们的服务支付的金额。',
+      limitationDesc: '在法律允许的最大范围内，Mentobe AI 不对因使用我们的服务而产生的任何间接、偶然、特殊或后果性损害承担责任。我们的总责任不应超过您在索赔前十二个月内为我们的服务支付的金额。',
       termination: '9. 终止',
       terminationDesc: '我们保留随时暂停或终止您的账户的权利，原因包括违反本条款或出于我们全权决定的任何其他原因。终止后，您使用我们服务的权利将立即终止。',
       governingLaw: '10. 管辖法律',
@@ -680,6 +682,7 @@ export const zh = {
       label2: '抽牌数量：',
     },
     cards: {
+      badge: '牌阵展示',
       title: '牌面揭示',
       reversed: '逆位',
     },
@@ -697,7 +700,7 @@ export const zh = {
       stats2: '4.9评分',
       stats3: '深受探索者喜爱',
     },
-    footer: '由Mentob AI驱动 • 用人工智能解锁塔罗的神秘',
+    footer: '由Mentobe AI驱动 • 用人工智能解锁塔罗的神秘',
   },
   answerBook: {
     badge: '神秘答案之书',
@@ -744,7 +747,7 @@ export const zh = {
       title: '记住',
       text: '此AI掌纹分析仅供娱乐和自我反思。相信你的直觉，记住你有力量塑造自己的命运。',
     },
-    footer: '由 Mentob AI 提供支持 • 为现代探索者准备的AI掌相分析',
+    footer: '由 Mentobe AI 提供支持 • 为现代探索者准备的AI掌相分析',
   },
   palmLines: {
     lifeLine: '生命线',

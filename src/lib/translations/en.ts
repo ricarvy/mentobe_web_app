@@ -27,7 +27,9 @@ export const en = {
     cancel: 'Cancel',
     cards: 'cards',
     share: 'Share Result',
+    shareDescription: 'Share this link with others to view your reading.',
     copied: 'Copied',
+    close: 'Close',
     notLoggedIn: 'Not Logged In',
     loginToViewProfile: 'Please log in to view your profile',
     goToLogin: 'Go to Login',
@@ -151,7 +153,7 @@ export const en = {
   home: {
     title: 'Explore Your Future',
     subtitle: 'AI-Powered Tarot Readings',
-    welcome: 'Welcome to Mentob AI',
+    welcome: 'Welcome to Mentobe AI',
     selectSpread: 'Select Spread',
     chooseQuestion: 'Enter Your Question',
     drawCards: 'Draw Cards',
@@ -359,7 +361,7 @@ export const en = {
   privacyPolicy: {
     title: 'Privacy Policy',
     lastUpdated: 'Last Updated: ',
-    introduction: 'At Mentob AI ("we", "our", or "us"), we are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our tarot reading services.',
+    introduction: 'At Mentobe AI ("we", "our", or "us"), we are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our tarot reading services.',
     tableOfContents: 'Table of Contents',
     sections: {
       information: 'Information We Collect',
@@ -615,11 +617,11 @@ export const en = {
   termsOfService: {
     title: 'Terms of Service',
     lastUpdated: 'Last Updated: January 1, 2025',
-    introduction: 'Welcome to Mentob AI ("we", "our", or "us"). By accessing or using our AI-powered tarot reading services, you agree to be bound by these Terms of Service. Please read them carefully.',
+    introduction: 'Welcome to Mentobe AI ("we", "our", or "us"). By accessing or using our AI-powered tarot reading services, you agree to be bound by these Terms of Service. Please read them carefully.',
     acceptance: 'By using our services, you acknowledge that you have read, understood, and agree to be bound by these terms.',
     sections: {
       services: '1. Services',
-      servicesDesc: 'Mentob AI provides AI-powered tarot reading services through our website and mobile applications. Our services include:\n- Single card readings\n- Multiple card spreads (Three Card, Celtic Cross, etc.)\n- AI-generated interpretations and insights\n- Personalized tarot readings based on your questions',
+      servicesDesc: 'Mentobe AI provides AI-powered tarot reading services through our website and mobile applications. Our services include:\n- Single card readings\n- Multiple card spreads (Three Card, Celtic Cross, etc.)\n- AI-generated interpretations and insights\n- Personalized tarot readings based on your questions',
       userAccount: '2. User Account',
       userAccountDesc: 'To access certain features of our services, you may be required to create an account. You agree to:\n- Provide accurate, current, and complete information\n- Maintain and update your account information\n- Keep your password secure and confidential\n- Notify us immediately of any unauthorized use',
       paidServices: '3. Paid Services',
@@ -629,11 +631,11 @@ export const en = {
       userConduct: '5. User Conduct',
       userConductDesc: 'You agree not to use our services to:\n- Violate any applicable laws or regulations\n- Infringe on the intellectual property rights of others\n- Harass, abuse, or harm others\n- Attempt to gain unauthorized access to our systems\n- Use automated tools to access our services',
       intellectualProperty: '6. Intellectual Property',
-      intellectualPropertyDesc: 'All content, features, and functionality of our services are owned by Mentob AI and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works without our prior written consent.',
+      intellectualPropertyDesc: 'All content, features, and functionality of our services are owned by Mentobe AI and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works without our prior written consent.',
       disclaimers: '7. Disclaimers',
       disclaimersDesc: 'Our tarot readings are for entertainment and informational purposes only. The insights provided by our AI should not be considered professional advice in any field, including medical, legal, financial, or psychological advice. We make no guarantees about the accuracy or reliability of our readings.',
       limitation: '8. Limitation of Liability',
-      limitationDesc: 'To the maximum extent permitted by law, Mentob AI shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services. Our total liability shall not exceed the amount you paid for our services in the twelve months preceding the claim.',
+      limitationDesc: 'To the maximum extent permitted by law, Mentobe AI shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services. Our total liability shall not exceed the amount you paid for our services in the twelve months preceding the claim.',
       termination: '9. Termination',
       terminationDesc: 'We reserve the right to suspend or terminate your account at any time for violation of these terms or for any other reason at our sole discretion. Upon termination, your right to use our services will immediately cease.',
       governingLaw: '10. Governing Law',
@@ -681,6 +683,7 @@ export const en = {
       label2: 'Cards Drawn:',
     },
     cards: {
+      badge: 'Tarot Spread',
       title: 'The Cards Reveal',
       reversed: 'Reversed',
     },
@@ -698,7 +701,7 @@ export const en = {
       stats2: '4.9 Rating',
       stats3: 'Loved by Seekers',
     },
-    footer: 'Powered by Mentob AI • Unlock the mysteries of tarot with artificial intelligence',
+    footer: 'Powered by Mentobe AI • Unlock the mysteries of tarot with artificial intelligence',
   },
   answerBook: {
     badge: 'Mystic Answer Book',
@@ -745,7 +748,7 @@ export const en = {
       title: 'Remember',
       text: 'This AI palm reading is for entertainment and self-reflection purposes only. Trust your intuition and remember that you have the power to shape your own destiny.',
     },
-    footer: 'Powered by Mentob AI • AI palmistry for the modern seeker',
+    footer: 'Powered by Mentobe AI • AI palmistry for the modern seeker',
   },
   palmLines: {
     lifeLine: 'Life Line',

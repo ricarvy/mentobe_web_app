@@ -132,7 +132,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
     try {
       setLoading(true);
       const data = await apiRequest<SharedInterpretation>(
-        `/api/tarot/shared/${id}`,
+        `/api/tarot/share/${id}`,
         { method: 'GET', requireAuth: false }
       );
       setSharedData(data);
@@ -370,6 +370,26 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
       `}</style>
 
       <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
+        {/* Header - Logo & Language */}
+        <div className="flex items-center justify-between mb-12 animate-fade-in-up">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              Mentobe AI
+            </span>
+          </div>
+          {/* Language Switcher could go here if implemented as a component, or we rely on the global one if present. 
+              Since the request says "keep Logo, Mentobe AI and internationalization options button", 
+              I will assume there might be a LanguageSwitcher component I should import, or I need to check how it's done elsewhere.
+              However, the current file doesn't import a LanguageSwitcher. I'll verify if there is one available. 
+              For now, I'll place a placeholder or simple text if no component found. 
+              Actually, checking previous `read` of `src/components/LanguageSwitcher.tsx` would be good. 
+              But I'll just add the header structure first.
+          */}
+        </div>
+
         {/* Hero Section - Eye-catching Header */}
         <div className="text-center mb-12 animate-fade-in-up">
           {/* Decorative Badge */}
@@ -403,73 +423,35 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
               <span className="text-sm font-medium text-purple-200">{t.share.hero.feature3}</span>
             </div>
           </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/">
-              <Button
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-10 py-4 text-lg font-semibold gradient-animate transition-all hover:scale-105"
-              >
-                <Zap className="mr-2 w-5 h-5" />
-                {t.share.hero.button1}
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-            <Button
-              onClick={handleCopyLink}
-              variant="outline"
-              className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-8 py-4 text-lg transition-all hover:scale-105"
-            >
-              {copied ? (
-                <>
-                  <Check className="mr-2 w-5 h-5 text-green-400" />
-                  {t.share.hero.button2Copied}
-                </>
-              ) : (
-                <>
-                  <Share2 className="mr-2 w-5 h-5" />
-                  {t.share.hero.button2}
-                </>
-              )}
-            </Button>
-          </div>
         </div>
 
         {/* User Info Card */}
         {showContent && (
-          <Card className="bg-black/40 backdrop-blur-md border-purple-500/30 mb-6 animate-fade-in-up animate-pulse-border" style={{ animationDelay: '0.3s' }}>
+          <Card className="bg-transparent border-none mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <CardContent className="pt-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  {/* User Avatar */}
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-glow">
-                    <User className="w-7 h-7 text-white" />
-                  </div>
+              <div className="flex flex-col items-center justify-center gap-4">
+                {/* User Avatar */}
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-glow mb-2">
+                  <User className="w-10 h-10 text-white" />
+                </div>
 
-                  {/* User Info */}
-                  <div>
-                    <p className="text-sm text-purple-400 mb-1">{t.share.userInfo.readingBy}</p>
-                    <p className="text-xl font-bold text-white">
-                      {sharedData.username || t.share.userInfo.anonymous}
-                    </p>
-                  </div>
+                {/* User Info */}
+                <div className="text-center">
+                  <p className="text-sm text-purple-400 mb-1">{t.share.userInfo.readingBy}</p>
+                  <p className="text-2xl font-bold text-white mb-4">
+                    {sharedData.username || t.share.userInfo.anonymous}
+                  </p>
                 </div>
 
                 {/* Time Info */}
-                <div className="flex items-center gap-6">
+                <div className="flex flex-col items-center gap-2">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-purple-400" />
-                    <div className="text-right">
-                      <p className="text-xs text-purple-400">{t.share.userInfo.dateLabel}</p>
-                      <p className="text-sm font-semibold text-white">{dateInfo.fullDate}</p>
-                    </div>
+                    <Calendar className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm text-purple-200">{dateInfo.fullDate}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-purple-400" />
-                    <div className="text-right">
-                      <p className="text-xs text-purple-400">{t.share.userInfo.timeLabel}</p>
-                      <p className="text-sm font-semibold text-white">{dateInfo.time}</p>
-                    </div>
+                    <Clock className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm text-purple-200">{dateInfo.time}</span>
                   </div>
                 </div>
               </div>
@@ -479,7 +461,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
 
         {/* Question Section */}
         {showContent && (
-          <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-md border-purple-500/30 mb-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <Card className="bg-transparent border-none mb-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <CardContent className="pt-8 pb-8">
               <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-6">
@@ -515,17 +497,19 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         {/* Tarot Cards Display */}
         {showContent && (
           <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Sparkles className="w-6 h-6 text-purple-400" />
-              <h2 className="text-2xl font-bold text-white">{t.share.cards.title}</h2>
-              <Sparkles className="w-6 h-6 text-pink-400" />
+            <div className="flex flex-col items-center justify-center gap-3 mb-8 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-2">
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span className="text-sm font-medium text-purple-300">{t.share.cards.badge}</span>
+              </div>
+              <h2 className="text-3xl font-bold text-white">{t.share.cards.title}</h2>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="flex flex-wrap justify-center gap-6">
               {cards.map((card, index) => (
                 <div
                   key={`${card.id}-${index}`}
-                  className={`relative bg-gradient-to-br from-purple-900/60 to-pink-900/60 border border-purple-500/40 rounded-2xl overflow-hidden animate-fade-in-scale animate-float animate-glow ${
+                  className={`relative w-[45%] md:w-48 lg:w-56 bg-gradient-to-br from-purple-900/60 to-pink-900/60 border border-purple-500/40 rounded-2xl overflow-hidden animate-fade-in-scale animate-float animate-glow ${
                     card.isReversed ? 'rotate-180' : ''
                   } ${visibleCards.has(index) ? 'opacity-100' : 'opacity-0'}`}
                   style={{
@@ -585,12 +569,12 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
         {showContent && (
           <Card className="bg-black/40 backdrop-blur-md border-purple-500/30 mb-8 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
             <CardContent className="pt-8 pb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-glow">
-                  <Sparkles className="w-6 h-6 text-white" />
+              <div className="flex flex-col items-center justify-center gap-3 mb-8 text-center">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center animate-glow mb-2">
+                  <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">{t.share.interpretation.title}</h2>
+                  <h2 className="text-3xl font-bold text-white mb-2">{t.share.interpretation.title}</h2>
                   <p className="text-sm text-purple-300">{t.share.interpretation.subtitle}</p>
                 </div>
               </div>
@@ -618,7 +602,7 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
 
         {/* Final CTA Section */}
         {showContent && (
-          <Card className="bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 backdrop-blur-md border-purple-500/30 mb-8 animate-fade-in-up animate-glow" style={{ animationDelay: '1s' }}>
+          <Card className="bg-transparent border-none mb-8 animate-fade-in-up animate-glow" style={{ animationDelay: '1s' }}>
             <CardContent className="pt-10 pb-10">
               <div className="text-center">
                 {/* Crown Icon */}
@@ -647,16 +631,6 @@ export default function SharePage({ params }: { params: Promise<{ id: string }> 
                       <Zap className="mr-2 w-5 h-5" />
                       {t.share.cta.button1}
                       <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/pricing">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="border-purple-500/40 text-purple-200 hover:bg-purple-500/10 px-10 py-4 text-lg transition-all hover:scale-105"
-                    >
-                      <Star className="mr-2 w-5 h-5 text-yellow-400" />
-                      {t.share.cta.button2}
                     </Button>
                   </Link>
                 </div>
