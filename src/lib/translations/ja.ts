@@ -466,6 +466,14 @@ export const ja = {
       yearly: '年額',
       save: '{percent}%お得',
     },
+    loading: {
+      title: '価格を読み込み中...',
+      subtitle: '最新の価格情報を取得しています。しばらくお待ちください',
+    },
+    error: {
+      title: 'システムメンテナンス中',
+      subtitle: '支払いは一時的に利用できません。後でもう一度お試しください',
+    },
     plans: {
       free: {
         name: '無料',
