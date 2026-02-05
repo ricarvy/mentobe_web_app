@@ -210,6 +210,7 @@ run_container() {
         --restart unless-stopped \
         -e NODE_ENV=production \
         --env-file "$ENV_FILE" \
+        --add-host=api.mentobe.co:47.253.254.219 \
         -v "$(pwd)/logs:/app/logs" \
         -v "$(pwd)/data:/app/data" \
         --memory="2g" \

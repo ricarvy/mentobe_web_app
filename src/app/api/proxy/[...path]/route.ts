@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
  * 绕过 CORS 限制，将前端请求转发到后端服务
  */
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
+// 优先使用服务端内部通信 URL，但仅当存在时。默认仍使用 NEXT_PUBLIC_BACKEND_URL (通常是域名)
+// 注意：如果容器内无法解析域名，需要配置 hosts 或使用 INTERNAL_BACKEND_URL
+const BACKEND_URL = process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
 
 export async function GET(
   request: NextRequest,

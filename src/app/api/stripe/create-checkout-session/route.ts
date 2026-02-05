@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 调用后端 API 创建 Checkout Session
-    // 优先使用服务端内部通信 URL，避免容器内 DNS 解析问题
     const backendUrl = process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
     const lang = getLanguageFromRequest(request);
     const backendUrlWithLang = `${backendUrl}/api/stripe/create-checkout-session?lang=${lang}`;
