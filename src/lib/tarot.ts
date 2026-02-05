@@ -23,8 +23,6 @@ export interface Spread {
   description: string;
   positions: SpreadPosition[];
   category: 'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced';
-  isPro?: boolean;
-  isPremium?: boolean;
 }
 
 export interface SpreadPosition {
@@ -221,7 +219,6 @@ export const spreads: Spread[] = [
     name: '恋人金字塔',
     description: '恋人关系 & 互动解析，简洁直接',
     category: 'love',
-    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -245,7 +242,6 @@ export const spreads: Spread[] = [
     name: '爱情大十字',
     description: '两性关系 & 爱情状况，注重内心情感',
     category: 'love',
-    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -274,7 +270,6 @@ export const spreads: Spread[] = [
     name: '寻找对象牌阵',
     description: '寻找意中人 & 有缘人',
     category: 'love',
-    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -298,7 +293,6 @@ export const spreads: Spread[] = [
     name: '爱情树牌阵',
     description: '溯本求源 & 寻找症结，回溯爱情过往',
     category: 'love',
-    isPro: true,
     positions: [
       {
         id: 'position1',
@@ -367,7 +361,6 @@ export const spreads: Spread[] = [
     name: '财富之树',
     description: '事业发展 & 财运状况',
     category: 'career',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -391,7 +384,6 @@ export const spreads: Spread[] = [
     name: '问题解决牌阵',
     description: '问题剖析 & 答疑解惑',
     category: 'career',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -417,7 +409,6 @@ export const spreads: Spread[] = [
     name: '身心灵牌阵',
     description: '自我探索 & 了解自己',
     category: 'self',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -441,7 +432,6 @@ export const spreads: Spread[] = [
     name: '四元素牌阵',
     description: '问题探索 & 多方解析',
     category: 'self',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -472,7 +462,6 @@ export const spreads: Spread[] = [
     name: '周运势牌阵',
     description: '周运分析 & 单周占卜',
     category: 'advanced',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -516,7 +505,6 @@ export const spreads: Spread[] = [
     name: '六芒星牌阵',
     description: '事物发展 & 预测未来',
     category: 'advanced',
-    isPremium: true,
     positions: [
       {
         id: 'position1',
@@ -553,12 +541,12 @@ export const spreads: Spread[] = [
 ];
 
 export function getSpreadRequirement(spread: Spread): 'free' | 'pro' | 'premium' {
-  // Free users: Basic Single (1) and Three (3) card spreads
-  if (spread.id === 'single' || spread.id === 'three') {
+  // Free users: Spreads with 3 or fewer cards
+  if (spread.positions.length <= 3) {
     return 'free';
   }
   
-  // Pro users: All spreads with 6 or fewer cards
+  // Pro users: Spreads with 6 or fewer cards
   if (spread.positions.length <= 6) {
     return 'pro';
   }
