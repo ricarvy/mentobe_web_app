@@ -466,6 +466,14 @@ export const zh = {
       yearly: '按年付费',
       save: '节省 {percent}%',
     },
+    loading: {
+      title: '价格加载中...',
+      subtitle: '请稍候，正在获取最新价格信息',
+    },
+    error: {
+      title: '系统维护中',
+      subtitle: '暂不支持支付，请稍后再试',
+    },
     plans: {
       free: {
         name: '免费版',

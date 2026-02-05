@@ -466,6 +466,14 @@ export const en = {
       yearly: 'Yearly',
       save: 'Save {percent}%',
     },
+    loading: {
+      title: 'Loading pricing...',
+      subtitle: 'Please wait while we fetch the latest pricing information',
+    },
+    error: {
+      title: 'System maintenance',
+      subtitle: 'Payment temporarily unavailable. Please try again later.',
+    },
     plans: {
       free: {
         name: 'Free',

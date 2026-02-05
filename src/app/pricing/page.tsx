@@ -253,22 +253,29 @@ export default function PricingPage() {
     let isDisabled = false;
     let action = () => plan.planType && handleSubscribe(plan.planType);
     let isUpgrade = false;
+    let warningText = '';
 
     if (configLoading) {
-      buttonText = 'Loading...';
-      isDisabled = true;
-      return { buttonText, isDisabled, action, isUpgrade };
+      // For paid plans, show loading state
+      if (plan.planType === 'pro' || plan.planType === 'premium') {
+        buttonText = t.pricing.loading?.title || 'Loading...';
+        isDisabled = true;
+        // Optionally set warningText if needed, but buttonText handles it.
+        return { buttonText, isDisabled, action, isUpgrade, warningText };
+      }
     }
 
     if (!pricingConfig && (plan.planType === 'pro' || plan.planType === 'premium')) {
        // Only disable paid plans if config is missing
        // Free plan doesn't need config
        isDisabled = true;
-       return { buttonText, isDisabled, action, isUpgrade };
+       buttonText = t.pricing.error?.title || 'Unavailable';
+       warningText = t.pricing.error?.subtitle || 'System maintenance';
+       return { buttonText, isDisabled, action, isUpgrade, warningText };
     }
 
     if (!user || !plan.planType) {
-        return { buttonText, isDisabled, action, isUpgrade };
+        return { buttonText, isDisabled, action, isUpgrade, warningText };
     }
 
     const isProUser = user.vipLevel === 'pro';
@@ -299,12 +306,13 @@ export default function PricingPage() {
         if (isProPlan) {
             buttonText = plan.buttonDowngrade || 'Downgrade Not Allowed';
             isDisabled = true;
+            warningText = t.pricing?.downgradeWarning || 'Downgrading from Premium is not allowed';
         } else if (isPremiumPlan) {
             buttonText = plan.buttonRenew || 'Renew';
         }
     }
 
-    return { buttonText, isDisabled, action, isUpgrade };
+    return { buttonText, isDisabled, action, isUpgrade, warningText };
   };
 
   return (
@@ -515,7 +523,7 @@ export default function PricingPage() {
                 </CardContent>
                 <CardFooter className="pt-6">
                   {plan.planType && (() => {
-                    const { buttonText, isDisabled, action } = getButtonState(plan);
+                    const { buttonText, isDisabled, action, warningText } = getButtonState(plan);
                     return (
                       <div className="w-full space-y-2">
                         <Button
@@ -530,9 +538,9 @@ export default function PricingPage() {
                           {loading && !isDisabled ? 'Processing...' : buttonText}
                           {!loading && !isDisabled && <ArrowRight className="ml-2 w-4 h-4" />}
                         </Button>
-                        {isDisabled && (
+                        {isDisabled && warningText && (
                           <p className="text-xs text-center text-purple-300/60">
-                            {t.pricing?.downgradeWarning || 'Downgrading from Premium is not allowed'}
+                            {warningText}
                           </p>
                         )}
                       </div>
