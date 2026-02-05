@@ -197,7 +197,9 @@ export default function LoginPage() {
     try {
       if (provider === 'google') {
         // 直接跳转到后端 Google 登录接口
-        window.location.href = `${BACKEND_URL}/api/auth/login/google`;
+        // 添加 redirect_url 参数，确保登录成功后跳回当前环境（如 localhost）
+        const redirectUrl = encodeURIComponent(`${window.location.origin}/google_login_successed`);
+        window.location.href = `${BACKEND_URL}/api/auth/login/google?redirect_url=${redirectUrl}`;
         return;
       }
 

@@ -79,51 +79,6 @@ function CancelContent() {
               <div className="text-gray-200">
                 {t.payment.cancel.message}
               </div>
-              {sessionId && (
-                <div className="text-sm text-gray-400 font-mono bg-black/30 p-3 rounded-lg">
-                  Session ID: {sessionId}
-                </div>
-              )}
-            </div>
-
-            {/* Stripe Dashboard配置信息 */}
-            <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-purple-300 mb-4 flex items-center gap-2">
-                <ExternalLink className="w-5 h-5" />
-                Stripe Dashboard Configuration
-              </h3>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <div className="text-gray-300 font-medium mb-2">Cancel Page URL:</div>
-                  <div className="space-y-2">
-                    <div className="bg-black/40 p-3 rounded font-mono text-gray-300">
-                      <div className="text-purple-400 mb-1">Development:</div>
-                      <div>http://localhost:5000/cancel</div>
-                    </div>
-                    <div className="bg-black/40 p-3 rounded font-mono text-gray-300">
-                      <div className="text-purple-400 mb-1">Production:</div>
-                      <div>https://yourdomain.com/cancel</div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-300 font-medium mb-2">Success Page URL:</div>
-                  <div className="space-y-2">
-                    <div className="bg-black/40 p-3 rounded font-mono text-gray-300">
-                      <div className="text-purple-400 mb-1">Development:</div>
-                      <div>http://localhost:5000/success</div>
-                    </div>
-                    <div className="bg-black/40 p-3 rounded font-mono text-gray-300">
-                      <div className="text-purple-400 mb-1">Production:</div>
-                      <div>https://yourdomain.com/success</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-gray-400 text-xs mt-4 pt-4 border-t border-purple-500/20">
-                  💡 Configure these URLs in your Stripe Dashboard:
-                  Products → Pricing → Select your price → Edit → Click &quot;More options&quot; → Edit payment link settings
-                </div>
-              </div>
             </div>
 
             {/* 操作按钮 */}
