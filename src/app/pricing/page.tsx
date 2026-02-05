@@ -183,6 +183,9 @@ export default function PricingPage() {
 
       if (response.url) {
         window.location.href = response.url;
+      } else {
+        console.error('No checkout URL in response', response);
+        alert('Failed to redirect to payment. Please try again.');
       }
     } catch (error) {
       console.error('Failed to create checkout session:', error);

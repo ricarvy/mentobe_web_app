@@ -13,8 +13,16 @@ import { User, Mail, Calendar, History, Settings, Shield, LogOut, Sparkles, Chec
 
 export default function ProfilePage() {
   const { user, logout } = useUser();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
+
+  const getLocale = () => {
+    switch (language) {
+      case 'zh': return 'zh-CN';
+      case 'ja': return 'ja-JP';
+      default: return 'en-US';
+    }
+  };
 
   const fetchQuota = useCallback(async () => {
     if (!user) return;
@@ -157,7 +165,7 @@ export default function ProfilePage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-purple-300">{t.common.subscriptionExpires}</p>
                   <p className="font-semibold text-white">
-                    {new Date(user.vipExpireAt).toLocaleDateString('en-US', {
+                    {new Date(user.vipExpireAt).toLocaleDateString(getLocale(), {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',

@@ -116,11 +116,12 @@ export async function POST(request: NextRequest) {
 
     console.log('[Stripe Checkout] Session created:', data.data.sessionId);
 
-    // 返回 session ID 和 publishable key
+    // 返回 session ID 和 publishable key 以及 checkout URL
     return NextResponse.json({
       success: true,
       data: {
         sessionId: data.data.sessionId,
+        url: data.data.url, // 确保返回 URL
         publishableKey: stripeConfig.publishableKey,
       },
     });
