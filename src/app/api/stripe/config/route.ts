@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 export async function GET(request: NextRequest) {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
+    // 优先使用服务端内部通信 URL，避免容器内 DNS 解析问题
+    const backendUrl = process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://120.76.142.91:8901';
     const lang = request.nextUrl.searchParams.get('lang') || 'en';
     const backendUrlWithLang = `${backendUrl}/api/stripe/config?lang=${lang}`;
 
