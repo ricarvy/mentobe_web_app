@@ -19,15 +19,12 @@ interface StripePrice {
   currency: string;
 }
 
-interface PricingConfigResponse {
-  success: boolean;
-  data: {
-    prices: {
-      pro_monthly: StripePrice;
-      pro_yearly: StripePrice;
-      premium_monthly: StripePrice;
-      premium_yearly: StripePrice;
-    };
+interface PricingConfigData {
+  prices: {
+    pro_monthly: StripePrice;
+    pro_yearly: StripePrice;
+    premium_monthly: StripePrice;
+    premium_yearly: StripePrice;
   };
 }
 
@@ -37,17 +34,18 @@ export default function PricingPage() {
   const { trackEvent } = useAnalytics();
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [pricingConfig, setPricingConfig] = useState<PricingConfigResponse['data']['prices'] | null>(null);
+  const [pricingConfig, setPricingConfig] = useState<PricingConfigData['prices'] | null>(null);
 
   // Fetch pricing config from API
   useEffect(() => {
     const fetchPricingConfig = async () => {
       try {
-        const response = await apiRequest<PricingConfigResponse>('/api/stripe/config', {
+        const data = await apiRequest<PricingConfigData>('/api/stripe/config', {
           requireAuth: false,
         });
-        if (response.success && response.data?.prices) {
-          setPricingConfig(response.data.prices);
+        console.log('Fetched pricing config:', data);
+        if (data?.prices) {
+          setPricingConfig(data.prices);
         }
       } catch (error) {
         console.error('Failed to fetch pricing config:', error);
