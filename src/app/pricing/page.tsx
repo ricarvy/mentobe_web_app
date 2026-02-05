@@ -76,19 +76,32 @@ export default function PricingPage() {
     return `${price.amount}`;
   };
 
-  // Hardcoded upgrade price ID as fallback/default
-  const UPGRADE_PRICE_ID = "price_1SxOoPGVP93aj81TCDnE6Kln";
-
   const handleUpgrade = async () => {
     if (!user) {
       window.location.href = '/login';
       return;
     }
 
+    if (!pricingConfig) {
+      console.error("Pricing config not loaded");
+      return;
+    }
+
     setLoading(true);
 
+    // Get price ID dynamically based on billing cycle
+    const configKey = `premium_${billingCycle}` as keyof typeof pricingConfig;
+    const priceInfo = pricingConfig[configKey];
+    
+    if (!priceInfo || !priceInfo.id) {
+      console.error(`Price ID not found for ${configKey}`);
+      alert('Failed to get pricing information. Please try again.');
+      setLoading(false);
+      return;
+    }
+
     const payload = {
-      priceId: UPGRADE_PRICE_ID,
+      priceId: priceInfo.id,
       userId: user.id,
       userEmail: user.email,
       successUrl: window.location.origin + "/success?session_id={CHECKOUT_SESSION_ID}",
