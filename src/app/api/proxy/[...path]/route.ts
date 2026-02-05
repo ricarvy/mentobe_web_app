@@ -86,13 +86,6 @@ async function proxyRequest(
       status: response.status,
       headers: {
         'Content-Type': response.headers.get('content-type') || 'application/json',
-        // 保留流式响应的相关头
-        ...(response.headers.get('transfer-encoding') && {
-          'Transfer-Encoding': response.headers.get('transfer-encoding')!,
-        }),
-        ...(response.headers.get('content-encoding') && {
-          'Content-Encoding': response.headers.get('content-encoding')!,
-        }),
       },
     });
   } catch (error) {
