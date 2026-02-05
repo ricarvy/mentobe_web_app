@@ -260,6 +260,17 @@ export default function PricingPage() {
 
     const isProUser = user.vipLevel === 'pro';
     const isPremiumUser = user.vipLevel === 'premium';
+
+    // Debug log
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[PricingPage] Button State Check:', {
+        vipLevel: user.vipLevel,
+        planType: plan.planType,
+        isProUser,
+        isPremiumUser
+      });
+    }
+
     const isProPlan = plan.planType === 'pro';
     const isPremiumPlan = plan.planType === 'premium';
 

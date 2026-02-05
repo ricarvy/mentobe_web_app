@@ -30,13 +30,16 @@ interface ApiResponseUser {
   isActive: boolean;
   isDemo: boolean;
   unlimitedQuota: boolean;
-  vipLevel: number; // 0: Free, 1: Pro, 2: Premium
+  vipLevel: number | string; // 0: Free, 1: Pro, 2: Premium (Allow string from API just in case)
   vipExpireAt: string | null;
 }
 
 // 将后端的数字VIP等级转换为前端的字符串类型
-export function convertVipLevelFromApi(vipLevel: number | undefined): 'pro' | 'premium' | undefined {
-  switch (vipLevel) {
+export function convertVipLevelFromApi(vipLevel: number | string | undefined): 'pro' | 'premium' | undefined {
+  const level = Number(vipLevel);
+  if (isNaN(level)) return undefined;
+
+  switch (level) {
     case 1:
       return 'pro';
     case 2:
@@ -125,10 +128,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
         
         console.warn('[refreshUser] Failed to refresh from token');
         
-        // 如果没有密码（例如第三方登录），无法回退到账号密码登录，直接返回当前用户
+        // 如果没有密码（例如第三方登录），无法回退到账号密码登录，无法刷新，只能登出
         if (!credentials.password) {
-           console.warn('[refreshUser] No password available for fallback login, returning current user');
-           return user;
+           console.warn('[refreshUser] No password available for fallback login, logging out');
+           logout();
+           return null;
         }
         
         console.log('[refreshUser] Falling back to login for refresh');
