@@ -27,6 +27,12 @@ export const ja = {
     cards: '枚',
     share: '結果を共有',
     copied: 'コピーしました',
+    notLoggedIn: 'ログインしていません',
+    loginToViewProfile: 'プロフィールを表示するにはログインしてください',
+    goToLogin: 'ログインへ',
+    accountInformation: 'アカウント情報',
+    accountDetails: 'アカウントの詳細と設定',
+    freeMember: '無料メンバー',
     loading: '読み込み中...',
   },
   settings: {
