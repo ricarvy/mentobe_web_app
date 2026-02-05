@@ -35,11 +35,13 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [pricingConfig, setPricingConfig] = useState<PricingConfigData['prices'] | null>(null);
+  const [configLoading, setConfigLoading] = useState(true);
 
   // Fetch pricing config from API
   useEffect(() => {
     const fetchPricingConfig = async () => {
       try {
+        setConfigLoading(true);
         const data = await apiRequest<PricingConfigData>('/api/stripe/config', {
           requireAuth: false,
         });
@@ -49,6 +51,8 @@ export default function PricingPage() {
         }
       } catch (error) {
         console.error('Failed to fetch pricing config:', error);
+      } finally {
+        setConfigLoading(false);
       }
     };
 
@@ -236,6 +240,19 @@ export default function PricingPage() {
     let isDisabled = false;
     let action = () => plan.planType && handleSubscribe(plan.planType);
     let isUpgrade = false;
+
+    if (configLoading) {
+      buttonText = 'Loading...';
+      isDisabled = true;
+      return { buttonText, isDisabled, action, isUpgrade };
+    }
+
+    if (!pricingConfig && (plan.planType === 'pro' || plan.planType === 'premium')) {
+       // Only disable paid plans if config is missing
+       // Free plan doesn't need config
+       isDisabled = true;
+       return { buttonText, isDisabled, action, isUpgrade };
+    }
 
     if (!user || !plan.planType) {
         return { buttonText, isDisabled, action, isUpgrade };
