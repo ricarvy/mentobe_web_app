@@ -43,7 +43,9 @@ export default function PricingPage() {
   useEffect(() => {
     const fetchPricingConfig = async () => {
       try {
-        const response = await apiRequest<PricingConfigResponse>('/api/stripe/config');
+        const response = await apiRequest<PricingConfigResponse>('/api/stripe/config', {
+          requireAuth: false,
+        });
         if (response.success && response.data?.prices) {
           setPricingConfig(response.data.prices);
         }
