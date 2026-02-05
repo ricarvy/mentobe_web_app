@@ -47,9 +47,9 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-white">Not Logged In</CardTitle>
+            <CardTitle className="text-white">{t.common.notLoggedIn || 'Not Logged In'}</CardTitle>
             <CardDescription className="text-purple-200">
-              Please log in to view your profile
+              {t.common.loginToViewProfile || 'Please log in to view your profile'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -57,7 +57,7 @@ export default function ProfilePage() {
               onClick={() => (window.location.href = '/login')}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
-              Go to Login
+              {t.common.goToLogin || 'Go to Login'}
             </Button>
           </CardContent>
         </Card>
@@ -76,9 +76,9 @@ export default function ProfilePage() {
         {/* User Info Card */}
         <Card className="bg-black/40 backdrop-blur-sm border-purple-500/30">
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-white text-lg sm:text-xl">Account Information</CardTitle>
+            <CardTitle className="text-white text-lg sm:text-xl">{t.common.accountInformation || 'Account Information'}</CardTitle>
             <CardDescription className="text-purple-200 text-sm sm:text-base">
-              Your account details and settings
+              {t.common.accountDetails || 'Your account details and settings'}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
@@ -141,7 +141,7 @@ export default function ProfilePage() {
                       }
                       return (
                         <Badge variant="outline" className="border-purple-500/30 text-purple-300">
-                          Free
+                          {t.common.freeMember || 'Free'}
                         </Badge>
                       );
                     })()}

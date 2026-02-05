@@ -8,20 +8,24 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { Menu, Sparkles, User, LogOut, Zap, ChevronDown } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { languages } from '@/lib/translations';
 import { useUser } from '@/lib/userContext';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
 import { getQuota } from '@/lib/quota';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showProModal, setShowProModal] = useState(false);
   const { language, setLanguage, t } = useI18n();
   const { user, logout } = useUser();
   const { isInFlow, resetFlow } = useTarotFlow();
   const [quota, setQuota] = useState<{ remaining: number; total: number | string; isDemo: boolean } | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Fetch quota when user changes
   useEffect(() => {
@@ -57,6 +61,25 @@ export function Header() {
     setIsOpen(false);
   };
 
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
+    if (href === '/') {
+      handleHomeClick(e);
+      return;
+    }
+
+    if (href === '/palm-reading') {
+      const isProOrPremium = user?.vipLevel === 'pro' || user?.vipLevel === 'premium';
+      if (!isProOrPremium) {
+        e.preventDefault();
+        setShowProModal(true);
+        setIsOpen(false);
+        return;
+      }
+    }
+
+    setIsOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-500/20 bg-black/40 backdrop-blur-md">
       <div className="container mx-auto px-4">
@@ -82,10 +105,15 @@ export function Header() {
               <Fragment key={item.href}>
                 <Link
                   href={item.href}
-                  onClick={item.href === '/' ? handleHomeClick : undefined}
-                  className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className="text-sm font-medium text-purple-200 hover:text-white transition-colors flex items-center gap-1"
                 >
                   {item.name}
+                  {item.href === '/palm-reading' && (
+                    <Badge className="ml-0.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-1.5 py-0.5 h-4 min-w-0 leading-none">
+                      PRO
+                    </Badge>
+                  )}
                 </Link>
 
                 {/* AI Tarot Dropdown - Inserted after Home (index 0) */}
@@ -230,16 +258,15 @@ export function Header() {
                       <Fragment key={item.href}>
                         <Link
                           href={item.href}
-                          onClick={(e) => {
-                            if (item.href === '/') {
-                              handleHomeClick(e);
-                            } else {
-                              setIsOpen(false);
-                            }
-                          }}
-                          className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2"
+                          onClick={(e) => handleNavClick(e, item.href)}
+                          className="text-lg font-medium text-purple-200 hover:text-white transition-colors py-2 flex items-center gap-2"
                         >
                           {item.name}
+                          {item.href === '/palm-reading' && (
+                            <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-0.5">
+                              PRO
+                            </Badge>
+                          )}
                         </Link>
                         {index === 0 && (
                           <div className="pt-1">
@@ -404,6 +431,14 @@ export function Header() {
           100% { background-position: 0% 50%; }
         }
       `}</style>
+      <ProUpgradeModal
+        isOpen={showProModal}
+        onClose={() => setShowProModal(false)}
+        onSubscribe={() => {
+          setShowProModal(false);
+          router.push('/pricing');
+        }}
+      />
     </header>
   );
 }

@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Sparkles, MessageSquare, Star, Brain } from 'lucide-react';
-import { spreads, drawCards, type Spread } from '@/lib/tarot';
+import { spreads, drawCards, type Spread, getSpreadRequirement } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
 import { TarotResult } from '@/components/TarotResult';
@@ -141,8 +141,10 @@ export default function Home() {
   };
 
   const handleSpreadSelect = (spread: Spread) => {
+    const requirement = getSpreadRequirement(spread);
+
     // 检查是否为 Premium 专用的牌阵
-    if (spread.isPremium) {
+    if (requirement === 'premium') {
       // 检查用户是否登录
       if (!user) {
         setShowLoginModal(true);
@@ -158,7 +160,7 @@ export default function Home() {
     }
 
     // 检查是否为 Pro 专用的牌阵
-    if (spread.isPro) {
+    if (requirement === 'pro') {
       // 检查用户是否登录
       if (!user) {
         setShowLoginModal(true);

@@ -172,28 +172,28 @@ export default function Home() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg text-purple-200/70 max-w-4xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg text-purple-100 max-w-4xl mx-auto mb-10 leading-relaxed">
               {t.landingPage.heroSubtitle}
             </p>
 
             {/* Feature Highlights */}
             <div className="flex flex-wrap justify-center gap-3 mb-10">
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.aiTarot}</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/40 rounded-lg backdrop-blur-sm hover:border-purple-500/60 transition-all">
+                <Sparkles className="w-4 h-4 text-purple-300" />
+                <span className="text-xs font-medium text-purple-100">{t.landingPage.features.aiTarot}</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <BookOpen className="w-4 h-4 text-pink-400" />
-                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.answerBook}</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/40 rounded-lg backdrop-blur-sm hover:border-purple-500/60 transition-all">
+                <BookOpen className="w-4 h-4 text-pink-300" />
+                <span className="text-xs font-medium text-purple-100">{t.landingPage.features.answerBook}</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-lg backdrop-blur-sm hover:border-purple-500/40 transition-all">
-                <Hand className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-medium text-purple-200">{t.landingPage.features.palmReading}</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/40 rounded-lg backdrop-blur-sm hover:border-purple-500/60 transition-all">
+                <Hand className="w-4 h-4 text-purple-300" />
+                <span className="text-xs font-medium text-purple-100">{t.landingPage.features.palmReading}</span>
               </div>
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-6 text-xs text-purple-300/70 mb-10">
+            <div className="flex flex-wrap justify-center gap-6 text-xs text-purple-200 mb-10">
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 text-yellow-400" />
                 <span className="font-medium">{t.landingPage.stats.readings}</span>
@@ -237,21 +237,21 @@ export default function Home() {
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
+                  <p className="text-purple-100 text-center mb-5 text-sm leading-relaxed">
                     {t.landingPage.aiTarotCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.aiTarotCard.features.cards}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.aiTarotCard.features.spreads}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.aiTarotCard.features.ai}</span>
                     </div>
@@ -295,21 +295,21 @@ export default function Home() {
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
+                  <p className="text-purple-100 text-center mb-5 text-sm leading-relaxed">
                     {t.landingPage.answerBookCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.answerBookCard.features.instant}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.answerBookCard.features.wisdom}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.answerBookCard.features.insights}</span>
                     </div>
@@ -353,21 +353,21 @@ export default function Home() {
                   </h2>
 
                   {/* Description */}
-                  <p className="text-purple-200/70 text-center mb-5 text-sm leading-relaxed">
+                  <p className="text-purple-100 text-center mb-5 text-sm leading-relaxed">
                     {t.landingPage.palmReadingCard.description}
                   </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-5">
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.palmReadingCard.features.analysis}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.palmReadingCard.features.lines}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-purple-300">
+                    <div className="flex items-center gap-2 text-xs text-purple-200">
                       <Star className="w-3 h-3 text-yellow-400" />
                       <span>{t.landingPage.palmReadingCard.features.destiny}</span>
                     </div>

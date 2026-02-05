@@ -282,10 +282,10 @@ export function TarotResult({
 
       <div className="flex gap-4 pt-4">
         <Button
-          onClick={onReset}
-          variant="outline"
-          className="flex-1 border-purple-500/30 text-purple-200 hover:bg-purple-500/10"
-        >
+            onClick={onReset}
+            variant="default"
+            className="flex-1 bg-purple-600 hover:bg-purple-500 text-white border-none shadow-lg shadow-purple-900/20"
+          >
           {t.header.home}
         </Button>
       </div>

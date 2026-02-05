@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Language, TranslationKey, translations } from '@/lib/translations';
 
 interface I18nContextType {
@@ -12,12 +12,13 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
+  const [language, setLanguageState] = useState<Language>('en');
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
     let targetLang: Language = 'en';
     try {
-      const savedLang = typeof window !== 'undefined'
-        ? (localStorage.getItem('tarot_language') as Language | null)
-        : null;
+      const savedLang = localStorage.getItem('tarot_language') as Language | null;
 
       if (savedLang && translations[savedLang]) {
         targetLang = savedLang;
@@ -31,12 +32,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         };
         const mappedLang = langMap[savedLang];
         if (mappedLang && translations[mappedLang]) {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('tarot_language', mappedLang);
-          }
+          localStorage.setItem('tarot_language', mappedLang);
           targetLang = mappedLang;
         }
-      } else if (typeof navigator !== 'undefined') {
+      } else if (navigator.language) {
         const browserLang = navigator.language.split('-')[0] as Language;
         if (translations[browserLang]) {
           targetLang = browserLang;
@@ -45,13 +44,24 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     } catch {
       targetLang = 'en';
     }
-    return targetLang;
-  });
+
+    if (targetLang !== 'en') {
+      setLanguageState(targetLang);
+    }
+    setIsInitialized(true);
+  }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('tarot_language', lang);
   };
+
+  // Prevent hydration mismatch by rendering only after client-side language determination
+  // Or just accept the flicker. For SEO, rendering 'en' content first is fine.
+  // To avoid flicker, we could use a loading state, but that might delay LCP.
+  // Given this is a client-side app wrapper, we accept the small flicker or use 'en' as default.
+  // However, the error log specifically complained about mismatch.
+  // By initializing state to 'en' and updating in useEffect, we solve the mismatch.
 
   const value = {
     language,

@@ -15,7 +15,10 @@ export function PremiumUpgradeModal({ isOpen, onClose, onSubscribe }: PremiumUpg
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-br from-purple-900/95 via-amber-900/80 to-purple-900/95 border-amber-500/50 text-white max-w-md">
+      <DialogContent 
+        className="bg-gradient-to-br from-purple-900/95 via-amber-900/80 to-purple-900/95 border-amber-500/50 text-white max-w-md"
+        showCloseButton={false}
+      >
         {/* Close button */}
         <button
           onClick={onClose}

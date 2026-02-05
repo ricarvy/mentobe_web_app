@@ -221,6 +221,13 @@ run_container() {
     print_info "日志查看: docker logs -f $CONTAINER_NAME"
 }
 
+# 清理旧镜像
+cleanup_images() {
+    print_oversea "清理旧 Docker 镜像..."
+    docker image prune -f
+    print_success "旧镜像清理完成"
+}
+
 # 清理 Nginx 缓存
 clear_nginx_cache() {
     print_oversea "执行 Nginx 缓存清理..."
@@ -271,6 +278,7 @@ main() {
     clear_nginx_cache
     build_image
     run_container
+    cleanup_images
 }
 
 main "$@"

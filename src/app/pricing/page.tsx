@@ -72,14 +72,64 @@ export default function PricingPage() {
     return `${price.amount}`;
   };
 
+  // Hardcoded upgrade price ID as fallback/default
+  const UPGRADE_PRICE_ID = "price_1SxOoPGVP93aj81TCDnE6Kln";
+
+  const handleUpgrade = async () => {
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
+
+    setLoading(true);
+
+    const payload = {
+      priceId: UPGRADE_PRICE_ID,
+      userId: user.id,
+      userEmail: user.email,
+      successUrl: window.location.origin + "/success?session_id={CHECKOUT_SESSION_ID}",
+      cancelUrl: window.location.origin + "/cancel"
+    };
+
+    try {
+      const response = await apiRequest<{
+        url: string;
+        sessionId?: string;
+      }>('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        requireAuth: true,
+        body: JSON.stringify(payload),
+      });
+
+      if (response.url) {
+        console.log("Session ID:", response.sessionId);
+        window.location.href = response.url;
+      } else {
+        console.error("Failed to create checkout session");
+        alert('Failed to create checkout session. Please try again.');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Failed to create checkout session. Please check your network connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubscribe = async (plan: 'pro' | 'premium') => {
+    // Logic for button action dispatch
+    if (user?.vipLevel === 'pro' && plan === 'premium') {
+        await handleUpgrade();
+        return;
+    }
+
     if (!user) {
       window.location.href = '/login';
       return;
     }
 
     if (user.vipLevel === 'premium' && plan === 'pro') {
-      alert('You already have Premium membership. Downgrading to Pro is not allowed. You can continue with Premium or renew your subscription.');
+      // Should be disabled in UI, but keep safeguard
       return;
     }
 
@@ -150,6 +200,9 @@ export default function PricingPage() {
     currency?: string;
     features: string[];
     button: string;
+    buttonRenew?: string;
+    buttonUpgrade?: string;
+    buttonDowngrade?: string;
     popular: boolean;
     planType?: 'pro' | 'premium';
   };
@@ -173,6 +226,42 @@ export default function PricingPage() {
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
   ];
+
+  const getButtonState = (plan: Plan) => {
+    // Default state
+    let buttonText = plan.button;
+    let isDisabled = false;
+    let action = () => plan.planType && handleSubscribe(plan.planType);
+    let isUpgrade = false;
+
+    if (!user || !plan.planType) {
+        return { buttonText, isDisabled, action, isUpgrade };
+    }
+
+    const isProUser = user.vipLevel === 'pro';
+    const isPremiumUser = user.vipLevel === 'premium';
+    const isProPlan = plan.planType === 'pro';
+    const isPremiumPlan = plan.planType === 'premium';
+
+    if (isProUser) {
+        if (isProPlan) {
+            buttonText = plan.buttonRenew || 'Renew';
+        } else if (isPremiumPlan) {
+            buttonText = plan.buttonUpgrade || 'Upgrade';
+            action = handleUpgrade;
+            isUpgrade = true;
+        }
+    } else if (isPremiumUser) {
+        if (isProPlan) {
+            buttonText = plan.buttonDowngrade || 'Downgrade Not Allowed';
+            isDisabled = true;
+        } else if (isPremiumPlan) {
+            buttonText = plan.buttonRenew || 'Renew';
+        }
+    }
+
+    return { buttonText, isDisabled, action, isUpgrade };
+  };
 
   return (
     <>
@@ -381,37 +470,30 @@ export default function PricingPage() {
                   </ul>
                 </CardContent>
                 <CardFooter className="pt-6">
-                  {plan.planType && (
-                    <>
-                      {/* 为Premium用户禁用Pro计划 */}
-                      {user && user.vipLevel === 'premium' && plan.planType === 'pro' ? (
-                        <div className="w-full space-y-2">
-                          <Button
-                            disabled
-                            className="w-full bg-gray-600 cursor-not-allowed"
-                          >
-                            {plan.button}
-                          </Button>
-                          <p className="text-xs text-center text-purple-300/60">
-                            {t.pricing?.downgradeWarning || 'Downgrading from Premium is not allowed'}
-                          </p>
-                        </div>
-                      ) : (
+                  {plan.planType && (() => {
+                    const { buttonText, isDisabled, action } = getButtonState(plan);
+                    return (
+                      <div className="w-full space-y-2">
                         <Button
-                          onClick={() => plan.planType && handleSubscribe(plan.planType)}
-                          disabled={loading}
+                          onClick={action}
+                          disabled={loading || isDisabled}
                           className={`w-full ${
                             plan.popular
                               ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                               : 'bg-purple-600 hover:bg-purple-700'
-                          }`}
+                          } ${isDisabled ? 'bg-gray-600 cursor-not-allowed opacity-50 hover:bg-gray-600' : ''}`}
                         >
-                          {loading ? 'Processing...' : plan.button}
-                          <ArrowRight className="ml-2 w-4 h-4" />
+                          {loading && !isDisabled ? 'Processing...' : buttonText}
+                          {!loading && !isDisabled && <ArrowRight className="ml-2 w-4 h-4" />}
                         </Button>
-                      )}
-                    </>
-                  )}
+                        {isDisabled && (
+                          <p className="text-xs text-center text-purple-300/60">
+                            {t.pricing?.downgradeWarning || 'Downgrading from Premium is not allowed'}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </CardFooter>
               </Card>
             ))}

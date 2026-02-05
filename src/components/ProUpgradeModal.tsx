@@ -16,14 +16,6 @@ export function ProUpgradeModal({ isOpen, onClose, onSubscribe }: ProUpgradeModa
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gradient-to-br from-purple-900/95 to-pink-900/95 border-purple-500/50 text-white max-w-md">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-purple-300 hover:text-white transition-colors text-2xl leading-none"
-        >
-          ×
-        </button>
-
         <div className="pt-8 pb-6">
           {/* Icon */}
           <div className="flex justify-center mb-6">

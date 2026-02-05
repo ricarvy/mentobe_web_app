@@ -79,6 +79,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const fetchUserProfile = async (): Promise<User | null> => {
+    try {
+      // 尝试调用 /api/auth/me 获取用户信息
+      const apiData = await apiRequest<ApiResponseUser>('/api/auth/me', {
+        method: 'GET',
+        requireAuth: true,
+      });
+      
+      const userData = convertApiUserToUser(apiData);
+      return userData;
+    } catch (error) {
+      console.warn('[fetchUserProfile] Failed to fetch user profile:', error);
+      return null;
+    }
+  };
+
   const refreshUser = async (): Promise<User | null> => {
     try {
       const credentials = getAuthCredentials();
@@ -87,10 +103,35 @@ export function UserProvider({ children }: { children: ReactNode }) {
         return null;
       }
 
-      // 如果存在 accessToken，说明是 Token 登录，不需要再调用后端的 login 接口
+      // 如果存在 accessToken，尝试通过 /api/auth/me 获取最新用户信息
       if (credentials.accessToken) {
-        console.log('[refreshUser] Token exists, skipping login API call');
-        return user;
+        console.log('[refreshUser] Token exists, fetching profile from /api/auth/me');
+        const userData = await fetchUserProfile();
+        
+        if (userData) {
+          // 更新 localStorage (保留现有凭证信息)
+          saveAuthCredentials(
+            userData as unknown as Record<string, unknown>, 
+            credentials.email, 
+            credentials.password
+          );
+          setUser(userData);
+          console.log('[refreshUser] User info refreshed successfully from token', {
+            vipLevel: userData.vipLevel,
+            vipExpireAt: userData.vipExpireAt,
+          });
+          return userData;
+        }
+        
+        console.warn('[refreshUser] Failed to refresh from token');
+        
+        // 如果没有密码（例如第三方登录），无法回退到账号密码登录，直接返回当前用户
+        if (!credentials.password) {
+           console.warn('[refreshUser] No password available for fallback login, returning current user');
+           return user;
+        }
+        
+        console.log('[refreshUser] Falling back to login for refresh');
       }
 
       // 使用登录API获取最新的用户信息

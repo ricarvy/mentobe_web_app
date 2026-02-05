@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { type Spread } from '@/lib/tarot';
+import { type Spread, getSpreadRequirement } from '@/lib/tarot';
 import { useSpreadTranslations } from '@/lib/spreadTranslations';
 import { useI18n } from '@/lib/i18n';
 
@@ -20,13 +20,17 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {spreads.map((spread) => {
           const translatedSpread = getTranslatedSpread(spread);
+          const requirement = getSpreadRequirement(spread);
+          const isPremium = requirement === 'premium';
+          const isPro = requirement === 'pro';
+
           return (
             <Card
               key={spread.id}
               className="cursor-pointer transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 bg-black/20 border-purple-500/30 relative overflow-hidden"
               onClick={() => onSpreadSelect(spread)}
             >
-              {spread.isPremium && (
+              {isPremium && (
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-purple-500/5 to-amber-500/5 animate-premium-shimmer"></div>
                   <div className="absolute top-0 left-0 w-full h-full">
@@ -50,12 +54,12 @@ export function TarotSpreadSelector({ spreads, onSpreadSelect }: TarotSpreadSele
               </CardHeader>
               <CardContent className="text-center relative z-10">
                 <p className="text-sm text-purple-300">{spread.positions.length} {t.common.cards}</p>
-                {spread.isPro && (
+                {isPro && (
                   <Badge className="mt-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-1 hover:from-purple-500 hover:to-pink-500">
                     PRO
                   </Badge>
                 )}
-                {spread.isPremium && (
+                {isPremium && (
                   <Badge className="mt-3 relative bg-gradient-to-r from-purple-600 via-purple-500 to-amber-500 text-white text-xs font-bold px-3 py-1 animate-premium-border" style={{
                     boxShadow: '0 0 20px rgba(245, 158, 11, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)',
                     textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',

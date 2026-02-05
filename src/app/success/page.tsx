@@ -121,18 +121,19 @@ function SuccessContent() {
           // 如果 refreshUser 因为有 token 而跳过刷新（返回旧 user），或者更新后的用户状态仍非 VIP（延迟问题）
           // 我们手动更新前端状态以提升体验（假设支付成功即为 PRO/PREMIUM）
           // 注意：这是一个 Optimistic UI 更新，实际状态以 API 为准，但在跳转回首页前给用户即时反馈是好的。
-          if (updatedUser && !updatedUser.vipLevel) {
-            // 尝试从 localStorage 获取购买的计划类型，如果没有则默认为 pro
-            const plan = localStorage.getItem('pending_checkout_plan') || 'pro';
-            const vipLevel = plan.includes('premium') ? 'premium' : 'pro';
-            
+          
+          // 获取购买的计划类型
+          const plan = localStorage.getItem('pending_checkout_plan');
+          const expectedVipLevel = plan?.includes('premium') ? 'premium' : (plan?.includes('pro') ? 'pro' : null);
+
+          if (updatedUser && expectedVipLevel && updatedUser.vipLevel !== expectedVipLevel) {
             setUser({
               ...updatedUser,
-              vipLevel: vipLevel as 'pro' | 'premium',
+              vipLevel: expectedVipLevel as 'pro' | 'premium',
               // 这里的 vipExpireAt 无法准确得知，可以暂不设置或设为一个月后
               vipExpireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
             });
-            console.log('[Success Page] Optimistically updated user VIP status to:', vipLevel);
+            console.log('[Success Page] Optimistically updated user VIP status to:', expectedVipLevel);
           }
 
           setStatus('success');

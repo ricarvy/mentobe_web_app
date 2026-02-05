@@ -552,6 +552,21 @@ export const spreads: Spread[] = [
   },
 ];
 
+export function getSpreadRequirement(spread: Spread): 'free' | 'pro' | 'premium' {
+  // Free users: Basic Single (1) and Three (3) card spreads
+  if (spread.id === 'single' || spread.id === 'three') {
+    return 'free';
+  }
+  
+  // Pro users: All spreads with 6 or fewer cards
+  if (spread.positions.length <= 6) {
+    return 'pro';
+  }
+  
+  // Premium users: All spreads (including those with > 6 cards)
+  return 'premium';
+}
+
 // 抽牌函数（使用完整78张牌，包含大阿卡纳和小阿卡纳）
 export function drawCards(count: number): TarotCard[] {
   const deck = allTarotCards.map(card => ({
