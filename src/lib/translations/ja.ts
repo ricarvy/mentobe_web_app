@@ -463,6 +463,7 @@ export const ja = {
   pricing: {
     title: 'プランを選択',
     subtitle: '無制限のAIタロットリーディングとパーソナライズされた洞察を解放',
+    upgradePriceLabel: 'アップグレード価格',
     billingCycle: {
       monthly: '月額',
       yearly: '年額',

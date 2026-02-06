@@ -25,6 +25,8 @@ interface PricingConfigData {
     pro_yearly: StripePrice;
     premium_monthly: StripePrice;
     premium_yearly: StripePrice;
+    upgrade_monthly: StripePrice;
+    upgrade_yearly: StripePrice;
   };
 }
 
@@ -90,7 +92,7 @@ export default function PricingPage() {
     setLoading(true);
 
     // Get price ID dynamically based on billing cycle
-    const configKey = `premium_${billingCycle}` as keyof typeof pricingConfig;
+    const configKey = `upgrade_${billingCycle}` as keyof typeof pricingConfig;
     const priceInfo = pricingConfig[configKey];
     
     if (!priceInfo || !priceInfo.id) {
@@ -225,6 +227,7 @@ export default function PricingPage() {
     buttonDowngrade?: string;
     popular: boolean;
     planType?: 'pro' | 'premium';
+    isUpgradePrice?: boolean;
   };
 
   const plans: Plan[] = [
@@ -241,9 +244,17 @@ export default function PricingPage() {
     {
       ...t.pricing.plans.premium,
       planType: 'premium',
-      price: pricingConfig ? formatPrice(pricingConfig[`premium_${billingCycle}`]) : '--',
+      price: pricingConfig ? (() => {
+        if (user?.vipLevel === 'pro') {
+          const upgradePrice = pricingConfig[`upgrade_${billingCycle}`];
+          return formatPrice(upgradePrice);
+        }
+        const premiumPrice = pricingConfig[`premium_${billingCycle}`];
+        return formatPrice(premiumPrice);
+      })() : '--',
       currency: pricingConfig ? pricingConfig[`premium_${billingCycle}`].currency.toLowerCase() : undefined,
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
+      isUpgradePrice: user?.vipLevel === 'pro',
     },
   ];
 
@@ -498,12 +509,19 @@ export default function PricingPage() {
                     </Badge>
                   </div>
                 )}
-                <CardHeader className="pt-8">
+                <CardHeader className="pt-8 text-center">
                   <CardTitle className="text-2xl font-bold text-white">{plan.name}</CardTitle>
                   <CardDescription className="text-purple-300/80">{plan.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-6">
-                  <div className="flex items-baseline gap-2">
+                  {plan.isUpgradePrice && (
+                    <div className="mb-2 flex justify-center">
+                      <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide">
+                        {t.pricing.upgradePriceLabel || 'Upgrade Price'}
+                      </Badge>
+                    </div>
+                  )}
+                  <div className="flex items-baseline justify-center gap-2">
                     <span className="text-5xl font-bold text-white">{plan.price}</span>
                     {plan.currency && (
                       <span className="text-sm text-purple-300">{plan.currency}</span>
@@ -514,9 +532,9 @@ export default function PricingPage() {
                   </div>
                   <ul className="mt-8 space-y-4">
                     {plan.features.map((feature: string, i: number) => (
-                      <li key={i} className="flex items-start gap-3">
+                      <li key={i} className="flex items-start justify-center gap-3">
                         <Check className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-purple-200/80">{feature}</span>
+                        <span className="text-purple-200/80 text-left">{feature}</span>
                       </li>
                     ))}
                   </ul>

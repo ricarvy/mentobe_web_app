@@ -23,6 +23,7 @@ export interface Spread {
   description: string;
   positions: SpreadPosition[];
   category: 'recommended' | 'basic' | 'love' | 'decision' | 'career' | 'self' | 'advanced';
+  permission?: 'free' | 'pro' | 'premium';
 }
 
 export interface SpreadPosition {
@@ -541,6 +542,10 @@ export const spreads: Spread[] = [
 ];
 
 export function getSpreadRequirement(spread: Spread): 'free' | 'pro' | 'premium' {
+  if (spread.permission) {
+    return spread.permission;
+  }
+
   // Free users: Spreads with 3 or fewer cards
   if (spread.positions.length <= 3) {
     return 'free';

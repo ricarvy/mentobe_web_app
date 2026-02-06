@@ -463,6 +463,7 @@ export const en = {
   pricing: {
     title: 'Choose Your Plan',
     subtitle: 'Unlock unlimited AI tarot readings and personalized insights',
+    upgradePriceLabel: 'Upgrade Price',
     billingCycle: {
       monthly: 'Monthly',
       yearly: 'Yearly',

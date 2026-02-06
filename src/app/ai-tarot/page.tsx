@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Sparkles, MessageSquare, Star, Brain } from 'lucide-react';
+import { Sparkles, MessageSquare, Star, Brain, Loader2 } from 'lucide-react';
 import { spreads, drawCards, type Spread, getSpreadRequirement } from '@/lib/tarot';
 import { TarotSpreadSelector } from '@/components/TarotSpreadSelector';
 import { TarotCardDisplay } from '@/components/TarotCardDisplay';
@@ -28,9 +28,41 @@ import { apiRequest, streamApiRequest, ApiRequestError } from '@/lib/api-client'
 import { getQuota } from '@/lib/quota';
 import { useAnalytics } from '@/components/GA4Tracker';
 
+interface ApiSpread {
+  id: number;
+  name: string;
+  name_en: string | null;
+  name_jp: string | null;
+  description: string;
+  description_en: string | null;
+  description_jp: string | null;
+  card_count: number;
+  permission: string;
+  category_id: number;
+}
+
+interface ApiCategory {
+  id: number;
+  slug: string;
+  name: string;
+  name_en: string | null;
+  name_jp: string | null;
+  spreads: ApiSpread[];
+}
+
+const STATIC_CATEGORIES = [
+  { slug: 'recommended' },
+  { slug: 'basic' },
+  { slug: 'love' },
+  { slug: 'decision' },
+  { slug: 'career' },
+  { slug: 'self' },
+  { slug: 'advanced' }
+];
+
 export default function Home() {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { getTranslatedSpread } = useSpreadTranslations();
   const { user, setUser } = useUser();
   const { trackEvent } = useAnalytics();
@@ -64,6 +96,8 @@ export default function Home() {
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
   const [tone, setTone] = useState<'mystical' | 'rational' | 'warm' | 'direct'>('mystical');
   const [cardStyle, setCardStyle] = useState<'classic' | 'modern' | 'fantasy'>('classic');
+  const [apiCategories, setApiCategories] = useState<ApiCategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   // 从localStorage加载用户信息
   useEffect(() => {
@@ -80,7 +114,75 @@ export default function Home() {
     if (savedStyle === 'classic' || savedStyle === 'modern' || savedStyle === 'fantasy') {
       setCardStyle(savedStyle);
     }
+
+    // Fetch categories
+    fetchCategories();
   }, [setUser, trackEvent]);
+
+  const fetchCategories = async () => {
+    try {
+      setIsLoadingCategories(true);
+      const data = await apiRequest<ApiCategory[]>('/api/tarot/categories');
+      setApiCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Fallback to local spreads if API fails?
+      // For now, we'll just log the error. The UI will use static spreads if apiCategories is empty, or we can handle it.
+    } finally {
+      setIsLoadingCategories(false);
+    }
+  };
+
+  const getSpreadsForCategory = (categorySlug: string): Spread[] => {
+    const category = apiCategories.find(c => c.slug === categorySlug);
+    // If API category not found or has no spreads, fall back to local logic (though category list comes from API now)
+    // If apiCategories is empty, we might want to fallback to static logic completely.
+    // But since we render tabs based on apiCategories, this function will only be called with valid slugs if apiCategories is populated.
+    
+    if (!category || apiCategories.length === 0) {
+      return spreads.filter(s => s.category === categorySlug);
+    }
+
+    return category.spreads.map(apiSpread => {
+      // Find matching local spread to get positions
+      const localSpread = spreads.find(s => s.name === apiSpread.name);
+      
+      let name = apiSpread.name;
+      let description = apiSpread.description;
+
+      // Use localized content if available and local spread not found (or to override?)
+      // If local spread is found, useSpreadTranslations will handle translation based on ID.
+      // If NOT found, we must provide translated content here.
+      if (!localSpread) {
+        if (language === 'en') {
+          name = apiSpread.name_en || name;
+          description = apiSpread.description_en || description;
+        } else if (language === 'ja') {
+          name = apiSpread.name_jp || name;
+          description = apiSpread.description_jp || description;
+        }
+      } else {
+        // If local spread exists, we rely on its ID for translation lookup in TarotSpreadSelector -> useSpreadTranslations
+        // So we can keep the base name/desc or use the local one.
+        name = localSpread.name;
+        description = localSpread.description;
+      }
+
+      return {
+        id: localSpread?.id || apiSpread.id.toString(),
+        name,
+        description,
+        category: categorySlug as any,
+        permission: (apiSpread.permission?.toLowerCase() || 'free') as 'free' | 'pro' | 'premium',
+        positions: localSpread?.positions || Array(apiSpread.card_count).fill(0).map((_, i) => ({
+          id: `pos_${i}`,
+          name: `Position ${i + 1}`,
+          description: ''
+        }))
+      };
+    });
+  };
+
 
   const fetchQuota = async (userId: string) => {
     try {
@@ -283,6 +385,27 @@ export default function Home() {
     }, 100);
   };
 
+  const activeCategories = apiCategories.length > 0 ? apiCategories : STATIC_CATEGORIES;
+
+  const getCategoryName = (category: ApiCategory | { slug: string }) => {
+    if ('name' in category) {
+      if (language === 'en') return category.name_en || category.name;
+      if (language === 'ja') return category.name_jp || category.name;
+      return category.name;
+    }
+    // Fallback to static translations
+    const staticMap: Record<string, string> = {
+      recommended: t.home.spreadCategories.recommended,
+      basic: t.home.spreadCategories.basic,
+      love: t.home.spreadCategories.love,
+      decision: t.home.spreadCategories.decision,
+      career: t.home.spreadCategories.career,
+      self: t.home.spreadCategories.self,
+      advanced: t.home.spreadCategories.advanced,
+    };
+    return staticMap[category.slug] || category.slug;
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="max-w-4xl mx-auto">
@@ -355,80 +478,34 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="recommended" className="w-full">
-                <TabsList className="w-full justify-start bg-black/20 border-purple-500/30">
-                  <TabsTrigger value="recommended" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.recommended}
-                  </TabsTrigger>
-                  <TabsTrigger value="basic" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.basic}
-                  </TabsTrigger>
-                  <TabsTrigger value="love" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.love}
-                  </TabsTrigger>
-                  <TabsTrigger value="decision" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.decision}
-                  </TabsTrigger>
-                  <TabsTrigger value="career" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.career}
-                  </TabsTrigger>
-                  <TabsTrigger value="self" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.self}
-                  </TabsTrigger>
-                  <TabsTrigger value="advanced" className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white">
-                    {t.home.spreadCategories.advanced}
-                  </TabsTrigger>
-                </TabsList>
+              {isLoadingCategories && apiCategories.length === 0 ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+                </div>
+              ) : (
+                <Tabs defaultValue={activeCategories[0]?.slug || 'recommended'} className="w-full">
+                  <TabsList className="w-full justify-start bg-black/20 border-purple-500/30 overflow-x-auto">
+                    {activeCategories.map((category) => (
+                      <TabsTrigger 
+                        key={category.slug} 
+                        value={category.slug} 
+                        className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white whitespace-nowrap"
+                      >
+                        {getCategoryName(category)}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
 
-                <TabsContent value="recommended" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'recommended')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="basic" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'basic')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="love" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'love')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="decision" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'decision')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="career" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'career')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="self" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'self')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-
-                <TabsContent value="advanced" className="mt-6">
-                  <TarotSpreadSelector
-                    spreads={spreads.filter(s => s.category === 'advanced')}
-                    onSpreadSelect={handleSpreadSelect}
-                  />
-                </TabsContent>
-              </Tabs>
+                  {activeCategories.map((category) => (
+                    <TabsContent key={category.slug} value={category.slug} className="mt-6">
+                      <TarotSpreadSelector
+                        spreads={getSpreadsForCategory(category.slug)}
+                        onSpreadSelect={handleSpreadSelect}
+                      />
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              )}
             </CardContent>
           </Card>
         )}

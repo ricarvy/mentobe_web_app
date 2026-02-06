@@ -463,6 +463,7 @@ export const zh = {
   pricing: {
     title: '选择您的计划',
     subtitle: '解锁无限AI塔罗解读和个性化洞察',
+    upgradePriceLabel: '升级补差价',
     billingCycle: {
       monthly: '按月付费',
       yearly: '按年付费',
