@@ -123,7 +123,12 @@ export default function Home() {
     try {
       setIsLoadingCategories(true);
       const data = await apiRequest<ApiCategory[]>('/api/tarot/categories');
-      setApiCategories(data);
+      if (Array.isArray(data)) {
+        setApiCategories(data);
+      } else {
+        console.error('API returned invalid categories format:', data);
+        setApiCategories([]);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       // Fallback to local spreads if API fails?
@@ -143,7 +148,7 @@ export default function Home() {
       return spreads.filter(s => s.category === categorySlug);
     }
 
-    return category.spreads.map(apiSpread => {
+    return (category.spreads || []).map(apiSpread => {
       // Find matching local spread to get positions
       const localSpread = spreads.find(s => s.name === apiSpread.name);
       
