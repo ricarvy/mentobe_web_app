@@ -237,8 +237,8 @@ export default function PricingPage() {
     {
       ...t.pricing.plans.pro,
       planType: 'pro',
-      price: pricingConfig ? formatPrice(pricingConfig[`pro_${billingCycle}`]) : '--',
-      currency: pricingConfig ? pricingConfig[`pro_${billingCycle}`].currency.toLowerCase() : undefined,
+      price: pricingConfig && pricingConfig[`pro_${billingCycle}`] ? formatPrice(pricingConfig[`pro_${billingCycle}`]) : '--',
+      currency: pricingConfig && pricingConfig[`pro_${billingCycle}`]?.currency ? pricingConfig[`pro_${billingCycle}`].currency.toLowerCase() : undefined,
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
     },
     {
@@ -247,12 +247,12 @@ export default function PricingPage() {
       price: pricingConfig ? (() => {
         if (user?.vipLevel === 'pro') {
           const upgradePrice = pricingConfig[`upgrade_${billingCycle}`];
-          return formatPrice(upgradePrice);
+          return upgradePrice ? formatPrice(upgradePrice) : '--';
         }
         const premiumPrice = pricingConfig[`premium_${billingCycle}`];
-        return formatPrice(premiumPrice);
+        return premiumPrice ? formatPrice(premiumPrice) : '--';
       })() : '--',
-      currency: pricingConfig ? pricingConfig[`premium_${billingCycle}`].currency.toLowerCase() : undefined,
+      currency: pricingConfig && pricingConfig[`premium_${billingCycle}`]?.currency ? pricingConfig[`premium_${billingCycle}`].currency.toLowerCase() : undefined,
       period: billingCycle === 'monthly' ? (language === 'zh' ? '/月' : '/month') : (language === 'zh' ? '/年' : '/year'),
       isUpgradePrice: user?.vipLevel === 'pro',
     },
