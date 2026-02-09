@@ -154,7 +154,7 @@ sync_database() {
     print_info "开始同步数据库字段..."
     
     # 使用国内镜像源的 Node 镜像
-    local NODE_IMAGE="dockerproxy.net/library/node:24-alpine"
+    local NODE_IMAGE="swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/node:24-alpine"
     
     print_info "使用临时容器执行数据库同步 (Image: $NODE_IMAGE)..."
     
@@ -215,7 +215,7 @@ build_image() {
     # 使用国内镜像源加速
     # 阿里云容器镜像服务 (公共镜像)
     # 如果遇到版本问题，可以回退到 dockerproxy.net 或直接使用官方镜像
-    BASE_IMAGE="dockerproxy.net/library/node:24-alpine"
+    BASE_IMAGE="swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/node:24-alpine"
     # BASE_IMAGE="node:24-alpine"
     # 如果上面的地址不可用，可以尝试：
     # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/google_containers/node:24-alpine" 
