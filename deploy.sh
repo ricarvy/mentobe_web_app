@@ -175,7 +175,7 @@ sync_database() {
             npm install drizzle-kit drizzle-orm pg dotenv zod drizzle-zod
             
             echo "3. 执行数据库同步..."
-            npx drizzle-kit push --schema=/app/src/storage/database/shared/schema.ts
+            npx drizzle-kit push --schema=/app/src/storage/database/shared/schema.ts --dialect=postgresql
         '
         
     if [ $? -eq 0 ]; then
