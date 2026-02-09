@@ -189,9 +189,8 @@ sync_database() {
 # 停止并删除旧容器
 stop_old_container() {
     print_info "检查端口占用..."
-    if [ "$(docker ps -q --filter "publish=$PORT")" ]; then
-        print_info "端口 $PORT 被占用，正在清理..."
-        docker rm -f $(docker ps -q --filter "publish=$PORT")
+    if docker ps -a --format "{{.Ports}}" | grep -q ":$PORT"; then
+        print_warning "端口 $PORT 已被占用"
     fi
 
     print_info "检查旧容器..."
