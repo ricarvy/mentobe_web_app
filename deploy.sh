@@ -374,7 +374,7 @@ main() {
     show_config
     confirm_deploy
     configure_npm_mirror
-    sync_database
+    # sync_database
     stop_old_container
     build_image
     run_container
