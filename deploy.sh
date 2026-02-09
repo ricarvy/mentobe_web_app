@@ -140,6 +140,52 @@ confirm_deploy() {
     fi
 }
 
+# 配置 npm 镜像
+configure_npm_mirror() {
+    print_info "配置国内 NPM 镜像..."
+    # 创建或覆盖 .npmrc
+    echo "registry=https://registry.npmmirror.com/" > .npmrc
+    echo "strict-ssl=false" >> .npmrc
+    print_success "NPM 镜像配置完成"
+}
+
+# 同步数据库字段
+sync_database() {
+    print_info "开始同步数据库字段..."
+    
+    # 使用国内镜像源的 Node 镜像
+    local NODE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
+    
+    print_info "使用临时容器执行数据库同步 (Image: $NODE_IMAGE)..."
+    
+    docker run --rm \
+        --env-file "$ENV_FILE" \
+        -v "$PWD/src":/app/src:ro \
+        "$NODE_IMAGE" \
+        sh -c '
+            set -e
+            echo "1. 配置 npm 镜像..."
+            npm config set registry https://registry.npmmirror.com/
+            
+            echo "2. 安装数据库同步工具..."
+            mkdir -p /tmp/migration
+            cd /tmp/migration
+            npm init -y > /dev/null
+            # 安装依赖
+            npm install drizzle-kit drizzle-orm pg dotenv zod drizzle-zod
+            
+            echo "3. 执行数据库同步..."
+            npx drizzle-kit push --schema=/app/src/storage/database/shared/schema.ts
+        '
+        
+    if [ $? -eq 0 ]; then
+        print_success "数据库字段同步成功"
+    else
+        print_error "数据库字段同步失败"
+        exit 1
+    fi
+}
+
 # 停止并删除旧容器
 stop_old_container() {
     print_info "检查端口占用..."
@@ -169,8 +215,8 @@ build_image() {
     # 使用国内镜像源加速
     # 阿里云容器镜像服务 (公共镜像)
     # 如果遇到版本问题，可以回退到 dockerproxy.net 或直接使用官方镜像
-    # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
-    BASE_IMAGE="node:24-alpine"
+    BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/dockerhub_proxy/node:24-alpine"
+    # BASE_IMAGE="node:24-alpine"
     # 如果上面的地址不可用，可以尝试：
     # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/google_containers/node:24-alpine" 
     # 或者回退到 dockerproxy:
@@ -327,6 +373,8 @@ main() {
     check_disk_space
     show_config
     confirm_deploy
+    configure_npm_mirror
+    sync_database
     stop_old_container
     build_image
     run_container
