@@ -65,11 +65,16 @@ async function proxyRequest(
       headers: {
         'Content-Type': 'application/json',
         // 转发 Authorization header
-        ...(request.headers.has('authorization') && {
+        ...(request.headers.get('authorization') && {
           'Authorization': request.headers.get('authorization')!,
+        }),
+        ...(request.headers.get('Authorization') && {
+          'Authorization': request.headers.get('Authorization')!,
         }),
       },
       body,
+      // 禁用缓存
+      cache: 'no-store',
     });
 
     console.log('[Backend Proxy Response]', {
@@ -77,6 +82,23 @@ async function proxyRequest(
       ok: response.ok,
       contentType: response.headers.get('content-type'),
     });
+
+    // 如果是流式响应，直接返回 body stream
+    if (response.headers.get('content-type')?.includes('text/event-stream') || 
+        response.headers.get('transfer-encoding') === 'chunked' ||
+        // AI 解读接口通常是流式的，即使 content-type 可能是 text/plain 或 application/json
+        path.includes('interpret')) {
+        
+        return new NextResponse(response.body, {
+            status: response.status,
+            headers: {
+                'Content-Type': response.headers.get('content-type') || 'application/json',
+                // 确保 CORS 和缓存头正确
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+            },
+        });
+    }
 
     // 获取响应体
     const responseText = await response.text();
