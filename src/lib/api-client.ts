@@ -130,10 +130,16 @@ export async function apiRequest<T = unknown>(
       hasBody: !!requestConfig.body,
     });
 
-    const response = await fetch(fullUrl, {
-      ...requestConfig,
-      headers,
-    });
+      // 增加超时控制
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+
+      const response = await fetch(fullUrl, {
+        ...requestConfig,
+        headers,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
 
     console.log('[API Response]', {
       url: fullUrl,
@@ -166,13 +172,23 @@ export async function apiRequest<T = unknown>(
           false
         );
       }
+      
+      // 如果是 504 Gateway Timeout 或 502 Bad Gateway
+      if (response.status === 504 || response.status === 502) {
+         throw new ApiRequestError(
+           '服务器响应超时，请稍后再试',
+           'SERVER_TIMEOUT',
+           text,
+           true
+         );
+      }
 
       console.error('[API Error] Non-JSON response:', text);
       responseData = {
         success: false,
         error: {
           code: 'INVALID_RESPONSE',
-          message: '服务器繁忙，请稍后再试',
+          message: `服务器繁忙 (${response.status})，请稍后再试`,
           details: text,
         },
       };

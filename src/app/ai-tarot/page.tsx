@@ -99,25 +99,27 @@ export default function Home() {
   const [apiCategories, setApiCategories] = useState<ApiCategory[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
-  // 从localStorage加载用户信息
+  // Fetch categories only once
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Track event only once
   useEffect(() => {
     trackEvent('feature_start', { feature_name: 'ai_tarot' });
-    
-    const savedUser = localStorage.getItem('tarot_user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      fetchQuota(parsedUser.id);
-    }
+  }, []);
 
+  // Sync user state from context and fetch quota
+  useEffect(() => {
     const savedStyle = localStorage.getItem('tarot_card_style');
     if (savedStyle === 'classic' || savedStyle === 'modern' || savedStyle === 'fantasy') {
       setCardStyle(savedStyle);
     }
-
-    // Fetch categories
-    fetchCategories();
-  }, [setUser, trackEvent]);
+    
+    if (user?.id) {
+      fetchQuota(user.id);
+    }
+  }, [user?.id]);
 
   const fetchCategories = async () => {
     try {

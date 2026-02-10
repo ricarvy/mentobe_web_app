@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type TarotCard, type Spread, type SpreadPosition } from '@/lib/tarot';
 import { useI18n } from '@/lib/i18n';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronUp, Share2, Copy, Check, MessageCircleQuestion } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -49,6 +49,7 @@ export function TarotResult({
   const [pendingFollowup, setPendingFollowup] = useState<string | null>(null);
   const { setQuestion, setShowResult, setAiInterpretation, setShowAiInterpretation } = useTarotFlow();
   const { trackEvent } = useAnalytics();
+  const lastFetchedInterpretation = useRef<string>('');
 
   useEffect(() => {
     if (readingId) {
@@ -64,9 +65,15 @@ export function TarotResult({
   };
 
   useEffect(() => {
+    // Only fetch when generation is complete and we have an interpretation
     if (!interpretation || isGenerating) return;
+
+    // Prevent duplicate fetches for the same interpretation
+    if (lastFetchedInterpretation.current === interpretation) return;
+
     (async () => {
       try {
+        lastFetchedInterpretation.current = interpretation;
         setIsLoadingFollowups(true);
         const data = await apiRequest<{ questions?: string[]; followups?: string[]; suggestion?: string }>(
           '/api/tarot/followup',
@@ -129,6 +136,7 @@ export function TarotResult({
                       alt={card.nameEn}
                       className="w-12 h-16 object-cover rounded"
                       onError={(e) => {
+                        console.error(`Failed to load list image for card ${card.nameEn}:`, card.imageUrl);
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
@@ -156,6 +164,10 @@ export function TarotResult({
                         src={card.imageUrl}
                         alt={card.nameEn}
                         className="max-w-[200px] max-h-[300px] object-contain rounded-lg border border-purple-500/30"
+                        onError={(e) => {
+                          console.error(`Failed to load expanded image for card ${card.nameEn}:`, card.imageUrl);
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
                       />
                     </div>
                   )}
