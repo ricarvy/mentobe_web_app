@@ -132,6 +132,11 @@ show_config() {
 
 # 确认部署
 confirm_deploy() {
+    # 自动确认模式（如果不需要交互）
+    if [ "$1" == "--yes" ]; then
+        return
+    fi
+
     read -p "$(echo -e ${YELLOW}确认开始部署？[y/N]: ${NC})" -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -380,7 +385,7 @@ main() {
     check_env_file
     check_disk_space
     show_config
-    confirm_deploy
+    confirm_deploy "$@"
     configure_npm_mirror
     # sync_database
     stop_old_container
@@ -392,4 +397,4 @@ main() {
 }
 
 # 执行主流程
-main
+main "$@"
