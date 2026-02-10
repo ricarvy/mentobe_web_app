@@ -134,11 +134,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="antialiased">
-        <Suspense fallback={null}>
-          <GA4Tracker />
-        </Suspense>
         <I18nProvider>
           <UserProvider>
+            <Suspense fallback={null}>
+              <GA4Tracker />
+            </Suspense>
             <TarotFlowProvider>
               <SidebarProvider>
                 <StarBackground />
