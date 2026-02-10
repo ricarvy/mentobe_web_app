@@ -150,10 +150,11 @@ export function TarotCardDisplay({ cards, positions, isDrawing, spread, cardStyl
                       alt={card.nameEn}
                       className={`w-full h-full object-cover ${card.isReversed ? 'rotate-180' : ''}`}
                       onError={(e) => {
-                        // 图片加载失败时显示占位符
-                        (e.target as HTMLImageElement).style.display = 'none';
-                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                      }}
+                      // 图片加载失败时显示占位符
+                      console.error(`Failed to load image for card ${card.nameEn}:`, card.imageUrl);
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
                     />
                   ) : (
                     <div className={`flex-1 flex items-center justify-center ${card.isReversed ? 'rotate-180' : ''}`}>

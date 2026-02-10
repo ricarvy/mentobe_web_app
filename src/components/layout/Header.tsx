@@ -28,12 +28,12 @@ export function Header() {
 
   // Fetch quota when user changes
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       getQuota(user.id)
         .then(setQuota)
         .catch(err => console.error('Error fetching quota in header:', err));
     }
-  }, [user]);
+  }, [user?.id]);
 
   const navItems = [
     { name: t.header.home, href: '/' },

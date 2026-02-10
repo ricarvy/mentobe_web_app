@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 import { getAuthCredentials, saveAuthCredentials } from '@/lib/auth';
 import { apiRequest } from '@/lib/api-client';
 
@@ -77,12 +77,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     return null;
   });
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('tarot_user');
     setUser(null);
-  };
+  }, []);
 
-  const fetchUserProfile = async (): Promise<User | null> => {
+  const fetchUserProfile = useCallback(async (): Promise<User | null> => {
     try {
       // 尝试调用 /api/auth/me 获取用户信息
       const apiData = await apiRequest<ApiResponseUser>('/api/auth/me', {
@@ -96,80 +96,48 @@ export function UserProvider({ children }: { children: ReactNode }) {
       console.warn('[fetchUserProfile] Failed to fetch user profile:', error);
       return null;
     }
-  };
+  }, []);
 
-  const refreshUser = async (): Promise<User | null> => {
+  const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
-      const credentials = getAuthCredentials();
-      if (!credentials) {
-        console.error('[refreshUser] No credentials found');
-        return null;
-      }
-
-      // 如果存在 accessToken，尝试通过 /api/auth/me 获取最新用户信息
-      if (credentials.accessToken) {
-        console.log('[refreshUser] Token exists, fetching profile from /api/auth/me');
-        const userData = await fetchUserProfile();
-        
-        if (userData) {
-          // 更新 localStorage (保留现有凭证信息)
-          saveAuthCredentials(
-            userData as unknown as Record<string, unknown>, 
-            credentials.email, 
-            credentials.password
-          );
-          setUser(userData);
-          console.log('[refreshUser] User info refreshed successfully from token', {
-            vipLevel: userData.vipLevel,
-            vipExpireAt: userData.vipExpireAt,
-          });
-          return userData;
-        }
-        
-        console.warn('[refreshUser] Failed to refresh from token');
-        
-        // 如果没有密码（例如第三方登录），无法回退到账号密码登录，无法刷新，只能登出
-        if (!credentials.password) {
-           console.warn('[refreshUser] No password available for fallback login, logging out');
-           logout();
-           return null;
-        }
-        
-        console.log('[refreshUser] Falling back to login for refresh');
-      }
-
-      // 使用登录API获取最新的用户信息
-      const apiData = await apiRequest<ApiResponseUser>('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-        }),
-        requireAuth: false,
-      });
-
-      // 转换API响应为User类型
-      const userData = convertApiUserToUser(apiData);
-
-      // 更新localStorage
-      saveAuthCredentials(userData as unknown as Record<string, unknown>, credentials.email, credentials.password);
-      // 更新state
-      setUser(userData);
-
-      console.log('[refreshUser] User info refreshed successfully', {
-        vipLevel: userData.vipLevel,
-        vipExpireAt: userData.vipExpireAt,
-      });
+      const userData = await fetchUserProfile();
       
+      if (userData) {
+        // Only update state if user data has actually changed
+        setUser(currentUser => {
+          // Compare content excluding potentially volatile fields if necessary
+          if (JSON.stringify(currentUser) !== JSON.stringify(userData)) {
+            // Preserve existing credentials in localStorage
+            try {
+              const savedStr = localStorage.getItem('tarot_user');
+              const savedData = savedStr ? JSON.parse(savedStr) : {};
+              const newStorageData = { ...savedData, ...userData };
+              localStorage.setItem('tarot_user', JSON.stringify(newStorageData));
+            } catch (e) {
+              console.error('Failed to update localStorage', e);
+              localStorage.setItem('tarot_user', JSON.stringify(userData));
+            }
+            return userData;
+          }
+          return currentUser;
+        });
+      }
       return userData;
     } catch (error) {
-      console.error('[refreshUser] Failed to refresh user info:', error);
-      throw error;
+      console.warn('[refreshUser] Failed to refresh user:', error);
+      return null;
     }
-  };
+  }, [fetchUserProfile]);
+
+  const value = useMemo(() => ({
+    user,
+    setUser,
+    logout,
+    refreshUser
+  }), [user, logout, refreshUser]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, refreshUser }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
