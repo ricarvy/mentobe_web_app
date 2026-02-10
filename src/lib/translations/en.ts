@@ -36,6 +36,9 @@ export const en = {
     accountInformation: 'Account Information',
     accountDetails: 'Your account details and settings',
     freeMember: 'Free',
+    cookiePolicy: 'Cookie Policy',
+    gdpr: 'GDPR',
+    disclaimer: 'Disclaimer',
   },
   settings: {
     title: 'Settings',

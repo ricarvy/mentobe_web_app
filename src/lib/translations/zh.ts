@@ -36,6 +36,9 @@ export const zh = {
     accountInformation: '账户信息',
     accountDetails: '您的账户详情和设置',
     freeMember: '免费会员',
+    cookiePolicy: 'Cookie 政策',
+    gdpr: 'GDPR',
+    disclaimer: '免责声明',
   },
   settings: {
     title: '设置',

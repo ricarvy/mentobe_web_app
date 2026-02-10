@@ -36,6 +36,9 @@ export const ja = {
     accountDetails: 'アカウントの詳細と設定',
     freeMember: '無料メンバー',
     loading: '読み込み中...',
+    cookiePolicy: 'クッキーポリシー',
+    gdpr: 'GDPR',
+    disclaimer: '免責事項',
   },
   settings: {
     title: '設定',
