@@ -132,7 +132,7 @@ export async function apiRequest<T = unknown>(
 
       // 增加超时控制
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 180秒超时
 
       const response = await fetch(fullUrl, {
         ...requestConfig,
@@ -313,6 +313,10 @@ export async function streamApiRequest(
     headers.set('Content-Type', 'application/json');
   }
 
+  // 增加超时控制
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 180000); // 180秒超时
+
   try {
     // 添加详细日志
     const requestContentType = headers instanceof Headers ? headers.get('Content-Type') : (headers as Record<string, string>)['Content-Type'];
@@ -332,35 +336,66 @@ export async function streamApiRequest(
     const response = await fetch(fullUrl, {
       ...requestConfig,
       headers,
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
-    // 处理 403 Forbidden
-    if (response.status === 403) {
-      if (typeof window !== 'undefined') {
-        clearAuthCredentials();
-        window.location.href = '/login';
+      // 处理 403 Forbidden
+      if (response.status === 403) {
+        if (typeof window !== 'undefined') {
+          clearAuthCredentials();
+          window.location.href = '/login';
+        }
+        const error = new ApiRequestError(
+          '登录已过期，请重新登录',
+          'AUTH_EXPIRED',
+          null,
+          false
+        );
+        if (onError) {
+          onError(error);
+        }
+        return;
       }
-      const error = new ApiRequestError(
-        '登录已过期，请重新登录',
-        'AUTH_EXPIRED',
-        null,
-        false
-      );
-      if (onError) {
-        onError(error);
+
+      // 处理 502/504 错误
+      if (response.status === 502 || response.status === 504) {
+        throw new ApiRequestError(
+          '服务器响应超时，请稍后再试',
+          'SERVER_TIMEOUT',
+          response.statusText,
+          true
+        );
       }
-      return;
-    }
 
-    console.log('[API Response]', {
-      url: fullUrl,
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok,
-      contentType: response.headers.get('content-type'),
-    });
+      // 处理其他非 200 响应
+      if (!response.ok) {
+        const text = await response.text();
+        let errorDetails;
+        try {
+            errorDetails = JSON.parse(text);
+        } catch {
+            errorDetails = text;
+        }
+        
+        throw new ApiRequestError(
+          `服务器请求失败 (${response.status})`,
+          'REQUEST_FAILED',
+          errorDetails,
+          true
+        );
+      }
 
-    // 检查响应是否为流式响应
+      console.log('[API Response]', {
+        url: fullUrl,
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        contentType: response.headers.get('content-type'),
+      });
+
+      // 检查响应是否为流式响应
+
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       // 如果是 JSON，说明发生了错误
@@ -402,6 +437,7 @@ export async function streamApiRequest(
       onComplete(fullText);
     }
   } catch (error) {
+    clearTimeout(timeoutId);
     if (error instanceof ApiRequestError) {
       if (onError) {
         onError(error);
