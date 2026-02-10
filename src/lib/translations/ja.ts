@@ -1,4 +1,6 @@
-export const ja = {
+import { TranslationType } from './zh';
+
+export const ja: TranslationType = {
   common: {
     language: '言語',
     login: 'ログイン',

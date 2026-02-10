@@ -1,4 +1,6 @@
-export const en = {
+import { TranslationType } from './zh';
+
+export const en: TranslationType = {
   common: {
     language: 'Language',
     login: 'Login',
@@ -462,7 +464,8 @@ export const en = {
       emailValue: 'contact@mentobai.com',
       response: 'We will respond to your inquiry within a reasonable time.',
     },
-    cookiePolicy: {
+  },
+  cookiePolicy: {
       title: 'Cookie Policy',
       lastUpdated: 'Last Updated: ',
       introduction: 'This Cookie Policy explains how Mentobe AI ("we", "our", or "us") uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.',
@@ -535,7 +538,6 @@ export const en = {
         content: 'Under no circumstance shall we have any liability to you for any loss or damage of any kind incurred as a result of the use of the site or reliance on any information provided on the site. Your use of the site and your reliance on any information on the site is solely at your own risk.',
       },
     },
-  },
   pricing: {
     title: 'Choose Your Plan',
     subtitle: 'Unlock unlimited AI tarot readings and personalized insights',

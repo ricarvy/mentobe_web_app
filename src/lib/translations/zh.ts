@@ -1,3 +1,4 @@
+export type TranslationType = typeof zh;
 export const zh = {
   common: {
     language: '语言',
@@ -667,6 +668,7 @@ export const zh = {
       processing: '正在确认支付...',
       processingDesc: '请稍候，我们正在确认您的交易结果。',
       processingMessage: '我们正在验证您的支付状态，这可能需要几秒钟。',
+      autoRedirect: '{0} 秒后返回首页...',
     },
     cancel: {
       title: '支付已取消',
