@@ -146,6 +146,14 @@ configure_npm_mirror() {
     # 创建或覆盖 .npmrc
     echo "registry=https://registry.npmmirror.com/" > .npmrc
     echo "strict-ssl=false" >> .npmrc
+    # 添加常见的二进制包镜像源
+    echo "sharp_binary_host=https://npmmirror.com/mirrors/sharp" >> .npmrc
+    echo "sharp_libvips_binary_host=https://npmmirror.com/mirrors/sharp-libvips" >> .npmrc
+    echo "sass_binary_site=https://npmmirror.com/mirrors/node-sass" >> .npmrc
+    echo "electron_mirror=https://npmmirror.com/mirrors/electron/" >> .npmrc
+    echo "puppeteer_download_host=https://npmmirror.com/mirrors/puppeteer/" >> .npmrc
+    echo "sentrycli_cdnurl=https://npmmirror.com/mirrors/sentry-cli/" >> .npmrc
+    
     print_success "NPM 镜像配置完成"
 }
 
@@ -161,11 +169,12 @@ sync_database() {
     docker run --rm \
         --env-file "$ENV_FILE" \
         -v "$PWD/src":/app/src:ro \
+        -v "$PWD/.npmrc":/root/.npmrc:ro \
         "$NODE_IMAGE" \
         sh -c '
             set -e
-            echo "1. 配置 npm 镜像..."
-            npm config set registry https://registry.npmmirror.com/
+            echo "1. 检查 npm 镜像配置..."
+            npm config list
             
             echo "2. 安装数据库同步工具..."
             mkdir -p /tmp/migration
