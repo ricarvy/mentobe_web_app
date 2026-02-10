@@ -15,6 +15,7 @@ import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
 import { apiRequest, ApiRequestError } from '@/lib/api-client';
 import { useTarotFlow } from '@/lib/tarotFlowContext';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 interface TarotResultProps {
   question: string;
@@ -47,6 +48,7 @@ export function TarotResult({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingFollowup, setPendingFollowup] = useState<string | null>(null);
   const { setQuestion, setShowResult, setAiInterpretation, setShowAiInterpretation } = useTarotFlow();
+  const { trackEvent } = useAnalytics();
 
   useEffect(() => {
     if (readingId) {
@@ -95,7 +97,11 @@ export function TarotResult({
         } else {
           console.warn('Followup API unknown error:', error);
         }
-        setFollowups([]);
+        // 前端兜底：如果 API 失败，显示默认追问问题
+        const fallbackQuestions = language === 'en'
+          ? ['What detailed guidance does this card offer?', 'How can I apply this advice in daily life?']
+          : ['这张牌对我目前的情况有什么具体的指引？', '我应该如何在日常生活中运用这个建议？'];
+        setFollowups(fallbackQuestions);
       } finally {
         setIsLoadingFollowups(false);
       }
@@ -321,6 +327,9 @@ export function TarotResult({
             <Button
               onClick={() => {
                 if (pendingFollowup) {
+                  trackEvent('ask_again', {
+                    question: pendingFollowup
+                  });
                   setQuestion(pendingFollowup);
                   setAiInterpretation('');
                   setShowAiInterpretation(false);

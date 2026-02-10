@@ -27,9 +27,9 @@ export function Footer() {
     legal: [
       { name: t.footer.termsOfService, href: '/terms' },
       { name: t.footer.privacyPolicy, href: '/privacy' },
-      { name: t.footer.cookiePolicy, href: '#cookies' },
-      { name: t.footer.gdpr, href: '#gdpr' },
-      { name: t.footer.disclaimer, href: '#disclaimer' },
+      { name: t.footer.cookiePolicy, href: '/cookie-policy' },
+      { name: t.footer.gdpr, href: '/gdpr' },
+      { name: t.footer.disclaimer, href: '/disclaimer' },
     ],
   };
 
@@ -90,8 +90,8 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company Links */}
-          <div>
+          {/* Company Links - Hidden for now */}
+          {/* <div>
             <h4 className="text-sm font-semibold text-white mb-4">{t.footer.company}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
@@ -105,7 +105,7 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Legal Links */}
           <div>

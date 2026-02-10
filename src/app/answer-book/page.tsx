@@ -54,8 +54,9 @@ export default function AnswerBookPage() {
   const handleReveal = async () => {
     setIsAnimating(true);
     setStage('revealing');
-    trackEvent('reveal_answer', { feature_name: 'answer_book' });
-
+    // Track click immediately or wait? Sheet requires 'answer' param.
+    // So we track after generation or generate early.
+    
     // 模拟神秘的延迟，让用户感受到神圣的氛围
     await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -65,6 +66,11 @@ export default function AnswerBookPage() {
     setAnswer(finalAnswer);
     setStage('answer');
     setIsAnimating(false);
+
+    trackEvent('reveal_answer', { 
+      feature_name: 'answer_book',
+      answer: finalAnswer 
+    });
   };
 
   const handleAskAgain = () => {

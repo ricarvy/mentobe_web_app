@@ -25,8 +25,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: isLogin ? DEMO_ACCOUNT.email : '',
-    password: isLogin ? DEMO_ACCOUNT.password : '',
+    email: '',
+    password: '',
     confirmPassword: '',
     rememberMe: false,
   });
@@ -38,8 +38,8 @@ export default function LoginPage() {
     setIsLogin(!isLogin);
     setErrors({});
     setFormData({
-      email: !isLogin ? DEMO_ACCOUNT.email : '',
-      password: !isLogin ? DEMO_ACCOUNT.password : '',
+      email: '',
+      password: '',
       confirmPassword: '',
       rememberMe: false,
     });
@@ -125,6 +125,7 @@ export default function LoginPage() {
         saveAuthCredentials(userData as unknown as Record<string, unknown>, formData.email, formData.password);
         
         trackEvent('login', { method: 'email' });
+        trackEvent('signin_success', { method: 'email' });
         // Update global user state
         setUser(userData);
         
@@ -148,6 +149,7 @@ export default function LoginPage() {
         // Auto login after registration
         saveAuthCredentials(data as unknown as Record<string, unknown>, formData.email, formData.password);
         trackEvent('sign_up', { method: 'email' });
+        trackEvent('create_account_success', { create_type: 'email' });
         // Update global user state
         // Note: registration API might return partial user data, normalize to expected shape
         const normalized = {
@@ -409,21 +411,6 @@ export default function LoginPage() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            {/* Demo Account Info - only for login */}
-            {isLogin && (
-              <div className="w-full p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg space-y-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="h-4 w-4 text-purple-400" />
-                  <span className="text-sm font-semibold text-purple-200">{t.auth.demoAccount}</span>
-                </div>
-                <p className="text-xs text-purple-200/70">{t.auth.demoAccountHint}</p>
-                <div className="text-xs text-purple-200/90 space-y-1 mt-2">
-                  <p>{t.auth.demoCredentials}</p>
-                  <p className="font-mono bg-black/30 px-2 py-1 rounded">{t.auth.demoEmail}</p>
-                  <p className="font-mono bg-black/30 px-2 py-1 rounded">{t.auth.demoPassword}</p>
-                </div>
-              </div>
-            )}
             <div className="text-center text-sm text-purple-200/80">
               {isLogin ? t.auth.dontHaveAccount : t.auth.alreadyHaveAccount}
               <button

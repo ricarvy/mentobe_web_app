@@ -102,6 +102,18 @@ export default function PricingPage() {
       return;
     }
 
+    // Track begin_checkout
+    trackEvent('begin_checkout', {
+      currency: priceInfo.currency,
+      value: priceInfo.amount,
+      items: [{
+        item_id: priceInfo.id,
+        item_name: `Upgrade ${billingCycle}`,
+        price: priceInfo.amount,
+        quantity: 1
+      }]
+    });
+
     const payload = {
       priceId: priceInfo.id,
       userId: user.id,

@@ -90,8 +90,8 @@ export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false);
   const [showPremiumUpgradeModal, setShowPremiumUpgradeModal] = useState(false);
-  const [email, setEmail] = useState(DEMO_ACCOUNT.email);
-  const [password, setPassword] = useState(DEMO_ACCOUNT.password);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [remainingQuota, setRemainingQuota] = useState(3);
   const [quotaInfo, setQuotaInfo] = useState<{ remaining: number; total: number | string; isDemo: boolean }>({ remaining: 3, total: 3, isDemo: false });
   const [tone, setTone] = useState<'mystical' | 'rational' | 'warm' | 'direct'>('mystical');
@@ -283,7 +283,10 @@ export default function Home() {
     }
 
     setSelectedSpread(spread);
-    trackEvent('select_spread', { spread_id: spread.id, spread_name: spread.name });
+    trackEvent('spread_click', { 
+      spread_type: spread.category,
+      spread_name: spread.name 
+    });
   };
 
   const handleDraw = () => {
@@ -292,7 +295,12 @@ export default function Home() {
     setIsDrawing(true);
     const cards = drawCards(selectedSpread.positions.length);
     setDrawnCards(cards);
-    trackEvent('draw_cards', { spread_id: selectedSpread.id, card_count: cards.length });
+    trackEvent('draw_cards', { 
+      query: question,
+      spread_type: selectedSpread.category,
+      spread_name: selectedSpread.name,
+      cards: cards.map(c => c.name)
+    });
 
     setTimeout(() => {
       setIsDrawing(false);
@@ -318,10 +326,12 @@ export default function Home() {
 
     setIsGenerating(true);
     setShowAiInterpretation(true);
-    trackEvent('request_interpretation', { 
+    trackEvent('tarot_request_interpretation', { 
       feature_name: 'ai_tarot',
-      question_length: question.length,
-      spread_id: selectedSpread?.id,
+      query: question,
+      spread_type: selectedSpread?.category,
+      spread_name: selectedSpread?.name,
+      cards: drawnCards.map(c => c.name),
       tone,
       card_style: cardStyle,
     });
@@ -345,8 +355,13 @@ export default function Home() {
         async (fullText) => {
           // 流式响应完成
           console.log('Interpretation completed, length:', fullText.length);
-          trackEvent('interpretation_generated', { 
+          trackEvent('tarot_interpretation_generated', { 
             feature_name: 'ai_tarot',
+            query: question,
+            spread_type: selectedSpread?.category,
+            spread_name: selectedSpread?.name,
+            cards: drawnCards.map(c => c.name),
+            interpretation: fullText, // Full text might be too long for some analytics, but requested
             is_free: !user?.vipLevel,
             word_count: fullText.length
           });
@@ -380,6 +395,11 @@ export default function Home() {
 
   const handleSelectQuestion = (selectedQuestion: string) => {
     setQuestion(selectedQuestion);
+    trackEvent('sug_query_click', {
+      sug_query: selectedQuestion,
+      spread_type: selectedSpread?.category,
+      spread_name: selectedSpread?.name
+    });
     // Scroll to the question input
     setTimeout(() => {
       const questionInput = document.querySelector('textarea');
@@ -494,6 +514,7 @@ export default function Home() {
                       <TabsTrigger 
                         key={category.slug} 
                         value={category.slug} 
+                        onClick={() => trackEvent('spread_type_click', { spread_type: category.slug })}
                         className="data-[state=active]:bg-purple-600/30 text-purple-200 data-[state=active]:text-white whitespace-nowrap"
                       >
                         {getCategoryName(category)}

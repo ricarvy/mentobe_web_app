@@ -6,9 +6,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, BookOpen, Hand, Star, Crown, ArrowRight, Zap, Eye, Heart } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { useAnalytics } from '@/components/GA4Tracker';
 
 export default function Home() {
   const { t } = useI18n();
+  const { trackEvent } = useAnalytics();
   const { stars, shooting } = useMemo(() => {
     const seedFromString = (str: string) => {
       let acc = 0;
@@ -212,7 +214,12 @@ export default function Home() {
           {/* Feature Cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {/* AI Tarot Card */}
-            <Link href="/ai-tarot" className="group animate-fade-in-scale animate-float animate-glow" style={{ animationDelay: '0.2s', animationDuration: '6s' }}>
+            <Link 
+              href="/ai-tarot" 
+              className="group animate-fade-in-scale animate-float animate-glow" 
+              style={{ animationDelay: '0.2s', animationDuration: '6s' }}
+              onClick={() => trackEvent('feature_start', { feature_name: 'ai_tarot' })}
+            >
               <Card className="relative h-full bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-md border-2 border-purple-500/50 rounded-3xl overflow-hidden hover:border-purple-400/70 transition-all duration-500 group-hover:scale-105">
                 {/* Animated Border */}
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-purple-500/30 rounded-3xl transition-all duration-500" />
@@ -270,7 +277,12 @@ export default function Home() {
             </Link>
 
             {/* Answer Book Card */}
-            <Link href="/answer-book" className="group animate-fade-in-scale animate-float animate-glow" style={{ animationDelay: '0.4s', animationDuration: '6.5s' }}>
+            <Link 
+              href="/answer-book" 
+              className="group animate-fade-in-scale animate-float animate-glow" 
+              style={{ animationDelay: '0.4s', animationDuration: '6.5s' }}
+              onClick={() => trackEvent('feature_start', { feature_name: 'answer_book' })}
+            >
               <Card className="relative h-full bg-gradient-to-br from-pink-900/40 to-purple-900/40 backdrop-blur-md border-2 border-pink-500/50 rounded-3xl overflow-hidden hover:border-pink-400/70 transition-all duration-500 group-hover:scale-105">
                 {/* Animated Border */}
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-pink-500/30 rounded-3xl transition-all duration-500" />
@@ -328,7 +340,12 @@ export default function Home() {
             </Link>
 
             {/* AI Palm Reading Card */}
-            <Link href="/palm-reading" className="group animate-fade-in-scale animate-float animate-glow" style={{ animationDelay: '0.6s', animationDuration: '7s' }}>
+            <Link 
+              href="/palm-reading" 
+              className="group animate-fade-in-scale animate-float animate-glow" 
+              style={{ animationDelay: '0.6s', animationDuration: '7s' }}
+              onClick={() => trackEvent('feature_start', { feature_name: 'palm_reading' })}
+            >
               <Card className="relative h-full bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-md border-2 border-purple-500/50 rounded-3xl overflow-hidden hover:border-pink-400/70 transition-all duration-500 group-hover:scale-105">
                 {/* Animated Border */}
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-purple-500/30 rounded-3xl transition-all duration-500" />

@@ -10,8 +10,9 @@ import {
 export async function POST(request: NextRequest) {
   console.log('=== /api/tarot/followup 开始处理请求 ===');
 
+  let body;
   try {
-    const body = await request.json();
+    body = await request.json();
     const { question, interpretation, spread, cards, lang } = body;
 
     if (!question || !interpretation) {
@@ -40,8 +41,13 @@ ${languageInstruction}`;
 
     console.log('[Followup] Calling LLM...');
     
-    // 使用 stream 模式并拼接结果，因为 SDK 可能没有 chat 方法或者不稳定
-    const stream = await client.stream(
+    // 使用 Promise.race 实现超时控制 (5秒超时)
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('LLM request timed out')), 5000);
+    });
+
+    // 使用 stream 模式并拼接结果
+    const streamPromise = client.stream(
       [
         { role: 'system', content: llmConfig.systemPrompt },
         { role: 'user', content: userPrompt },
@@ -51,6 +57,8 @@ ${languageInstruction}`;
         temperature: 0.7,
       }
     );
+
+    const stream = await Promise.race([streamPromise, timeoutPromise]) as AsyncIterable<any>;
 
     let fullContent = '';
     for await (const chunk of stream) {
@@ -67,16 +75,25 @@ ${languageInstruction}`;
       .map(line => line.replace(/^\d+\.\s*/, '').trim()) // Remove "1. " etc.
       .filter(line => line.length > 0 && !line.startsWith('*') && !line.startsWith('相关追问') && !line.startsWith('**'));
 
+    if (questions.length === 0) {
+      throw new Error('No valid questions generated');
+    }
+
     return NextResponse.json(createSuccessResponse({
       questions: questions
     }));
 
   } catch (error) {
     console.error('Followup API Error:', error);
-    return NextResponse.json(createErrorResponse(
-      ERROR_CODES.INTERNAL_ERROR,
-      'Failed to generate follow-up questions',
-      error instanceof Error ? error.message : String(error)
-    ), { status: 500 });
+    
+    // 降级处理：返回默认的通用追问问题，确保前端不报错
+    const fallbackQuestions = body?.lang === 'en' 
+      ? ['What detailed guidance does this card offer?', 'How can I apply this advice in daily life?']
+      : ['这张牌对我目前的情况有什么具体的指引？', '我应该如何在日常生活中运用这个建议？'];
+      
+    return NextResponse.json(createSuccessResponse({
+      questions: fallbackQuestions,
+      isFallback: true
+    }));
   }
 }

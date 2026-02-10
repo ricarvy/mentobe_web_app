@@ -76,11 +76,7 @@ export default function PalmReadingPage() {
       setIsAnalyzing(false);
       trackEvent('analyze_palm_complete', { 
         feature_name: 'palm_reading',
-        palm_lines_detected: 3 // Mock count or derived from result
-      });
-      trackEvent('interpretation_generated', {
-        feature_name: 'palm_reading',
-        is_free: true // Assuming free for now
+        answer: JSON.stringify(result)
       });
     }, 3000);
   };
