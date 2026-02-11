@@ -54,8 +54,15 @@ function getLanguageFromRequest(request: NextRequest): string {
 export async function POST(request: NextRequest) {
   try {
     // 解析请求体
-    const body: CreateCheckoutSessionRequest = await request.json();
-    const { priceId, userId, userEmail, successUrl, cancelUrl } = body;
+    const rawBody = await request.json();
+    console.log('[Stripe Checkout] Frontend request body:', rawBody);
+    
+    // 兼容前端可能传过来的不同格式参数
+    const priceId = rawBody.priceId || rawBody.price_id;
+    const userId = rawBody.userId || rawBody.user_id;
+    const userEmail = rawBody.userEmail || rawBody.user_email;
+    const successUrl = rawBody.successUrl || rawBody.success_url;
+    const cancelUrl = rawBody.cancelUrl || rawBody.cancel_url;
 
     // 验证必要参数
     if (!priceId || !userId || !userEmail) {
@@ -80,8 +87,13 @@ export async function POST(request: NextRequest) {
     const finalCancelUrl = cancelUrl || stripeConfig.cancelUrl;
 
     console.log('[Stripe Checkout] Calling backend API:', backendUrlWithLang);
-    console.log('[Stripe Checkout] Success URL:', finalSuccessUrl);
-    console.log('[Stripe Checkout] Cancel URL:', finalCancelUrl);
+    console.log('[Stripe Checkout] Request body:', JSON.stringify({
+      price_id: priceId,
+      user_id: userId,
+      user_email: userEmail,
+      success_url: finalSuccessUrl,
+      cancel_url: finalCancelUrl,
+    }));
 
     const response = await fetch(backendUrlWithLang, {
       method: 'POST',
@@ -90,13 +102,18 @@ export async function POST(request: NextRequest) {
         ...addAuthHeader({}),
       },
       body: JSON.stringify({
-        priceId,
-        userId,
-        userEmail,
-        successUrl: finalSuccessUrl,
-        cancelUrl: finalCancelUrl,
+        price_id: priceId,
+        user_id: userId,
+        user_email: userEmail,
+        success_url: finalSuccessUrl,
+        cancel_url: finalCancelUrl,
       }),
     });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[Stripe Checkout] Backend error ${response.status}:`, errorText);
+    }
 
     const data = await response.json();
 
