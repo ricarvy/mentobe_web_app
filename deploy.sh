@@ -148,8 +148,8 @@ confirm_deploy() {
 # 国内镜像源配置
 # NPM 源: 腾讯云 (比淘宝源更快更稳定)
 CN_NPM_REGISTRY="https://mirrors.cloud.tencent.com/npm/"
-# Docker 基础镜像源: 南京大学 (教育网/国内访问快)
-CN_BASE_IMAGE="docker.nju.edu.cn/library/node:22-alpine"
+# Docker 基础镜像源: DaoCloud (国内推荐)
+CN_BASE_IMAGE="docker.m.daocloud.io/library/node:22-alpine"
 
 # 配置国内 NPM 镜像
 configure_npm_mirror() {
