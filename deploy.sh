@@ -145,21 +145,24 @@ confirm_deploy() {
     fi
 }
 
-# 配置 npm 镜像
+# 国内镜像源配置
+# NPM 源: 腾讯云 (比淘宝源更快更稳定)
+CN_NPM_REGISTRY="https://mirrors.cloud.tencent.com/npm/"
+# Docker 基础镜像源: 南京大学 (教育网/国内访问快)
+CN_BASE_IMAGE="docker.nju.edu.cn/library/node:22-alpine"
+
+# 配置国内 NPM 镜像
 configure_npm_mirror() {
     print_info "配置国内 NPM 镜像..."
-    # 创建或覆盖 .npmrc
-    echo "registry=https://registry.npmmirror.com/" > .npmrc
-    echo "strict-ssl=false" >> .npmrc
-    # 添加常见的二进制包镜像源
-    echo "sharp_binary_host=https://npmmirror.com/mirrors/sharp" >> .npmrc
-    echo "sharp_libvips_binary_host=https://npmmirror.com/mirrors/sharp-libvips" >> .npmrc
-    echo "sass_binary_site=https://npmmirror.com/mirrors/node-sass" >> .npmrc
-    echo "electron_mirror=https://npmmirror.com/mirrors/electron/" >> .npmrc
-    echo "puppeteer_download_host=https://npmmirror.com/mirrors/puppeteer/" >> .npmrc
-    echo "sentrycli_cdnurl=https://npmmirror.com/mirrors/sentry-cli/" >> .npmrc
     
-    print_success "NPM 镜像配置完成"
+    # 替换 Dockerfile 中的源配置
+    if [ -f "Dockerfile" ]; then
+        # 如果没有设置 NPM_REGISTRY 构建参数，添加它
+        if ! grep -q "ARG NPM_REGISTRY" Dockerfile; then
+            sed -i '' '1s/^/ARG NPM_REGISTRY=https:\/\/registry.npmjs.org\/\n/' Dockerfile
+        fi
+        print_success "NPM 镜像配置完成"
+    fi
 }
 
 # 同步数据库字段
@@ -225,23 +228,13 @@ build_image() {
     # 使用 BuildKit 加速构建
     export DOCKER_BUILDKIT=1
     
-    # 使用国内镜像源加速
-    # 阿里云容器镜像服务 (公共镜像)
-    # 如果遇到版本问题，可以回退到 dockerproxy.net 或直接使用官方镜像
-    BASE_IMAGE="swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/node:22-alpine"
-    # BASE_IMAGE="node:24-alpine"
-    # 如果上面的地址不可用，可以尝试：
-    # BASE_IMAGE="registry.cn-hangzhou.aliyuncs.com/google_containers/node:24-alpine" 
-    # 或者回退到 dockerproxy:
-    # BASE_IMAGE="dockerproxy.net/library/node:24-alpine"
-    
-    NPM_REGISTRY="https://registry.npmmirror.com/"
-    print_info "使用国内基础镜像: $BASE_IMAGE"
-    print_info "使用国内 NPM 镜像: $NPM_REGISTRY"
+    # 使用国内镜像配置
+    print_info "使用国内基础镜像: $CN_BASE_IMAGE"
+    print_info "使用国内 NPM 镜像: $CN_NPM_REGISTRY"
 
     docker build \
-        --build-arg BASE_IMAGE="$BASE_IMAGE" \
-        --build-arg NPM_REGISTRY="$NPM_REGISTRY" \
+        --build-arg BASE_IMAGE="$CN_BASE_IMAGE" \
+        --build-arg NPM_REGISTRY="$CN_NPM_REGISTRY" \
         --build-arg ENV_FILE="$ENV_FILE" \
         -t "$IMAGE_NAME:latest" . 2>&1 | tee build.log | while IFS= read -r line; do
         if [[ "$line" == *"ERROR"* ]]; then
